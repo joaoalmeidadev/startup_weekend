@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+# Health checks for the local development environment.
+
+class Doctor
+  REQUIRED_FILES = %w[config/database.yml config/master.key .env].freeze
+
+  def initialize
+    @errors = []
+    @warnings = []
+  end
+
+  def check_all
+    check_required_files
+    check_rails_boots || return
+    check_node
+    check_env_vars
+    check_database
+    check_redis
+  ensure
+    print_summary
+  end
+
+  private
+
+  def check_required_files
+    section("📁 Required files")
+    REQUIRED_FILES.each do |file|
+      File.exist?(file) ? ok(file) : error("Missing: #{file}")
+    end
+  end
+
+  def check_rails_boots
+    section("🚂 Rails environment")
+    require_relative "../config/environment"
+    ok("Rails #{Rails.version} boots (#{Rails.env})")
+    true
+  rescue => e
+    error("Rails failed to load: #{e.message}")
+    false
+  end
+
+  def check_node
+    section("📦 Node.js / Yarn")
+    node = `node --version 2>/dev/null`.strip
+    yarn = `yarn --version 2>/dev/null`.strip
+    node.empty? ? warn_about("Node.js not found (needed for Vite)") : ok("Node.js #{node}")
+    yarn.empty? ? warn_about("Yarn not found") : ok("Yarn #{yarn}")
+  end
+
+  def check_env_vars
+    section("🔐 Environment variables")
+    missing = App::Boot::EnvVars.new.missing
+    missing.empty? ? ok("All required variables are set") : missing.each { |var| error("#{var} not set") }
+  end
+
+  def check_database
+    section("🗄️  Database")
+    ActiveRecord::Base.connection.execute("SELECT 1")
+    ok("Connected to #{ActiveRecord::Base.connection.current_database}")
+  rescue => e
+    error("Database connection failed: #{e.message}")
+  end
+
+  def check_redis
+    section("📮 Redis")
+    REDIS.ping
+    ok("Redis connected")
+  rescue => e
+    error("Redis connection failed: #{e.message}")
+  end
+
+  def section(title) = puts("\n#{title}")
+
+  def ok(message) = puts("  ✓ #{message}")
+
+  def error(message)
+    @errors << message
+    puts "  ✗ #{message}"
+  end
+
+  def warn_about(message)
+    @warnings << message
+    puts "  ⚠ #{message}"
+  end
+
+  def print_summary
+    puts "\n#{"=" * 50}"
+    puts "✅ All checks passed!" if @errors.empty? && @warnings.empty?
+    @warnings.each { |w| puts "  ⚠ #{w}" }
+    @errors.each { |e| puts "  ✗ #{e}" }
+    exit 1 if @errors.any?
+  end
+end
+
+Dir.chdir(File.expand_path("..", __dir__)) { Doctor.new.check_all }

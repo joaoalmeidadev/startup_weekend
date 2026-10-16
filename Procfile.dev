@@ -1,0 +1,4 @@
+web: bin/rails server -p ${PORT:-3000}
+vite: bin/vite dev
+sidekiq: bundle exec sidekiq
+clock: bundle exec clockwork config/clock.rb

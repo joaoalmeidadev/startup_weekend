@@ -1,0 +1,82 @@
+# Kamal 2 deploy config — https://kamal-deploy.org
+# Replace every CHANGE_ME before the first `make deploy-setup`.
+service: app
+image: CHANGE_ME_registry_user/app
+
+servers:
+  web:
+    - CHANGE_ME_SERVER_IP
+  job:
+    hosts:
+      - CHANGE_ME_SERVER_IP
+    cmd: bundle exec sidekiq
+  clock:
+    hosts:
+      - CHANGE_ME_SERVER_IP
+    cmd: bundle exec clockwork config/clock.rb
+
+# kamal-proxy terminates SSL (Let's Encrypt) and routes to the web role
+proxy:
+  ssl: true
+  host: CHANGE_ME_app.example.com
+  app_port: 3000
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 5
+
+registry:
+  server: ghcr.io
+  username: CHANGE_ME_registry_user
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+
+env:
+  clear:
+    APP_HOST: CHANGE_ME_app.example.com
+    POSTGRES_HOST: app-db
+    POSTGRES_USER: app
+    POSTGRES_DB: app_production
+    REDIS_URL: redis://app-redis:6379
+    RAILS_LOG_LEVEL: info
+    RAILS_MAX_THREADS: 5
+    WEB_CONCURRENCY: 2
+  secret:
+    - RAILS_MASTER_KEY
+    - POSTGRES_PASSWORD
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
+
+volumes:
+  - "app_storage:/rails/storage"
+
+asset_path: /rails/public/vite
+
+accessories:
+  db:
+    image: postgres:16
+    host: CHANGE_ME_SERVER_IP
+    port: "127.0.0.1:5432:5432"
+    env:
+      clear:
+        POSTGRES_USER: app
+        POSTGRES_DB: app_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    host: CHANGE_ME_SERVER_IP
+    port: "127.0.0.1:6379:6379"
+    cmd: redis-server --appendonly yes
+    directories:
+      - data:/data

@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+require "fileutils"
+
+FileUtils.chdir File.expand_path("..", __dir__) do
+  puts "WARNING: this will destroy all data in the #{ENV.fetch("RAILS_ENV", "development")} database!"
+  print "Are you sure? (yes/no): "
+
+  unless $stdin.gets.to_s.chomp.casecmp("yes").zero?
+    puts "Aborted."
+    exit
+  end
+
+  system("bin/rails db:drop db:create db:migrate db:seed", exception: true)
+  puts "\n== Database reset complete! =="
+end
