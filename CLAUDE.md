@@ -2,6 +2,10 @@
 
 Rails 7.2 (Ruby 3.1.7) + Inertia.js + React 19 (TypeScript, Vite, Tailwind 4) + PostgreSQL + Sidekiq/Redis + Devise, deploy com Kamal 2.
 
+## Contexto do projeto
+- `ai-notes/business.md` — proposta do negócio (problema, público, MVP, pitch, decisões). Leia antes de implementar features; o código deve servir à hipótese do MVP.
+- `ai-notes/todo.md` — só tarefas. Use a skill `working-off-of-todo-files`.
+
 ## Comandos
 - `make setup` — instala tudo, cria `.env`, prepara o banco
 - `make dev` — web (3000) + vite + sidekiq + clockwork
