@@ -1,22 +1,19 @@
 require "rails_helper"
 
-RSpec.describe "Home", :inertia do
+RSpec.describe "Home" do
   describe "GET /" do
-    it "renders the home page for guests" do
+    it "sends guests to the login page" do
       get root_path
 
-      expect(response).to have_http_status(:ok)
-      expect_inertia.to render_component("home/index")
-      expect_inertia.to include_props(current_user: nil)
+      expect(response).to redirect_to(new_user_session_path)
     end
 
-    it "shares the signed-in user" do
-      user = create(:user)
-      sign_in user
+    it "sends signed-in users to their area" do
+      sign_in create(:user, :manager)
 
       get root_path
 
-      expect_inertia.to include_props(current_user: {"id" => user.id, "email" => user.email})
+      expect(response).to redirect_to(management_root_path)
     end
   end
 end

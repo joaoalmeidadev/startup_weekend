@@ -5,7 +5,7 @@ void createInertiaApp({
 
   serverHead: true,
 
-  title: (title) => title || 'App',
+  title: (title) => (title ? `${title} · Nivela` : 'Nivela'),
 
   strictMode: true,
 

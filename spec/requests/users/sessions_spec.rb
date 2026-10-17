@@ -12,11 +12,19 @@ RSpec.describe "User sessions", :inertia do
   end
 
   describe "POST /users/sign_in" do
-    it "signs the user in and redirects home" do
+    it "signs a collaborator in and redirects to the journey" do
       post user_session_path, params: {user: {email: "jane@example.com", password: "password123"}}
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(collaborator_journey_path)
       expect(controller.current_user).to eq(user)
+    end
+
+    it "redirects management users to the management area" do
+      create(:user, :hr, email: "ana@example.com", password: "password123")
+
+      post user_session_path, params: {user: {email: "ana@example.com", password: "password123"}}
+
+      expect(response).to redirect_to(management_root_path)
     end
 
     it "re-renders the login page with an alert on bad credentials" do
@@ -24,7 +32,7 @@ RSpec.describe "User sessions", :inertia do
 
       expect(response).to have_http_status(:unprocessable_content)
       expect_inertia.to render_component("users/sessions/new")
-      expect_inertia.to include_props(flash: {"alert" => "Invalid email or password."})
+      expect_inertia.to include_props(flash: {"alert" => "E-mail ou senha inválidos."})
     end
 
     it "answers Inertia XHR requests with the login page instead of a 401" do
@@ -44,7 +52,7 @@ RSpec.describe "User sessions", :inertia do
       delete destroy_user_session_path
 
       expect(response).to have_http_status(:see_other)
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_user_session_path)
     end
 
     it "clears the encrypted Inertia history on the next page" do

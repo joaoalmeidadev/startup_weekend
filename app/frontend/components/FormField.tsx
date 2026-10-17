@@ -11,12 +11,12 @@ export function FormField({ label, name, error, ...inputProps }: FormFieldProps)
   const errorId = `${name}-error`
 
   return (
-    <div className="space-y-1">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+    <div className="space-y-space-xs">
+      <label htmlFor={name} className="block text-label-lg text-on-surface">
         {label}
       </label>
       <input
-        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        className="block h-14 w-full rounded-2xl border-[1.5px] border-slate-200 bg-surface-container-lowest px-space-md text-body-lg text-slate-800 focus:border-primary-container focus:ring-2 focus:ring-primary-container aria-invalid:border-error"
         {...inputProps}
         id={name}
         name={name}
@@ -24,7 +24,7 @@ export function FormField({ label, name, error, ...inputProps }: FormFieldProps)
         aria-describedby={errorMessage ? errorId : undefined}
       />
       {errorMessage && (
-        <p id={errorId} className="text-sm text-red-600">
+        <p id={errorId} className="text-body-lg text-error">
           {errorMessage}
         </p>
       )}

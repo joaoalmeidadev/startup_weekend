@@ -1,7 +1,8 @@
 require "rails_helper"
 
-# Only sign in, sign out and sign up have Inertia pages. Anything else Devise
-# would expose falls back to unstyled ERB views, so it stays disabled until built.
+# Only sign in and sign out have Inertia pages. Anything else Devise would expose
+# falls back to unstyled ERB views, so it stays disabled until built.
+# Sign up is off on purpose: companies invite their people (B2B).
 RSpec.describe "Devise routes" do
   it "does not expose password recovery" do
     expect(Rails.application.routes.url_helpers).not_to respond_to(:new_user_password_path)
@@ -14,7 +15,7 @@ RSpec.describe "Devise routes" do
     expect(helpers).not_to respond_to(:cancel_user_registration_path)
   end
 
-  it "keeps sign up available" do
-    expect(Rails.application.routes.url_helpers).to respond_to(:new_user_registration_path)
+  it "does not expose public sign up" do
+    expect(Rails.application.routes.url_helpers).not_to respond_to(:new_user_registration_path)
   end
 end

@@ -1,47 +1,37 @@
 require "rails_helper"
 
 RSpec.describe "Authentication", :js do
-  it "lets a visitor sign up, sign out and sign back in" do
+  def sign_in_with(email, password)
     visit root_path
-    click_link "Criar conta"
-
-    fill_in "E-mail", with: "jane@example.com"
-    fill_in "Senha", with: "password123"
-    fill_in "Confirmar senha", with: "password123"
-    click_button "Criar conta"
-
-    expect(page).to have_content("Olá, jane@example.com")
-
-    click_button "Sair"
-    expect(page).to have_content("Bem-vindo")
-
-    click_link "Entrar"
-    fill_in "E-mail", with: "jane@example.com"
-    fill_in "Senha", with: "password123"
+    fill_in "E-mail", with: email
+    fill_in "Senha", with: password
     click_button "Entrar"
-
-    expect(page).to have_content("Olá, jane@example.com")
   end
 
-  it "shows validation errors on invalid sign up" do
-    visit new_user_registration_path
+  it "takes a collaborator to the journey and back to the login on sign out" do
+    create(:user, email: "maria@example.com", password: "password123")
 
-    fill_in "E-mail", with: "jane@example.com"
-    fill_in "Senha", with: "123"
-    fill_in "Confirmar senha", with: "123"
-    click_button "Criar conta"
+    sign_in_with("maria@example.com", "password123")
+    expect(page).to have_content("Sua Trilha de Aprendizado")
 
-    expect(page).to have_content("is too short")
+    click_link "Meu Perfil", match: :first
+    click_button "Sair da minha conta"
+    expect(page).to have_button("Entrar")
+  end
+
+  it "takes an HR user to the management area" do
+    create(:user, :hr, email: "ana@example.com", password: "password123")
+
+    sign_in_with("ana@example.com", "password123")
+
+    expect(page).to have_content("Pessoas")
   end
 
   it "shows an alert on wrong credentials" do
     create(:user, email: "jane@example.com", password: "password123")
-    visit new_user_session_path
 
-    fill_in "E-mail", with: "jane@example.com"
-    fill_in "Senha", with: "wrong-password"
-    click_button "Entrar"
+    sign_in_with("jane@example.com", "wrong-password")
 
-    expect(page).to have_content("Invalid email or password.")
+    expect(page).to have_content("E-mail ou senha inválidos.")
   end
 end
