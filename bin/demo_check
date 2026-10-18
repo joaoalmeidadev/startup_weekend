@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Smoke test for the pitch demo: logs in with each demo user and checks every page of the script.
+# Usage: bin/demo_check [base_url]   (default http://localhost:3000; app must be running with seeds loaded)
+set -uo pipefail
+
+BASE="${1:-http://localhost:3000}"
+PASSWORD="12345678"
+JAR="$(mktemp)"
+FAILED=0
+
+login() {
+  rm -f "$JAR"
+  local token
+  token=$(curl -s -c "$JAR" "$BASE/users/sign_in" | grep -o 'name="csrf-token" content="[^"]*' | cut -d'"' -f4)
+  curl -s -b "$JAR" -c "$JAR" -o /dev/null -w "%{redirect_url}" -X POST "$BASE/users/sign_in" \
+    --data-urlencode "authenticity_token=$token" --data-urlencode "user[email]=$1" --data-urlencode "user[password]=$PASSWORD"
+}
+
+check() {
+  local code
+  code=$(curl -s -b "$JAR" -o /dev/null -w "%{http_code}" "$BASE$1")
+  if [ "$code" = "200" ]; then echo "  ok   $1"; else echo "  FAIL $1 ($code)"; FAILED=1; fi
+}
+
+expect_landing() {
+  local landed
+  landed=$(login "$1")
+  if [[ "$landed" == *"$2" ]]; then echo "$1 -> $2"; else echo "FAIL $1 landed on '$landed' (expected $2)"; FAILED=1; fi
+}
+
+expect_landing "admin@nivela.com" "/management"
+for path in /management "/management?period=30d" /management/people /management/people/maria-souza \
+  /management/journeys /management/journeys/onboarding-atendimento /management/modules/rotinas-de-atendimento \
+  /management/modules/new "/management/modules/new?mode=manual" /management/lesson_reviews/1 \
+  /management/lesson_reviews/8 /management/modules/rotinas-de-atendimento/publish /management/sector_goal; do
+  check "$path"
+done
+
+expect_landing "novo@nivela.com" "/collaborator/journey"
+check /collaborator/welcome
+check /collaborator/diagnostic
+check /collaborator/diagnostic/result
+
+expect_landing "colab@nivela.com" "/collaborator/journey"
+for path in /collaborator/journey /collaborator/modules/rotinas-da-distribuidora \
+  /collaborator/lessons/rotinas-da-distribuidora /collaborator/progress /collaborator/profile; do
+  check "$path"
+done
+
+rm -f "$JAR"
+if [ "$FAILED" = "0" ]; then echo "Tudo pronto para a demo."; else echo "Algo falhou — veja acima."; exit 1; fi

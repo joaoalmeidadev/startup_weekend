@@ -20,8 +20,8 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
    Clique em "Usar o arquivo de exemplo" → "Criar lições com IA".
 3. **Revisar lições**. "A IA transformou o manual em microlições. Eu confiro: à esquerda o manual, à direita o
    que o funcionário vai ver. Nada vai para a equipe sem a minha aprovação." Mostre "Corrigir texto".
-   (Atalho para não aprovar 8 lições: abra `/management/lesson_reviews/8` e clique "Aprovar e publicar".)
-4. **Publicar**: escolha "Setor Atendimento" + "Novatos" → Publicar. "Pronto: 32 pessoas recebem."
+   (Atalho para não aprovar 8 lições: abra `/management/lesson_reviews/8` e clique "Aprovar e escolher quem recebe".)
+4. **Publicar** (passo 4): "Setor Atendimento" e "Novatos" já vêm marcados → **Publicar**. "Pronto: 32 pessoas recebem."
 
 ### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)
 5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.
@@ -41,6 +41,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 
 ## Preparação (10 min antes)
 - `cd ~/projects/startup_weekend/app && make dev` (http://localhost:3000) e `bin/rails db:seed`.
+- `bin/demo_check` — tem que terminar com "Tudo pronto para a demo."
 - Janela 1 (admin) logada no Dashboard; janela 2 estreita (novo@) na tela de login; janela 3 (colab@) na Minha jornada.
 - Zoom do navegador em 110–125% se o projetor for pequeno.
 - Vídeo aberto no QuickTime, em tela cheia, pausado no início.
