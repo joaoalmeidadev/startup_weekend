@@ -19,7 +19,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 ## 3. Demo ao vivo (~2 min) — as 3 fatias + dashboard
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
-1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos."
+1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos — cerca de R$ 17,6 mil."
 2. **Biblioteca** (o que existe). Clique no filtro **Produtos Nivela**: "Sem material? A Nivela já vem com 12 módulos
    para qualquer setor — os mais citados na nossa pesquisa."
 3. **+ Novo conteúdo**: "Um formulário só: o conteúdo em cima, de onde vem embaixo." "Usar o arquivo de exemplo" →
@@ -29,7 +29,10 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 4. **Jornadas** → **+ Nova jornada**: nome, tipo (**Base**, **Empresa** ou **Setor**) e quem recebe (setores e grupos ou
    pessoas específicas) → **Criar e escolher conteúdos**. "A Biblioteca alimenta; a jornada decide quem recebe."
 5. No montador (**Atendimento na prática**): à esquerda a Biblioteca, à direita "Como o participante vê". Adicione um
-   conteúdo e mostre o valor no topo mudar (horas de repasse e R$).
+   conteúdo e mostre a **Calculadora da jornada** mudar: "9 h de treino substituídas, R$ 765 economizados, 306 pts".
+   Edite as horas de uma etapa ou digite pontos manuais para mostrar que o admin controla.
+7. **Recompensas** → **Calculadora de pontos**: "1 h de treino custa o gestor + a pessoa (R$ 85); eu decido quanto
+   disso vira prêmio — 40% dá 34 pts por hora. 1 ponto = R$ 1." Mude para 50% e mostre os cards se ajustarem.
 6. **Setores** → **Staff** (grupo): "Cada setor tem as suas pessoas e a sua meta. Grupos juntam gente de setores
    diferentes." Meta começa num nível de mercado — Fácil, Médio, Difícil — e ajusto por competência. Se der tempo,
    **+ Novo setor** mostra os 3 blocos: nome, pessoas, meta.

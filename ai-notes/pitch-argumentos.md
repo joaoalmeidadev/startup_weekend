@@ -92,9 +92,13 @@ Segue o modelo Kirkpatrick de avaliação de treinamento (aprendizado → compor
 - Tudo no mock é exemplo; não citar como resultado real.
 
 ## 3d. Recompensas: pagas com o que a empresa deixou de gastar
-- Cada lição evita ~0,6 h de alguém treinando presencialmente (R$ 40/h) → 1 ponto ≈ R$ 1,20 de treino economizado.
-- O prêmio custa no máximo **40%** dessa economia: uma caneca de R$ 25 sai por 53 pts (a pessoa já economizou ~R$ 64 de treino).
-- O colaborador vê só pontos e prêmios; a conta é do gestor. Frase: **"O prêmio é pago com parte do que a empresa deixou de gastar."**
+- **1 h de treino presencial custa o gestor + a pessoa** (os dois param). Padrão: R$ 60 + R$ 25 = **R$ 85/h**.
+- O admin define **quanto dessa economia vira prêmio** (padrão 40%) → **34 pts por hora** de treino substituída.
+- **1 ponto = R$ 1 em prêmios**: caneca de R$ 25 = 25 pts. Como os pontos nascem de uma fatia da economia, nenhum
+  prêmio custa mais do que a empresa economizou.
+- Na jornada, cada etapa mostra quantas horas de treino substitui e quantos pontos vale (pontos manuais são opcionais).
+- O colaborador vê só pontos e prêmios. Frase: **"O prêmio é pago com parte do que a empresa deixou de gastar —
+  e quem decide quanto é o gestor."**
 
 ## 4. Frases prontas para o palco
 - "O mesmo treinamento é pago três vezes: na hora do veterano, no curso de fora e no erro do novato."
