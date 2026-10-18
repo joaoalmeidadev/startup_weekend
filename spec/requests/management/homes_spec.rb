@@ -60,7 +60,7 @@ RSpec.describe "Management dashboard", :inertia do
       get management_root_path
 
       savings = inertia.props[:dashboard][:savings]
-      expect(savings).to include(new_hires: 9, hours: 9 * 23, amount: 9 * 23 * 40)
+      expect(savings).to include(new_hires: 9, hours: 9 * 23, amount: 9 * 23 * 85)
     end
 
     it "shows that what is learned sticks and that the team keeps studying" do
@@ -83,7 +83,7 @@ RSpec.describe "Management dashboard", :inertia do
 
       dashboard = inertia.props[:dashboard]
       expect(dashboard[:knowledge_gain]).to include(before: 52, now: 71)
-      expect(dashboard[:savings]).to include(new_hires: 2, hours: 46, amount: 1840)
+      expect(dashboard[:savings]).to include(new_hires: 2, hours: 46, amount: 3910)
       expect(dashboard[:time_to_level][:days]).to eq(38)
     end
 

@@ -20,9 +20,8 @@ module Management
       }
     }.freeze
     DEFAULT_PERIOD = "6m"
-    # Same assumptions as the journey builder and the pitch: hand-off hours per new hire and their hourly cost
+    # Hand-off hours per new hire (same as the pitch); their cost comes from the admin's PointsRule
     HANDOFF_HOURS_PER_HIRE = 23
-    HANDOFF_HOURLY_COST = 40
     DAYS_TO_LEVEL_BEFORE = 90
 
     def initialize(period = nil)
@@ -51,7 +50,7 @@ module Management
 
     def savings
       hours = @data[:new_hires] * HANDOFF_HOURS_PER_HIRE
-      {new_hires: @data[:new_hires], hours: hours, amount: hours * HANDOFF_HOURLY_COST}
+      {new_hires: @data[:new_hires], hours: hours, amount: PointsRule.new.saved_for(hours)}
     end
 
     def retention
