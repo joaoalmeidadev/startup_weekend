@@ -90,3 +90,4 @@ Roles: `web` (Puma atrás do kamal-proxy, healthcheck `/up`), `job` (Sidekiq) e 
 ## CI
 
 `.github/workflows/ci.yml` roda StandardRB, Brakeman, ESLint/Prettier/tsc, Vitest e RSpec (com Postgres e Redis como services).
+# startup_weekend
