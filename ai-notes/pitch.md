@@ -20,16 +20,19 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
 1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos."
-2. **Biblioteca** (o que alimenta as jornadas). Clique no filtro **Produtos Nivela**: "Sem material? A Nivela já vem
-   com 12 módulos para qualquer setor — os mais citados na nossa pesquisa." Se perguntarem, "Entenda as origens" explica IA · Nivela · Empresa.
-3. **Jornadas** → abra **Onboarding Atendimento** (montador). "A Biblioteca alimenta; a jornada é o que o colaborador percorre." Leia o topo: "Esta jornada substitui ~23h de repasse por novato, ≈ R$ 920
-   por contratação." À direita: "é exatamente o que o colaborador vê". Adicione um produto Nivela e mostre o valor mudar.
-4. Volte à **Biblioteca** → **+ Novo conteúdo** → "Enviar material → a IA cria as lições" → "Usar o arquivo de exemplo" → **Criar lições com IA**.
-5. **Revisar lições**: "À esquerda o manual, à direita o que o funcionário vai ver. Nada vai para a equipe sem a minha
-   aprovação." (Atalho: `/management/lesson_reviews/8` → "Aprovar e escolher quem recebe".)
-6. **Publicar**: "Setor Atendimento" e "Novatos" já marcados → **Publicar**.
-7. (Se perguntarem da meta) aba **Meta do setor**: "Começa num nível de mercado — Fácil, Médio, Difícil — e eu ajusto
-   por competência; a marca cinza é a referência dos meus veteranos."
+2. **Biblioteca** (o que existe). Clique no filtro **Produtos Nivela**: "Sem material? A Nivela já vem com 12 módulos
+   para qualquer setor — os mais citados na nossa pesquisa."
+3. **+ Novo conteúdo**: "Um formulário só: o conteúdo em cima, de onde vem embaixo." "Usar o arquivo de exemplo" →
+   **Gerado por IA** já marcado → **Criar lições com IA** → **Revisar lições**: "À esquerda o manual, à direita o que o
+   funcionário vai ver. Nada vai para a equipe sem a minha aprovação." (Atalho: `/management/lesson_reviews/8` →
+   "Aprovar e salvar na Biblioteca".)
+4. **Jornadas** → **+ Nova jornada**: nome, tipo (**Base**, **Empresa** ou **Setor**) e quem recebe (setores e grupos ou
+   pessoas específicas) → **Criar e escolher conteúdos**. "A Biblioteca alimenta; a jornada decide quem recebe."
+5. No montador (**Atendimento na prática**): à esquerda a Biblioteca, à direita "Como o participante vê". Adicione um
+   conteúdo e mostre o valor no topo mudar (horas de repasse e R$).
+6. **Setores** → **Staff** (grupo): "Cada setor tem as suas pessoas e a sua meta. Grupos juntam gente de setores
+   diferentes." Meta começa num nível de mercado — Fácil, Médio, Difícil — e ajusto por competência. Se der tempo,
+   **+ Novo setor** mostra os 3 blocos: nome, pessoas, meta.
 
 ### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)
 5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.
