@@ -1,34 +1,55 @@
 import { describe, expect, it } from 'vitest'
-import { journey, journeyGoal } from '@/test/managementFixtures'
-import { formatReais, journeyValue, weeksToFinish } from './journeyValue'
+import { journey, journeyGoal, pointsRule, serviceJourney } from '@/test/managementFixtures'
+import { changeHours, changeManualPoints, toSteps } from './journeyEditing'
+import { formatHours, formatReais, journeyValue, stepPoints, weeksToFinish } from './journeyValue'
+
+const value = (steps = toSteps(journey.modules)) => journeyValue(steps, journeyGoal, pointsRule)
+
+describe('stepPoints', () => {
+  it('turns the hours of training a step replaces into points by the admin rule', () => {
+    const [tratamento] = toSteps(serviceJourney.modules)
+
+    expect(stepPoints(tratamento, pointsRule)).toBe(170)
+  })
+
+  it('uses the manual points when the admin typed them', () => {
+    const [tratamento] = toSteps(serviceJourney.modules)
+
+    expect(stepPoints({ ...tratamento, manualPoints: 50 }, pointsRule)).toBe(50)
+    expect(stepPoints({ ...tratamento, manualPoints: 0 }, pointsRule)).toBe(0)
+  })
+})
 
 describe('journeyValue', () => {
-  it('adds up the hand-off hours the journey replaces and prices them at R$ 40 an hour', () => {
-    const value = journeyValue(journey.modules, journeyGoal)
+  it('adds up the training hours, what they save and the points of the whole journey', () => {
+    const service = journeyValue(toSteps(serviceJourney.modules), journeyGoal, pointsRule)
 
-    expect(value.hours).toBe(12)
-    expect(value.cost).toBe(480)
+    expect(service).toMatchObject({ hours: 9, saved: 765, points: 306 })
   })
 
-  it('counts modules and lessons of the whole journey', () => {
-    const value = journeyValue(journey.modules, journeyGoal)
+  it('follows edited hours and manual points', () => {
+    const edited = changeManualPoints(
+      changeHours(toSteps(journey.modules), 'matematica', 1.5),
+      'conversa-clara',
+      10,
+    )
 
-    expect(value.modules).toBe(3)
-    expect(value.lessons).toBe(16)
-    expect(value.weeks).toBe(3)
+    expect(value(edited)).toMatchObject({ hours: 10.5, saved: 893, points: 10 + 51 + 204 })
   })
 
-  it('counts the goal competencies covered by at least one module', () => {
-    const value = journeyValue(journey.modules, journeyGoal)
+  it('counts contents, lessons and the weeks to study them', () => {
+    expect(value()).toMatchObject({ modules: 3, lessons: 16, weeks: 3 })
+  })
 
-    expect(value.covered).toBe(2)
-    expect(value.total).toBe(4)
+  it('counts the goal competencies covered by at least one content', () => {
+    expect(value()).toMatchObject({ covered: 2, total: 4 })
   })
 
   it('is all zero for an empty journey', () => {
-    expect(journeyValue([], journeyGoal)).toEqual({
+    expect(value([])).toEqual({
       hours: 0,
-      cost: 0,
+      saved: 0,
+      points: 0,
       modules: 0,
       lessons: 0,
       weeks: 0,
@@ -51,5 +72,12 @@ describe('formatReais', () => {
   it('writes the amount in reais with the Brazilian thousands separator', () => {
     expect(formatReais(1040)).toBe('R$ 1.040')
     expect(formatReais(480)).toBe('R$ 480')
+  })
+})
+
+describe('formatHours', () => {
+  it('writes hours with a Brazilian decimal comma', () => {
+    expect(formatHours(9)).toBe('9')
+    expect(formatHours(10.5)).toBe('10,5')
   })
 })

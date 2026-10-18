@@ -71,9 +71,9 @@ function AudienceLine({ journey, ...choices }: AudienceChoices & { journey: Jour
   )
 }
 
-type JourneyHeaderProps = AudienceChoices & { journey: Journey; goal: JourneyGoal }
+type JourneyHeaderProps = AudienceChoices & { journey: Journey; goal: JourneyGoal; points: number }
 
-export function JourneyHeader({ journey, goal, ...choices }: JourneyHeaderProps) {
+export function JourneyHeader({ journey, goal, points, ...choices }: JourneyHeaderProps) {
   const notify = useMockNotice()
 
   return (
@@ -97,7 +97,7 @@ export function JourneyHeader({ journey, goal, ...choices }: JourneyHeaderProps)
         <div className="flex flex-col items-start gap-space-xs lg:items-end">
           <button
             type="button"
-            onClick={() => notify('Alterações publicadas para a equipe (simulação).')}
+            onClick={() => notify(`Alterações publicadas: ${points} pts na jornada (simulação).`)}
             className="inline-flex h-12 items-center gap-space-xs rounded-xl bg-primary px-space-lg text-label-lg text-on-primary shadow-md hover:bg-primary-container"
           >
             <Icon name="publish" className="text-[1.25rem]" />

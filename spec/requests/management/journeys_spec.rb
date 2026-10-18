@@ -81,6 +81,13 @@ RSpec.describe "Management journeys", :inertia do
       expect(inertia.props[:people]).to include("Maria Souza")
     end
 
+    it "brings the admin's points rule to price each content of the journey" do
+      get management_journey_path("atendimento-na-pratica")
+
+      expect(inertia.props[:points_rule]).to include(manager_hourly: 60, person_hourly: 25, reward_share: 0.4)
+      expect(inertia.props[:journey][:modules].pluck(:teaching_hours)).to eq([5, 4])
+    end
+
     it "offers the ready-made Base Nivela only on base journeys" do
       get management_journey_path("base-nivela")
 

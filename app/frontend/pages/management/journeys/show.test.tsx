@@ -7,7 +7,9 @@ import {
   journey,
   journeyGoal,
   manager,
+  pointsRule,
   readyJourney,
+  serviceJourney,
 } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
 import JourneysShow from './show'
@@ -16,7 +18,7 @@ vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).ine
 
 const preview = () => screen.getByRole('region', { name: 'Como o participante vê' })
 const catalogGroup = (title: string) => screen.getByRole('region', { name: `Biblioteca: ${title}` })
-const value = () => screen.getByRole('region', { name: 'Valor desta jornada' })
+const calculator = () => screen.getByRole('region', { name: 'Calculadora da jornada' })
 const stops = () =>
   within(within(preview()).getByRole('list', { name: 'Paradas da jornada' }))
     .getAllByRole('link')
@@ -33,6 +35,7 @@ describe('JourneysShow (montador de jornada)', () => {
       start_ready: false,
       audience_options: audienceOptions,
       people: ['Maria Souza', 'Marcos Oliveira'],
+      points_rule: pointsRule,
       manager,
     }
   })
@@ -66,18 +69,66 @@ describe('JourneysShow (montador de jornada)', () => {
     render(<JourneysShow />)
 
     expect(screen.queryByRole('link', { name: /Ver a meta/ })).not.toBeInTheDocument()
-    expect(value()).toHaveTextContent('Sem meta de setor para comparar')
+    expect(calculator()).toHaveTextContent('Sem meta de setor para comparar')
   })
 
-  it('sums up the value of the journey as an estimate', () => {
+  it('prices the journey by the points rule: hours of training replaced, reais saved and points', () => {
+    page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
     render(<JourneysShow />)
 
-    expect(value()).toHaveTextContent('Substitui ~12h de repasse por novato')
-    expect(value()).toHaveTextContent('≈ R$ 480 por contratação')
-    expect(value()).toHaveTextContent('estimativa')
-    expect(value()).toHaveTextContent('3 módulos · 16 lições')
-    expect(value()).toHaveTextContent('~3 semanas a 5 min/dia')
-    expect(value()).toHaveTextContent('Cobre 2 de 4 competências da meta')
+    expect(calculator()).toHaveTextContent('9 h de treino substituídas')
+    expect(calculator()).toHaveTextContent('R$ 765 economizados')
+    expect(calculator()).toHaveTextContent('306 pts na jornada')
+    expect(calculator()).toHaveTextContent('até R$ 306 viram prêmios')
+  })
+
+  it('shows the rule it used, set in Recompensas', () => {
+    render(<JourneysShow />)
+
+    expect(calculator()).toHaveTextContent(
+      '1 h de treino = R$ 85 (gestor R$ 60 + pessoa R$ 25) · 34 pts/h — definido em Recompensas',
+    )
+    expect(within(calculator()).getByRole('link', { name: 'Recompensas' })).toHaveAttribute(
+      'href',
+      '/management/rewards',
+    )
+  })
+
+  it('keeps the study time and the goal coverage as a secondary line', () => {
+    render(<JourneysShow />)
+
+    expect(calculator()).toHaveTextContent('3 módulos · 16 lições · ~3 semanas a 5 min/dia')
+    expect(calculator()).toHaveTextContent('Cobre 2 de 4 competências da meta')
+  })
+
+  it('edits the hours each content replaces and recalculates the journey', async () => {
+    render(<JourneysShow />)
+
+    expect(within(preview()).getByText('204 pts')).toBeInTheDocument()
+    const hours = screen.getByRole('spinbutton', { name: 'Horas de treino de Rotinas' })
+    expect(hours).toHaveValue(6)
+    await userEvent.clear(hours)
+    await userEvent.type(hours, '2')
+
+    expect(within(preview()).getByText('68 pts')).toBeInTheDocument()
+    expect(calculator()).toHaveTextContent('8 h de treino substituídas')
+    expect(calculator()).toHaveTextContent('272 pts na jornada')
+  })
+
+  it('lets the admin type the points of a content, and clear them back to the rule', async () => {
+    render(<JourneysShow />)
+
+    const manual = screen.getByRole('spinbutton', { name: 'Pontos manuais de Rotinas' })
+    await userEvent.type(manual, '100')
+
+    expect(within(preview()).getByText('100 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('manual')).toBeInTheDocument()
+    expect(calculator()).toHaveTextContent('304 pts na jornada')
+
+    await userEvent.clear(manual)
+
+    expect(within(preview()).queryByText('manual')).not.toBeInTheDocument()
+    expect(calculator()).toHaveTextContent('408 pts na jornada')
   })
 
   it('shows the single ordered path the participant follows, ending in the badge', () => {
@@ -113,7 +164,8 @@ describe('JourneysShow (montador de jornada)', () => {
 
     expect(screen.queryByRole('button', { name: 'Setor' })).not.toBeInTheDocument()
     expect(stops()).toEqual(['Conversa Clara', 'Matemática', 'Rotinas', 'Tratamento de Reclamações'])
-    expect(value()).toHaveTextContent('4 módulos · 22 lições')
+    expect(calculator()).toHaveTextContent('4 módulos · 22 lições')
+    expect(calculator()).toHaveTextContent('17 h de treino substituídas')
     expect(
       screen.getByRole('button', { name: 'Tratamento de Reclamações já está na jornada' }),
     ).toBeDisabled()
@@ -125,7 +177,8 @@ describe('JourneysShow (montador de jornada)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Remover Rotinas' }))
 
     expect(stops()).toEqual(['Conversa Clara', 'Matemática'])
-    expect(value()).toHaveTextContent('Substitui ~6h')
+    expect(calculator()).toHaveTextContent('6 h de treino substituídas')
+    expect(calculator()).toHaveTextContent('204 pts na jornada')
     expect(screen.getByRole('button', { name: 'Adicionar Rotinas' })).toBeEnabled()
   })
 
@@ -135,13 +188,14 @@ describe('JourneysShow (montador de jornada)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Descer Matemática' }))
 
     expect(stops()).toEqual(['Conversa Clara', 'Rotinas', 'Matemática'])
+    expect(calculator()).toHaveTextContent('408 pts na jornada')
   })
 
   it('starts over with the ready-made Base Nivela on a base journey', async () => {
     render(<JourneysShow />)
 
     const ready = within(screen.getByRole('region', { name: 'Usar a Base Nivela pronta' }))
-    expect(ready.getByText(/3 módulos · ~9h de repasse/)).toBeInTheDocument()
+    expect(ready.getByText(/3 módulos · ~9 h de treino \(R\$ 765\)/)).toBeInTheDocument()
     await userEvent.click(ready.getByRole('button', { name: 'Usar a Base Nivela pronta' }))
 
     expect(stops()).toEqual(['Conversa Clara', 'Matemática', 'Postura e Empatia'])
@@ -168,7 +222,9 @@ describe('JourneysShow (montador de jornada)', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /Publicar alterações/ }))
 
-    expect(screen.getByRole('status')).toHaveTextContent('simulação')
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Alterações publicadas: 408 pts na jornada (simulação).',
+    )
   })
 
   it('changes who receives the journey to specific people', async () => {

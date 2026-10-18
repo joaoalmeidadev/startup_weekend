@@ -156,6 +156,7 @@ export type JourneyBuilderProps = {
   start_ready: boolean
   audience_options: AudienceOption[]
   people: string[]
+  points_rule: PointsRule
 }
 
 export type NewJourneyProps = { audience_options: AudienceOption[]; people: string[] }

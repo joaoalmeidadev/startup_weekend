@@ -249,6 +249,15 @@ const aiModule = (id: string, name: string, overrides: ModuleOverrides = {}) =>
 const companyModule = (id: string, name: string, overrides: ModuleOverrides = {}) =>
   mod(id, name, { source: 'company', stretch: 'sector', teaching_hours: 5, ...overrides })
 
+const tratamentoDeReclamacoes = companyModule('tratamento-de-reclamacoes', 'Tratamento de Reclamações', {
+  lessons: 6,
+  competency: 'Reclamações',
+})
+const usoDoSistema = companyModule('uso-do-sistema', 'Uso do Sistema', {
+  teaching_hours: 4,
+  competency: 'Sistema',
+})
+
 export const catalog: CatalogGroup[] = [
   {
     source: 'nivela',
@@ -272,9 +281,20 @@ export const catalog: CatalogGroup[] = [
   {
     source: 'company',
     title: 'Produtos da empresa',
-    modules: [companyModule('tratamento-de-reclamacoes', 'Tratamento de Reclamações', { lessons: 6 })],
+    modules: [tratamentoDeReclamacoes],
   },
 ]
+
+// Atendimento na prática as the seeds have it: 5 h + 4 h of in-person training replaced
+export const serviceJourney: Journey = {
+  ...journey,
+  id: 'atendimento-na-pratica',
+  name: 'Atendimento na prática',
+  kind: 'sector',
+  audience: { type: 'sectors', names: ['Atendimento'] },
+  badge: 'Nivelado em Atendimento',
+  modules: [tratamentoDeReclamacoes, usoDoSistema],
+}
 
 export const journeyGoal: JourneyGoal = {
   sector: 'Atendimento',
@@ -285,7 +305,7 @@ export const journeyGoal: JourneyGoal = {
 export const contentLibrary: ModuleSummary[] = [
   rotinas,
   conversaClara,
-  companyModule('uso-do-sistema', 'Uso do Sistema'),
+  usoDoSistema,
   mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }),
 ]
 
