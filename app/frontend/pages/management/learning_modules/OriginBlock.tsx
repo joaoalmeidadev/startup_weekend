@@ -1,6 +1,8 @@
 import { Icon } from '@/components/Icon'
 import { SOURCES } from '@/components/SourceBadge'
-import { FIELD, FormBlock } from './FormBlock'
+import type { CompetencyGroup } from '@/types/management'
+import { CompetencyField } from './CompetencyField'
+import { FormBlock } from './FormBlock'
 import type { ContentDraft, Origin } from './contentDraft'
 
 const ORIGINS: { value: Origin; title: string; hint: string }[] = [
@@ -14,7 +16,7 @@ const ORIGINS: { value: Origin; title: string; hint: string }[] = [
 
 type OriginBlockProps = {
   draft: ContentDraft
-  competencies: string[]
+  competencyGroups: CompetencyGroup[]
   onChange: (draft: ContentDraft) => void
 }
 
@@ -51,7 +53,7 @@ function OriginCard({
 }
 
 // Where the content comes from and which competency it trains
-export function OriginBlock({ draft, competencies, onChange }: OriginBlockProps) {
+export function OriginBlock({ draft, competencyGroups, onChange }: OriginBlockProps) {
   return (
     <FormBlock id="origin-block" title="De onde vem">
       <div role="radiogroup" aria-label="Origem" className="grid grid-cols-1 gap-space-md md:grid-cols-2">
@@ -64,22 +66,7 @@ export function OriginBlock({ draft, competencies, onChange }: OriginBlockProps)
           />
         ))}
       </div>
-      <div className="flex flex-col gap-space-xs">
-        <label htmlFor="content-competency" className="text-label-lg text-on-surface">
-          Competência
-        </label>
-        <select
-          id="content-competency"
-          value={draft.competency}
-          onChange={(event) => onChange({ ...draft, competency: event.target.value })}
-          className={FIELD}
-        >
-          <option value="">Escolha a competência treinada</option>
-          {competencies.map((competency) => (
-            <option key={competency}>{competency}</option>
-          ))}
-        </select>
-      </div>
+      <CompetencyField draft={draft} groups={competencyGroups} onChange={onChange} />
       <p className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
         <Icon name={SOURCES.nivela.icon} className="text-[1.125rem] text-primary" />
         Produtos Nivela já vêm prontos na Biblioteca — não precisa cadastrar.

@@ -10,8 +10,22 @@ module Management
       {
         journey: @journey&.slice(:id, :name),
         generated: {lessons: 8, review_path: Rails.application.routes.url_helpers.management_lesson_review_path(1)},
-        competencies: ModuleCatalog.all.pluck(:competency).uniq.sort
+        competency_groups: competency_groups
       }
+    end
+
+    private
+
+    # The goal competencies of each sector and group first, so the content counts towards a goal,
+    # then the other competencies already used in the library
+    def competency_groups
+      goals = SectorCatalog.all.map do |sector|
+        label = (sector[:kind] == "group") ? "#{sector[:name]} (grupo)" : sector[:name]
+        {label: label, competencies: sector[:competencies].map(&:first)}
+      end
+      in_goals = goals.flat_map { |group| group[:competencies] }
+      others = ModuleCatalog.all.pluck(:competency).uniq.sort - in_goals
+      goals + [{label: "Outras da Biblioteca", competencies: others}]
     end
   end
 end

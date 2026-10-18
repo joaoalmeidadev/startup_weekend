@@ -4,6 +4,7 @@ import { LessonsEditor } from './LessonsEditor'
 import { withMaterial, type ContentDraft, type Material } from './contentDraft'
 
 const SAMPLE_NAME = 'Rotinas de atendimento'
+const SAMPLE_COMPETENCY = 'Rotinas'
 const MATERIALS: { value: Material; label: string }[] = [
   { value: 'file', label: 'Enviar arquivo' },
   { value: 'lessons', label: 'Escrever as lições' },
@@ -36,7 +37,12 @@ function MaterialChoice({ draft, onChange }: BlockProps) {
 // What the content is: its name and the material it is made of
 export function ContentBlock({ draft, onChange }: BlockProps) {
   const pickSample = () =>
-    onChange({ ...draft, fileName: SAMPLE_FILE, name: draft.name.trim() ? draft.name : SAMPLE_NAME })
+    onChange({
+      ...draft,
+      fileName: SAMPLE_FILE,
+      name: draft.name.trim() ? draft.name : SAMPLE_NAME,
+      competency: draft.competency || SAMPLE_COMPETENCY,
+    })
 
   return (
     <FormBlock id="content-block" title="Conteúdo">

@@ -117,8 +117,10 @@ export type PersonDetail = Person & {
 export type NewModuleProps = {
   journey: { id: string; name: string } | null
   generated: { lessons: number; review_path: string }
-  competencies: string[]
+  competency_groups: CompetencyGroup[]
 }
+
+export type CompetencyGroup = { label: string; competencies: string[] }
 
 export type TeamDashboard = {
   sector: string

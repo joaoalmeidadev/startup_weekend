@@ -13,7 +13,11 @@ function renderForm(props: { journey?: typeof journey | null } = {}) {
   page.props = {
     journey: props.journey ?? null,
     generated: { lessons: 8, review_path: '/management/lesson_reviews/1' },
-    competencies: ['Comunicação clara', 'Rotinas da Distribuidora'],
+    competency_groups: [
+      { label: 'Atendimento', competencies: ['Comunicação', 'Reclamações'] },
+      { label: 'Staff (grupo)', competencies: ['Colaboração'] },
+      { label: 'Outras da Biblioteca', competencies: ['Rotinas'] },
+    ],
     manager,
   }
   render(<LearningModulesNew />)
@@ -21,6 +25,7 @@ function renderForm(props: { journey?: typeof journey | null } = {}) {
 
 const writeLessons = () => userEvent.click(screen.getByRole('radio', { name: /Escrever as lições/ }))
 const typeName = (name: string) => userEvent.type(screen.getByLabelText('Nome do conteúdo'), name)
+const pickCompetency = (name: string) => userEvent.selectOptions(screen.getByLabelText('Competência'), name)
 
 describe('LearningModulesNew', () => {
   beforeEach(() => {
@@ -60,12 +65,49 @@ describe('LearningModulesNew', () => {
     expect(screen.getByText(/Produtos Nivela já vêm prontos na Biblioteca/)).toBeInTheDocument()
   })
 
-  it('offers the library competencies', () => {
+  it('offers the goal competencies grouped by sector, then the others of the library', () => {
     renderForm()
 
     const select = within(screen.getByLabelText('Competência'))
-    expect(select.getByRole('option', { name: 'Rotinas da Distribuidora' })).toBeInTheDocument()
-    expect(select.getByRole('option', { name: 'Comunicação clara' })).toBeInTheDocument()
+    expect(
+      within(select.getByRole('group', { name: 'Atendimento' }))
+        .getAllByRole('option')
+        .map((o) => o.textContent),
+    ).toEqual(['Comunicação', 'Reclamações'])
+    expect(
+      within(select.getByRole('group', { name: 'Outras da Biblioteca' })).getByRole('option', {
+        name: 'Rotinas',
+      }),
+    ).toBeInTheDocument()
+    expect(select.getByRole('option', { name: '+ Nova competência' })).toBeInTheDocument()
+  })
+
+  it('needs the competency before saving', async () => {
+    renderForm()
+    await writeLessons()
+    await typeName('Trocas')
+    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+
+    const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
+    expect(save).toBeDisabled()
+    await pickCompetency('Comunicação')
+    expect(save).toBeEnabled()
+  })
+
+  it('creates a new competency in a single word', async () => {
+    renderForm()
+    await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
+    await pickCompetency('+ Nova competência')
+
+    const create = screen.getByRole('button', { name: /Criar lições com IA/ })
+    expect(create).toBeDisabled()
+    await userEvent.type(screen.getByLabelText('Nova competência'), 'Boa vontade')
+    expect(screen.getByText('Use uma palavra só, ex.: Pontualidade.')).toBeInTheDocument()
+    expect(create).toBeDisabled()
+
+    await userEvent.clear(screen.getByLabelText('Nova competência'))
+    await userEvent.type(screen.getByLabelText('Nova competência'), 'Pontualidade')
+    expect(create).toBeEnabled()
   })
 
   it('starts by sending a file to the AI, which needs a name and a file', async () => {
@@ -78,6 +120,7 @@ describe('LearningModulesNew', () => {
     await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
     expect(screen.getByText('Manual de SAC.pdf')).toBeInTheDocument()
     expect(screen.getByLabelText('Nome do conteúdo')).toHaveValue('Rotinas de atendimento')
+    expect(screen.getByLabelText('Competência')).toHaveValue('Rotinas')
     expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeEnabled()
 
     await userEvent.clear(screen.getByLabelText('Nome do conteúdo'))
@@ -118,6 +161,7 @@ describe('LearningModulesNew', () => {
 
     const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
     await typeName('Trocas')
+    await pickCompetency('Comunicação')
     expect(save).toBeDisabled()
     await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
     await userEvent.click(save)
@@ -133,6 +177,7 @@ describe('LearningModulesNew', () => {
     await writeLessons()
 
     await typeName('Trocas')
+    await pickCompetency('Comunicação')
     await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
     await userEvent.click(screen.getByRole('button', { name: /Salvar na Biblioteca/ }))
 
@@ -145,6 +190,7 @@ describe('LearningModulesNew', () => {
 
     await userEvent.click(screen.getByRole('radio', { name: /Produto da empresa/ }))
     await typeName('Trocas')
+    await pickCompetency('Comunicação')
     expect(screen.getByRole('button', { name: /Salvar na Biblioteca/ })).toBeDisabled()
 
     await userEvent.upload(

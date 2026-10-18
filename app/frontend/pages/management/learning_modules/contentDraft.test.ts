@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { canSubmit, emptyDraft, withMaterial, type ContentDraft } from './contentDraft'
+import {
+  canSubmit,
+  chosenCompetency,
+  emptyDraft,
+  NEW_COMPETENCY,
+  withMaterial,
+  type ContentDraft,
+} from './contentDraft'
 
 const draft = (overrides: Partial<ContentDraft>): ContentDraft => ({
   ...emptyDraft(),
   name: 'Trocas',
+  competency: 'Comunicação',
   ...overrides,
 })
 
@@ -33,5 +41,19 @@ describe('contentDraft', () => {
       draft({ origin: 'company', material: 'lessons', lessons: [{ title, text: '' }] })
     expect(canSubmit(lessons(' '))).toBe(false)
     expect(canSubmit(lessons('Um'))).toBe(true)
+  })
+
+  it('needs the competency the content trains', () => {
+    expect(canSubmit(draft({ fileName: 'a.pdf', competency: '' }))).toBe(false)
+  })
+
+  it('accepts a new competency written as a single word', () => {
+    const fresh = (newCompetency: string) =>
+      draft({ fileName: 'a.pdf', competency: NEW_COMPETENCY, newCompetency })
+
+    expect(chosenCompetency(fresh(' Pontualidade '))).toBe('Pontualidade')
+    expect(canSubmit(fresh('Pontualidade'))).toBe(true)
+    expect(canSubmit(fresh('Boa vontade'))).toBe(false)
+    expect(canSubmit(fresh(''))).toBe(false)
   })
 })

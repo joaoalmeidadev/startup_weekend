@@ -9,7 +9,11 @@ export type ContentDraft = {
   lessons: DraftLesson[]
   origin: Origin
   competency: string
+  newCompetency: string
 }
+
+// The option that lets the manager type a competency that is not in any goal yet
+export const NEW_COMPETENCY = 'new'
 
 const ORIGIN_FOR: Record<Material, Origin> = { file: 'ai', lessons: 'company' }
 
@@ -23,6 +27,7 @@ export function emptyDraft(): ContentDraft {
     lessons: [emptyLesson()],
     origin: 'ai',
     competency: '',
+    newCompetency: '',
   }
 }
 
@@ -40,6 +45,12 @@ function hasMaterial(draft: ContentDraft) {
   return draft.origin === 'company' && draft.lessons.some((lesson) => lesson.title.trim() !== '')
 }
 
+export const isSingleWord = (text: string) => /^\p{L}+$/u.test(text)
+
+export function chosenCompetency(draft: ContentDraft) {
+  return draft.competency === NEW_COMPETENCY ? draft.newCompetency.trim() : draft.competency
+}
+
 export function canSubmit(draft: ContentDraft) {
-  return draft.name.trim() !== '' && hasMaterial(draft)
+  return draft.name.trim() !== '' && hasMaterial(draft) && isSingleWord(chosenCompetency(draft))
 }

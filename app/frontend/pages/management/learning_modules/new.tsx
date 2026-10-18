@@ -30,7 +30,7 @@ function BackLink({ journey }: Pick<NewModuleProps, 'journey'>) {
 }
 
 // The library keeps what exists; who receives it is decided in the journeys
-function NewContentForm({ journey, generated, competencies }: NewModuleProps) {
+function NewContentForm({ journey, generated, competency_groups: competencyGroups }: NewModuleProps) {
   const notify = useMockNotice()
   const [draft, setDraft] = useState(emptyDraft)
   const [phase, setPhase] = useState<Phase>('form')
@@ -58,7 +58,7 @@ function NewContentForm({ journey, generated, competencies }: NewModuleProps) {
   return (
     <>
       <ContentBlock draft={draft} onChange={setDraft} />
-      <OriginBlock draft={draft} competencies={competencies} onChange={setDraft} />
+      <OriginBlock draft={draft} competencyGroups={competencyGroups} onChange={setDraft} />
       <SubmitArea draft={draft} onSubmit={submit} />
     </>
   )
