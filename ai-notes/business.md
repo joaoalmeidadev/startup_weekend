@@ -15,7 +15,7 @@
 
 ## Problema
 
-- Diploma não garante base: mais de 50% das empresas relatam funcionários com problemas em contas e escrita básicas.
+- Diploma não garante base: na nossa pesquisa (16 empresas), metade teve funcionário com dificuldade em tarefa básica no último ano, e em 62% o problema aparece toda semana ou todo mês (ver `pesquisa-validacao.md`).
 - A formação não ensina as soft skills que o trabalho cobra (comunicação, postura, trabalho em equipe).
 - Hoje o nivelamento é improvisado: o veterano ensina o novato do jeito dele, a cultura se perde e ninguém mede se funcionou.
 
@@ -63,7 +63,7 @@ O padrão da sua empresa em cada colaborador, com prova de que ele chegou lá.
 
 | Data | Com quem | O que aprendemos |
 | --- | --- | --- |
-| | | |
+| 2026-10-17 | 16 empresas (formulário) | Metade teve o problema no último ano; 62% veem toda semana/mês; retrabalho em 56%; gestor corrige na hora; ninguém mede o custo; 11 de 16 topam conversar. Detalhes em `pesquisa-validacao.md` |
 
 ## MVP
 
@@ -92,7 +92,7 @@ O padrão da sua empresa em cada colaborador, com prova de que ele chegou lá.
 
 ## Pitch
 
-- **Gancho / abertura:** mais da metade das empresas tem funcionário com dificuldade em contas e escrita básicas.
+- **Gancho / abertura:** das 16 empresas que ouvimos, em 62% o problema aparece toda semana ou todo mês — e a solução de hoje é o gestor corrigir na hora.
 - **Problema:** diploma não garante base, e o nivelamento hoje é improvisado e não é medido.
 - **Solução + demo:** jornada Base → Empresa → Setor; demo do colaborador e do RH.
 - **Mercado:** PMEs com contratação operacional.

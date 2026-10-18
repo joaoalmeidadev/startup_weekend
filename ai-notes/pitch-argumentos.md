@@ -76,6 +76,12 @@ Versão curta (para fechar): **"Grave uma vez. Nivele todos. Pague uma vez."**
 
 ---
 
+## 3b. O que a nossa pesquisa confirma (16 empresas — `pesquisa-validacao.md`)
+- Em **62%** o problema aparece **toda semana ou todo mês**; ninguém respondeu "nunca".
+- A consequência mais citada é **retrabalho (56%)**; a solução de hoje é **o gestor corrigir na hora**.
+- Quem gastou, gastou **R$ 6–12 mil no ano** em treinamento e horas de gestor — e a maioria **não sabe medir**.
+- **11 de 16** deixaram contato para conversar: é a fila de pilotos.
+
 ## 4. Frases prontas para o palco
 - "O mesmo treinamento é pago três vezes: na hora do veterano, no curso de fora e no erro do novato."
 - "Cada vez que um veterano para para ensinar, a empresa paga duas horas por uma."
@@ -83,6 +89,8 @@ Versão curta (para fechar): **"Grave uma vez. Nivele todos. Pague uma vez."**
 - "Hoje ninguém sabe se o novato aprendeu: descobre quando ele erra. Com a Nivela, você vê antes."
 - "A meta não é uma prova genérica: é o nível dos seus melhores funcionários."
 - "Grave uma vez. Nivele todos. Pague uma vez."
+- "Ouvimos 16 empresas: em 62% isso acontece toda semana ou todo mês. E a solução de hoje é o gestor parar o que está fazendo para corrigir."
+- "Perguntamos quanto isso custa. A resposta mais comum foi: 'não sei medir'. A Nivela mede."
 
 ## 5. Perguntas difíceis (e respostas curtas)
 - **"Já temos um LMS / plataforma de cursos."** → LMS distribui curso; a Nivela **cria** o conteúdo a partir do
@@ -103,7 +111,7 @@ Versão curta (para fechar): **"Grave uma vez. Nivele todos. Pague uma vez."**
 ## 6. O que validar antes de subir (lista rápida)
 - [ ] Perguntar a 1–2 RHs: quantas contratações/ano, quantas horas o veterano e o gestor gastam por novato, quanto
       gastam com curso de fora, quanto tempo o novato leva para render.
-- [ ] Achar uma fonte confiável para o "mais de 50% das empresas" (dado da sua pesquisa) e, se possível, um dado de
+- [x] Fonte da pesquisa: `pesquisa-validacao.md` — use "metade das 16 empresas" e "62% toda semana ou todo mês" (não "mais de 50%"). Se possível, um dado de
       mercado sobre o custo de integração/turnover. **Não citar número sem fonte.**
 - [ ] Fechar o preço de referência (R$ 15/colaborador/mês é premissa).
 - [ ] Trocar os números da tabela pelos reais, se conseguir; senão, dizer "numa empresa típica, pelas nossas contas".

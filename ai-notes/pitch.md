@@ -4,7 +4,9 @@
 > Antes de subir: `make dev` rodando, `bin/rails db:seed`, abas abertas já logadas (ver "Preparação").
 
 ## 1. Abertura falada (30s)
-"Quem aqui já foi o 'veterano' que teve que explicar tudo de novo para o novato? Toda vez que entra alguém,
+"Ouvimos 16 empresas na última semana. Em 62% delas, funcionário com dificuldade em coisa básica — interpretar uma
+instrução, escrever para o cliente, resolver um problema simples — aparece toda semana ou todo mês. E sabe o que elas
+fazem? O gestor para o que está fazendo e corrige. Quem aqui já foi o 'veterano' que teve que explicar tudo de novo para o novato? Toda vez que entra alguém,
 alguém para o que está fazendo para ensinar. O mesmo treinamento, repetido de pessoa para pessoa — e o gestor
 perde horas nisso todo mês. Pior: cada um aprende de um jeito, e ninguém mede se aprendeu."
 
@@ -35,6 +37,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 7. Troque o período para **Últimos 30 dias**. "O gestor acompanha a evolução sem perguntar a ninguém."
 
 ## 4. Modelo e pedido (45s)
+- Tração: **16 empresas responderam a pesquisa e 11 aceitaram conversar** — é a fila de pilotos.
 - SaaS B2B: assinatura por colaborador ativo/mês.
 - Próximo passo: **empresas piloto** com alta contratação operacional (atendimento, logística, varejo).
 - "Se a sua empresa repete o mesmo treinamento todo mês, fale comigo hoje."
