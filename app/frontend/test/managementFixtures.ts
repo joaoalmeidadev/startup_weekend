@@ -1,4 +1,5 @@
 import type {
+  RewardsProps,
   AudienceOption,
   CatalogGroup,
   Journey,
@@ -432,4 +433,32 @@ export const newSectorProps: NewSectorProps = {
     },
     { name: 'Raciocínio', icon: 'psychology', experts_average: null, goal: null, reached: null },
   ],
+}
+
+const reward = (id: string, name: string, icon: string, category: string, cost: number, points: number) => ({
+  id,
+  name,
+  icon,
+  category,
+  cost,
+  points,
+  stock: null,
+})
+
+export const rewardsProps: RewardsProps = {
+  rule: { point_value: 1.2, share: 0.4, min_points: 30, hourly_cost: 40 },
+  rewards: [
+    { ...reward('caneca-nivela', 'Caneca Nivela', 'coffee', 'Brinde', 25, 53), stock: 20 },
+    reward('dia-de-folga', 'Dia de folga', 'beach_access', 'Folga', 150, 313),
+  ],
+  ideas: [reward('almoco-com-o-gestor', 'Almoço com o gestor', 'restaurant', 'Experiência', 60, 125)],
+  redemptions: [
+    {
+      person: { id: 'maria-souza', name: 'Maria Souza', avatar_url: null },
+      reward: 'Vale-lanche',
+      date: '02/10',
+      points: 63,
+    },
+  ],
+  month: { spent: 120, saved: 1200 },
 }

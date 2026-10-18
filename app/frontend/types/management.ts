@@ -190,3 +190,31 @@ export type SectorDetail = {
 export type SectorCandidate = Pick<Person, 'id' | 'name' | 'sector' | 'avatar_url'>
 
 export type NewSectorProps = { people: SectorCandidate[]; levels: GoalLevel[]; competencies: Competency[] }
+
+// Rewards: a point is worth `point_value` R$ of in-person training saved; a reward gives back at most `share` of it
+export type RewardRule = { point_value: number; share: number; min_points: number; hourly_cost: number }
+
+export type Reward = {
+  id: string
+  name: string
+  icon: string
+  category: string
+  cost: number
+  points: number
+  stock: number | null
+}
+
+export type Redemption = {
+  person: { id: string; name: string; avatar_url: string | null }
+  reward: string
+  date: string
+  points: number
+}
+
+export type RewardsProps = {
+  rule: RewardRule
+  rewards: Reward[]
+  ideas: Reward[]
+  redemptions: Redemption[]
+  month: { spent: number; saved: number }
+}

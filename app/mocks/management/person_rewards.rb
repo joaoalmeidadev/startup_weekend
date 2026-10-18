@@ -1,10 +1,10 @@
 module Management
-  # The badge, milestones and rewards of one person; the rewards catalog itself is still empty (Recompensas tab)
+  # The badge, milestones and rewards of one person (rewards from the RewardCatalog)
   class PersonRewards
+    # What each kind of person already traded points for, priced by the RewardCatalog rule
     REDEEMED = {
-      "leveled" => [{name: "Folga de meio período", date: "12/09", points: 300},
-        {name: "Vale-lanche R$ 30", date: "28/08", points: 150}],
-      "on_track" => [{name: "Vale-lanche R$ 30", date: "02/10", points: 150}],
+      "leveled" => [["Meio período de folga", "12/09"], ["Vale-lanche", "28/08"]],
+      "on_track" => [["Vale-lanche", "02/10"]],
       "late" => []
     }.freeze
     BADGE_DATE = "14/08"
@@ -25,7 +25,9 @@ module Management
     end
 
     def rewards
-      redeemed = REDEEMED.fetch(@person[:status])
+      redeemed = REDEEMED.fetch(@person[:status]).map do |name, date|
+        {name: name, date: date, points: RewardCatalog.find(name)[:points]}
+      end
       {points: @study.points, balance: @study.points - redeemed.sum { |reward| reward[:points] }, redeemed: redeemed}
     end
 
