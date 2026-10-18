@@ -153,7 +153,10 @@ const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleS
   ...overrides,
 })
 
-const conversaClara = mod('conversa-clara', 'Conversa Clara', { competency: 'Comunicação' })
+const conversaClara = mod('conversa-clara', 'Conversa Clara', {
+  competency: 'Comunicação',
+  research_share: 44,
+})
 const matematica = mod('matematica', 'Matemática')
 const rotinas = mod('rotinas-de-atendimento', 'Rotinas', {
   status: 'in_review',

@@ -1,5 +1,4 @@
 import { Icon } from '@/components/Icon'
-import { ResearchShare } from '@/components/ResearchShare'
 import { SourceBadge } from '@/components/SourceBadge'
 import type { CatalogGroup, ModuleSummary } from '@/types/management'
 
@@ -21,7 +20,6 @@ function CatalogItem({ module, added, onAdd }: CatalogItemProps) {
         <span className="text-body-sm text-on-surface-variant">
           {module.lessons} lições · substitui ~{module.teaching_hours}h
         </span>
-        <ResearchShare share={module.research_share} />
       </span>
       <button
         type="button"

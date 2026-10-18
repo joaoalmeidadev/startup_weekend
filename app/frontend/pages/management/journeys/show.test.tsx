@@ -242,4 +242,10 @@ describe('JourneysShow (montador de jornada)', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('(simulação)')
   })
+
+  it('keeps the library in the builder free of survey shares', () => {
+    render(<JourneysShow />)
+
+    expect(screen.queryByText(/Citado por/)).not.toBeInTheDocument()
+  })
 })
