@@ -4,17 +4,17 @@ module Management
   class TeamDashboardMock
     PERIODS = {
       "30d" => {
-        label: "30 dias", change: 7, days_to_level: 38, gain: [52, 71], new_hires: 2,
+        label: "30 dias", months: 1, rework: 9, change: 7, days_to_level: 38, gain: [52, 71], new_hires: 2,
         over_time: [["sem 1", 50], ["sem 2", 52], ["sem 3", 55], ["sem 4", 57]],
         retention: [88, "11 de 14", 6]
       },
       "90d" => {
-        label: "90 dias", change: 21, days_to_level: 41, gain: [50, 76], new_hires: 5,
+        label: "90 dias", months: 3, rework: 22, change: 21, days_to_level: 41, gain: [50, 76], new_hires: 5,
         over_time: [["ago", 36], ["set", 45], ["out", 57]],
         retention: [86, "10 de 14", 6]
       },
       "6m" => {
-        label: "6 meses", change: 43, days_to_level: 46, gain: [48, 79], new_hires: 9,
+        label: "6 meses", months: 6, rework: 39, change: 43, days_to_level: 46, gain: [48, 79], new_hires: 9,
         over_time: [["mai", 14], ["jun", 21], ["jul", 29], ["ago", 36], ["set", 45], ["out", 57]],
         retention: [86, "9 de 14", 5]
       }
@@ -23,6 +23,7 @@ module Management
     # Hand-off hours per new hire (same as the pitch); their cost comes from the admin's PointsRule
     HANDOFF_HOURS_PER_HIRE = 23
     DAYS_TO_LEVEL_BEFORE = 90
+    TEAM_SIZE = 14
 
     def initialize(period = nil)
       @period = PERIODS.key?(period) ? period : DEFAULT_PERIOD
@@ -34,12 +35,13 @@ module Management
         sector: "Atendimento",
         period: @period,
         periods: PERIODS.map { |key, data| {key: key, label: "Últimos #{data[:label]}"} },
-        leveled: {count: 8, total: 14, change: @data[:change], change_label: "em #{@data[:label]}"},
+        leveled: {count: 8, total: TEAM_SIZE, change: @data[:change], change_label: "em #{@data[:label]}"},
         leveled_over_time: @data[:over_time].map { |label, percent| {label: label, percent: percent} },
         company_target: 80,
         knowledge_gain: {before: @data[:gain].first, now: @data[:gain].last},
         time_to_level: {days: @data[:days_to_level], before_days: DAYS_TO_LEVEL_BEFORE},
         savings: savings,
+        return: net_return,
         retention: retention,
         competencies: competencies,
         on_the_job: on_the_job,
@@ -54,6 +56,11 @@ module Management
       rule = PointsRule.new
       {new_hires: @data[:new_hires], hours: hours,
        amount: rule.saved_with_learner(hours, average_learner_hourly(rule)), salaries: salaries}
+    end
+
+    def net_return
+      NetReturn.new(training_saved: savings[:amount], rework_count: @data[:rework], people: TEAM_SIZE,
+        months: @data[:months]).props
     end
 
     def retention

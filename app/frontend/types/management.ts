@@ -167,10 +167,23 @@ export type TeamDashboard = {
     // How many people had their salary informed on invite (used for the amount)
     salaries: { informed: number; total: number }
   }
+  return: NetReturn
   retention: { review_accuracy: number; active_weekly: string; minutes_per_day: number }
   competencies: { name: string; before: number; now: number; goal: number }[]
   on_the_job: { source: string; items: { label: string; before: number; now: number; unit: string }[] }
   study_share: { by_sector: StudyShareSlice[]; by_person: StudyShareSlice[] }
+}
+
+// What Nivela gave back in the period, in R$: savings minus rewards paid and the platform price
+export type NetReturn = {
+  training_saved: number
+  rework_count: number
+  rework_avoided: number
+  rewards_paid: number
+  platform_cost: number
+  balance: number
+  return_per_real: number
+  assumptions: { rework_cost: number; price_per_person: number; people: number; months: number }
 }
 
 // Training hours replaced by completed contents, for one sector or person (or "Outros")
