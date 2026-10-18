@@ -41,10 +41,10 @@ describe('RewardsShow', () => {
     expect(calculator().getByLabelText('Salário mensal de quem ensina (R$)')).toHaveValue(4400)
     expect(calculator().getByLabelText('Salário mensal de quem aprende (R$)')).toHaveValue(2200)
     expect(calculator().getByRole('radio', { name: 'Equilibrado · 40%' })).toBeChecked()
-    expect(calculator().getByLabelText('Horas de treino substituídas')).toHaveValue(6)
+    expect(calculator().getByLabelText('Horas de estudo')).toHaveValue(6)
     expect(calculator().getByText('1 h de treino presencial custa R$ 30')).toBeInTheDocument()
-    expect(calculator().getByText('12 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
-    expect(calculator().getByText('6 h de treino → R$ 180 economizados → 72 pts')).toBeInTheDocument()
+    expect(calculator().getByText('4 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('6 h de estudo → R$ 180 economizados → 24 pts')).toBeInTheDocument()
     expect(calculator().queryByRole('button', { name: /Salvar/ })).not.toBeInTheDocument()
   })
 
@@ -54,11 +54,11 @@ describe('RewardsShow', () => {
 
     await retype('Salário mensal de quem ensina (R$)', '6600')
     await userEvent.click(calculator().getByRole('radio', { name: 'Econômico · 20%' }))
-    await retype('Horas de treino substituídas', '3')
+    await retype('Horas de estudo', '3')
 
     expect(calculator().getByText('1 h de treino presencial custa R$ 40')).toBeInTheDocument()
-    expect(calculator().getByText('8 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
-    expect(calculator().getByText('3 h de treino → R$ 120 economizados → 24 pts')).toBeInTheDocument()
+    expect(calculator().getByText('2 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('3 h de estudo → R$ 120 economizados → 6 pts')).toBeInTheDocument()
   })
 
   it('takes a custom share of the saving', async () => {
@@ -68,8 +68,8 @@ describe('RewardsShow', () => {
     await userEvent.click(calculator().getByRole('radio', { name: 'Personalizar' }))
     await retype('Porcentagem que vira prêmio (%)', '50')
 
-    expect(calculator().getByText('15 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
-    expect(calculator().getByText('6 h de treino → R$ 180 economizados → 90 pts')).toBeInTheDocument()
+    expect(calculator().getByText('5 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('6 h de estudo → R$ 180 economizados → 30 pts')).toBeInTheDocument()
   })
 
   it('tells how much training a reward stands for', async () => {
@@ -78,9 +78,7 @@ describe('RewardsShow', () => {
 
     await retype('Custo do prêmio (R$)', '50')
 
-    expect(
-      calculator().getByText('Um prêmio de R$ 50 vale 50 pts ≈ 4,2 h de treino substituído'),
-    ).toBeInTheDocument()
+    expect(calculator().getByText('Um prêmio de R$ 50 vale 50 pts ≈ 12,5 h de estudo')).toBeInTheDocument()
   })
 
   it('leaves the catalog untouched and closes', async () => {
@@ -92,7 +90,7 @@ describe('RewardsShow', () => {
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     const mug = within(catalog().getByRole('article', { name: 'Caneca Nivela' }))
-    expect(mug.getByText('Equivale a ~2,1 h de treino substituído')).toBeInTheDocument()
+    expect(mug.getByText('Equivale a ~6,3 h de estudo')).toBeInTheDocument()
   })
 
   it('shows each reward with points, cost and the training it stands for', () => {
@@ -101,7 +99,7 @@ describe('RewardsShow', () => {
     const mug = within(catalog().getByRole('article', { name: 'Caneca Nivela' }))
     expect(mug.getByText('25 pts')).toBeInTheDocument()
     expect(mug.getByText('Custa R$ 25')).toBeInTheDocument()
-    expect(mug.getByText('Equivale a ~2,1 h de treino substituído')).toBeInTheDocument()
+    expect(mug.getByText('Equivale a ~6,3 h de estudo')).toBeInTheDocument()
     expect(mug.getByText('17 em estoque · 3 resgatados')).toBeInTheDocument()
     const shift = within(catalog().getByRole('article', { name: 'Escolher a escala da semana' }))
     expect(shift.getByText('40 pts')).toBeInTheDocument()
@@ -117,7 +115,7 @@ describe('RewardsShow', () => {
 
     const dialog = within(screen.getByRole('dialog'))
     expect(field('Pontos')).toHaveValue(68)
-    expect(dialog.getByText('Equivale a ~5,7 h de treino substituído')).toBeInTheDocument()
+    expect(dialog.getByText('Equivale a ~17 h de estudo')).toBeInTheDocument()
     expect(dialog.queryByText(/40%/)).not.toBeInTheDocument()
   })
 
@@ -161,9 +159,7 @@ describe('RewardsShow', () => {
     expect(field('Nome')).toHaveValue('Almoço com o gestor')
     expect(field('Custo (R$)')).toHaveValue(60)
     expect(field('Pontos')).toHaveValue(60)
-    expect(
-      within(screen.getByRole('dialog')).getByText('Equivale a ~5 h de treino substituído'),
-    ).toBeInTheDocument()
+    expect(within(screen.getByRole('dialog')).getByText('Equivale a ~15 h de estudo')).toBeInTheDocument()
   })
 
   it('lists the recent redemptions and the month spent against the training saved', () => {

@@ -65,10 +65,14 @@ RSpec.describe "Management people", :inertia do
       expect(inertia.props[:person][:study]).to include(saved: 6 * 30, salary_informed: false)
     end
 
-    it "keeps the points the same whatever the salary" do
+    it "prices the points with the person's own salary, or the sector value without one" do
       get management_person_path("maria-souza")
+      # 8 h studied × Maria's R$ 9,50/h × 40%
+      expect(inertia.props[:person][:rewards][:points]).to eq(30)
 
-      expect(inertia.props[:person][:rewards][:points]).to eq(8 * 12)
+      get management_person_path("bruna-costa")
+      # 6 h × the sector learner's R$ 10/h × 40%
+      expect(inertia.props[:person][:rewards][:points]).to eq(24)
     end
 
     it "compares the diagnostic with today in what the person has studied so far" do
@@ -92,8 +96,8 @@ RSpec.describe "Management people", :inertia do
       get management_person_path("maria-souza")
 
       rewards = inertia.props[:person][:rewards]
-      expect(rewards).to include(points: 96, balance: 66)
-      expect(rewards[:redeemed]).to eq([{"name" => "Vale-lanche", "date" => "02/10", "points" => 30}])
+      expect(rewards).to include(points: 30, balance: 5)
+      expect(rewards[:redeemed]).to eq([{"name" => "Caneca Nivela", "date" => "02/10", "points" => 25}])
     end
 
     it "shows the earned badge of a leveled person" do
@@ -102,9 +106,9 @@ RSpec.describe "Management people", :inertia do
       person = inertia.props[:person]
       expect(person[:badge]).to include(earned: true, date: "14/08")
       expect(person[:milestones]).to include("Concluiu a jornada Atendimento na prática", "Ganhou o selo Nivelado em Atendimento")
-      expect(person[:rewards][:redeemed].size).to eq(3)
-      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 130)
-      expect(person[:rewards]).to include(points: 276, balance: 146)
+      expect(person[:rewards][:redeemed].size).to eq(2)
+      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 55)
+      expect(person[:rewards]).to include(points: 110, balance: 55)
     end
 
     it "names the badge after the sector when no sector journey reaches the person" do

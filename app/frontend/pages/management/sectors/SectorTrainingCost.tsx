@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useMockNotice } from '@/components/MockNotice'
 import { TrainingCostFields, type TrainingCost } from '@/components/TrainingCostFields'
-import { pointsPerHour } from '@/lib/pointsRule'
 import type { PointsRule, SectorTrainingCost as Cost } from '@/types/management'
 import { Block } from './Block'
-import { hourText, sectorRule } from './trainingCostText'
+import { hourText, pointsText, sectorRule } from './trainingCostText'
 
 const salariesOf = ({ teacher_salary, learner_salary }: TrainingCost): TrainingCost => ({
   teacher_salary,
@@ -51,7 +50,7 @@ export function SectorTrainingCost({ sector, companyRule, trainingCost }: Props)
       </div>
       {own && <TrainingCostFields value={salaries} onChange={setSalaries} />}
       <div className="flex flex-col justify-between gap-space-md rounded-xl bg-surface-container-low p-space-md sm:flex-row sm:items-center">
-        <p className="text-label-lg text-primary">{`Neste setor, 1 h de treino vira ${pointsPerHour(rule)} pts`}</p>
+        <p className="text-label-lg text-primary">{`Neste setor, cada hora de estudo vira ${pointsText(rule)} pts para quem não informou o salário`}</p>
         <button
           type="button"
           onClick={() => notify(`Custo do treino de ${sector} salvo (simulação).`)}

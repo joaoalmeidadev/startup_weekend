@@ -4,12 +4,12 @@ import { Modal } from '@/components/Modal'
 import { useMockNotice } from '@/components/MockNotice'
 import { RewardSharePicker } from '@/components/RewardSharePicker'
 import { TrainingCostFields } from '@/components/TrainingCostFields'
-import { hourCost, pointsPerHour } from '@/lib/pointsRule'
+import { hourCost } from '@/lib/pointsRule'
 import type { PointsRule } from '@/types/management'
-import { reais, shareText } from './trainingCostText'
+import { pointsText, reais, shareText } from './trainingCostText'
 
 const summaryOf = (rule: PointsRule) =>
-  `1 h de treino custa ${reais(hourCost(rule))} → vira ${pointsPerHour(rule)} pts · ${shareText(rule.reward_share)}`
+  `1 h de treino custa ${reais(hourCost(rule))} · quem estuda ganha ${pointsText(rule)} pts por hora · ${shareText(rule.reward_share)}`
 
 type EditorProps = { rule: PointsRule; onSave: (rule: PointsRule) => void; onClose: () => void }
 
@@ -23,7 +23,7 @@ function CompanyRuleEditor({ rule, onSave, onClose }: EditorProps) {
         onChange={(share) => setDraft({ ...draft, reward_share: share })}
       />
       <p className="rounded-xl bg-surface-container-low p-space-md text-label-lg text-primary">
-        {`Cada hora de treino que a Nivela substitui vira ${pointsPerHour(draft)} pts`}
+        {`Cada hora de estudo vira ${pointsText(draft)} pts para quem ganha ${reais(draft.learner_salary)}`}
       </p>
       <div className="flex justify-end gap-space-sm">
         <button type="button" onClick={onClose} className="h-11 px-space-md text-label-lg text-primary">

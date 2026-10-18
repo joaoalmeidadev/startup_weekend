@@ -12,7 +12,7 @@ const FIELD =
 type WhatIf = { hours: string; cost: string }
 
 const WHAT_IF_FIELDS: { key: keyof WhatIf; label: string }[] = [
-  { key: 'hours', label: 'Horas de treino substituídas' },
+  { key: 'hours', label: 'Horas de estudo' },
   { key: 'cost', label: 'Custo do prêmio (R$)' },
 ]
 
@@ -25,10 +25,10 @@ function Results({ rule, whatIf }: { rule: PointsRule; whatIf: WhatIf }) {
   const rewardHours = hoursReplaced(cost, rule)
   return (
     <ul className="flex flex-col gap-1 rounded-xl bg-surface-container-low p-space-md text-body-md text-on-surface">
-      <li className="text-label-lg text-primary">{`${pointsPerHour(rule)} pts por hora para quem estuda (1 pt = R$ 1)`}</li>
-      <li>{`${whatIf.hours || 0} h de treino → ${brl(savedFor(hours, rule))} economizados → ${pointsFor(hours, rule)} pts`}</li>
+      <li className="text-label-lg text-primary">{`${pointsPerHour(rule).toLocaleString('pt-BR')} pts por hora para quem estuda (1 pt = R$ 1)`}</li>
+      <li>{`${whatIf.hours || 0} h de estudo → ${brl(savedFor(hours, rule))} economizados → ${pointsFor(hours, rule)} pts`}</li>
       {whatIf.cost !== '' && rewardHours && (
-        <li>{`Um prêmio de ${brl(cost)} vale ${cost} pts ≈ ${rewardHours} h de treino substituído`}</li>
+        <li>{`Um prêmio de ${brl(cost)} vale ${cost} pts ≈ ${rewardHours} h de estudo`}</li>
       )}
     </ul>
   )

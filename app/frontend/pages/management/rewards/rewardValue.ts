@@ -1,7 +1,7 @@
 import { pointsPerHour } from '@/lib/pointsRule'
 import type { PointsRule, Reward } from '@/types/management'
 
-// Hours of in-person training a reward's points stand for under the rule (null when the rule gives no points)
+// Hours of study a reward's points stand for under the rule (null when the rule gives no points)
 export function hoursReplaced(points: number, rule: PointsRule) {
   const perHour = pointsPerHour(rule)
   if (perHour <= 0) return null

@@ -37,9 +37,7 @@ export function RewardCard({ reward, rule }: { reward: Reward; rule: PointsRule 
       </div>
       <div className="flex flex-col gap-1 border-t border-surface-container-high pt-space-xs text-body-sm">
         <span className="text-on-surface">Custa {brl(reward.cost)}</span>
-        {hours && (
-          <span className="text-on-surface-variant">{`Equivale a ~${hours} h de treino substituído`}</span>
-        )}
+        {hours && <span className="text-on-surface-variant">{`Equivale a ~${hours} h de estudo`}</span>}
         <StockLine stock={reward.stock} redeemed={reward.redeemed} />
       </div>
     </article>

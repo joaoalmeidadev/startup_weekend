@@ -167,7 +167,9 @@ describe('SectorsShow', () => {
 
       expect(costBlock().getByRole('radio', { name: 'Usar o padrão da empresa (R$ 30/h)' })).toBeChecked()
       expect(costBlock().queryByLabelText('Salário mensal de quem ensina (R$)')).not.toBeInTheDocument()
-      expect(costBlock().getByText('Neste setor, 1 h de treino vira 12 pts')).toBeInTheDocument()
+      expect(
+        costBlock().getByText('Neste setor, cada hora de estudo vira 4 pts para quem não informou o salário'),
+      ).toBeInTheDocument()
     })
 
     it('gives the sector its own cost, starting from the company one', async () => {
@@ -181,7 +183,11 @@ describe('SectorsShow', () => {
       fireEvent.change(costBlock().getByLabelText('Salário mensal de quem aprende (R$)'), {
         target: { value: '1980' },
       })
-      expect(costBlock().getByText('Neste setor, 1 h de treino vira 11 pts')).toBeInTheDocument()
+      expect(
+        costBlock().getByText(
+          'Neste setor, cada hora de estudo vira 3,6 pts para quem não informou o salário',
+        ),
+      ).toBeInTheDocument()
 
       await userEvent.click(costBlock().getByRole('button', { name: 'Salvar' }))
       expect(screen.getByRole('status')).toHaveTextContent(
@@ -220,10 +226,16 @@ describe('SectorsShow', () => {
 
       expect(costBlock().getByRole('radio', { name: 'Valor próprio deste setor' })).toBeChecked()
       expect(costBlock().getByLabelText('Salário mensal de quem ensina (R$)')).toHaveValue(3960)
-      expect(costBlock().getByText('Neste setor, 1 h de treino vira 11 pts')).toBeInTheDocument()
+      expect(
+        costBlock().getByText(
+          'Neste setor, cada hora de estudo vira 3,6 pts para quem não informou o salário',
+        ),
+      ).toBeInTheDocument()
 
       await userEvent.click(costBlock().getByRole('radio', { name: /Usar o padrão da empresa/ }))
-      expect(costBlock().getByText('Neste setor, 1 h de treino vira 12 pts')).toBeInTheDocument()
+      expect(
+        costBlock().getByText('Neste setor, cada hora de estudo vira 4 pts para quem não informou o salário'),
+      ).toBeInTheDocument()
     })
 
     it('shows the rulers once a level is picked', async () => {

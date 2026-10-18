@@ -1,7 +1,8 @@
 module Management
-  # How study turns into points. One hour of in-person training costs the hour of who teaches plus the hour of
-  # who learns (monthly salary ÷ 220 h, no extra charges, so it stays conservative); the company's share of that
-  # saving becomes points (1 point = R$ 1 in rewards). A sector may have its own salaries (SectorCatalog).
+  # How study turns into savings and points. One hour of in-person training saves the hour of who teaches plus the
+  # hour of who learns (monthly salary ÷ 220 h, no extra charges, so it stays conservative). The learner earns
+  # points for the hours they study: their own hour × the company's share (1 point = R$ 1 in rewards).
+  # A sector may have its own salaries (SectorCatalog); a person's informed salary prices their own points.
   class PointsRule
     HOURS_PER_MONTH = 220
     DEFAULTS = {teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4}.freeze
@@ -35,9 +36,10 @@ module Management
 
     def saved_with_learner(hours, learner_hourly) = (hours * (teacher_hourly + learner_hourly)).round
 
-    def points_per_hour = (hour_cost * @rule[:reward_share]).round
+    # Points come from the learner's own hour (their salary when informed), never from who teaches
+    def points_per_hour(salary: nil) = (learner_hourly_for(salary) * @rule[:reward_share]).round(1)
 
-    def points_for(hours) = (hours * points_per_hour).round
+    def points_for(hours, salary: nil) = (hours * learner_hourly_for(salary) * @rule[:reward_share]).round
 
     def saved_for(hours) = (hours * hour_cost).round
 

@@ -18,25 +18,26 @@ RSpec.describe "Management rewards", :inertia do
       get management_rewards_path
 
       rewards = inertia.props[:rewards].index_by { |reward| reward[:name] }
-      expect(rewards["Caneca Nivela"]).to include(stock: 17, redeemed: 3)
+      expect(rewards["Caneca Nivela"]).to include(stock: 16, redeemed: 4)
       expect(rewards["Ingresso de cinema"]).to include(stock: 10, redeemed: 0)
-      expect(rewards["Vale-lanche"]).to include(stock: nil, redeemed: 7)
+      expect(rewards["Vale-lanche"]).to include(stock: nil, redeemed: 4)
     end
 
     it "lists the recent redemptions, newest first, with the person" do
       get management_rewards_path
 
       redemptions = inertia.props[:redemptions]
-      expect(redemptions.first).to include(reward: "Vale-lanche", date: "02/10", points: 30)
+      expect(redemptions.first).to include(date: "02/10")
       expect(redemptions.first[:person]).to include(:id, :name, :avatar_url)
-      expect(redemptions.pluck(:date).first(4)).to all(eq("02/10"))
+      expect(redemptions.pluck(:date).first(2)).to all(eq("02/10"))
+      expect(redemptions.pluck(:reward).first(2)).to contain_exactly("Vale-lanche", "Caneca Nivela")
     end
 
     it "compares the month spent on rewards with the training saved by whoever redeemed" do
       get management_rewards_path
 
       month = inertia.props[:month]
-      expect(month).to include(spent: 120, saved: 1020)
+      expect(month).to include(spent: 55, saved: 660)
       expect(month[:spent]).to be < month[:saved]
     end
   end

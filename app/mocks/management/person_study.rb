@@ -25,10 +25,10 @@ module Management
       minutes.positive? ? (minutes / 10).clamp(1, 7) : 0
     end
 
-    # Each completed module earns points for the in-person training hours it replaced, at the person's sector cost
+    # Hours studied × the person's own hour (their salary, or the sector's learner salary) × the company's share
     def points
       rule = PointsRule.for_sector(@person[:sector])
-      done_modules.sum { |mod| rule.points_for(mod[:teaching_hours]) }
+      rule.points_for(hours_done, salary: @person[:salary])
     end
 
     def hours_done = done_modules.sum { |mod| mod[:teaching_hours] }

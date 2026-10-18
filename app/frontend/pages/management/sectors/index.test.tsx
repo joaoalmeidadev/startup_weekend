@@ -67,7 +67,9 @@ describe('SectorsIndex', () => {
     render(<SectorsIndex />)
 
     expect(
-      companyCard().getByText('1 h de treino custa R$ 30 → vira 12 pts · Equilibrado (40%)'),
+      companyCard().getByText(
+        '1 h de treino custa R$ 30 · quem estuda ganha 4 pts por hora · Equilibrado (40%)',
+      ),
     ).toBeInTheDocument()
     expect(
       companyCard().getByText('Vale para todos os setores, menos os que têm valor próprio.'),
@@ -79,19 +81,21 @@ describe('SectorsIndex', () => {
 
     await userEvent.click(companyCard().getByRole('button', { name: 'Editar' }))
     const dialog = within(screen.getByRole('dialog', { name: 'Custo do treino da empresa' }))
-    expect(dialog.getByText('Cada hora de treino que a Nivela substitui vira 12 pts')).toBeInTheDocument()
+    expect(dialog.getByText('Cada hora de estudo vira 4 pts para quem ganha R$ 2.200')).toBeInTheDocument()
 
     fireEvent.change(dialog.getByLabelText('Salário mensal de quem ensina (R$)'), {
       target: { value: '6600' },
     })
     await userEvent.click(dialog.getByRole('radio', { name: 'Generoso · 60%' }))
-    expect(dialog.getByText('Cada hora de treino que a Nivela substitui vira 24 pts')).toBeInTheDocument()
+    expect(dialog.getByText('Cada hora de estudo vira 6 pts para quem ganha R$ 2.200')).toBeInTheDocument()
     await userEvent.click(dialog.getByRole('button', { name: 'Salvar' }))
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('Custo do treino salvo (simulação).')
     expect(
-      companyCard().getByText('1 h de treino custa R$ 40 → vira 24 pts · Generoso (60%)'),
+      companyCard().getByText(
+        '1 h de treino custa R$ 40 · quem estuda ganha 6 pts por hora · Generoso (60%)',
+      ),
     ).toBeInTheDocument()
   })
 

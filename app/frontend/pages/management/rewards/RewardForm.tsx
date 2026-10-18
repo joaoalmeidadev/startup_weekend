@@ -44,11 +44,7 @@ function RuleCheck({ cost, points, rule }: { cost: number; points: number; rule:
     )
   }
   const hours = hoursReplaced(points, rule)
-  return (
-    hours && (
-      <p className="text-body-sm text-on-surface-variant">{`Equivale a ~${hours} h de treino substituído`}</p>
-    )
-  )
+  return hours && <p className="text-body-sm text-on-surface-variant">{`Equivale a ~${hours} h de estudo`}</p>
 }
 
 type RewardFormProps = {

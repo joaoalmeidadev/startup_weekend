@@ -9,13 +9,18 @@ RSpec.describe Management::PointsRule do
     expect(rule.hour_cost).to eq(30)
   end
 
-  it "turns the company's share of that saving into points, 1 point = R$ 1 in rewards" do
-    expect(rule.points_per_hour).to eq(12)
-    expect(described_class.new(reward_share: 0.6).points_per_hour).to eq(18)
+  it "gives the learner points for each hour studied: their own hour × the company's share (1 pt = R$ 1)" do
+    expect(rule.points_per_hour).to eq(4)
+    expect(described_class.new(reward_share: 0.6).points_per_hour).to eq(6)
   end
 
-  it "prices a step by the hours of training it replaces" do
-    expect(rule.points_for(5)).to eq(60)
+  it "prices the hours studied with the learner's own salary when it was informed" do
+    expect(rule.points_for(5)).to eq(20)
+    expect(rule.points_for(8, salary: 2090)).to eq(30)
+    expect(rule.points_per_hour(salary: 2090)).to eq(3.8)
+  end
+
+  it "measures the saving with both hours, who teaches and who learns" do
     expect(rule.saved_for(9)).to eq(270)
   end
 
@@ -25,7 +30,7 @@ RSpec.describe Management::PointsRule do
 
   it "uses a sector's own salaries when it has them, and the company default otherwise" do
     expect(described_class.for_sector("Logística").hour_cost).to eq(27)
-    expect(described_class.for_sector("Logística").points_per_hour).to eq(11)
+    expect(described_class.for_sector("Logística").points_per_hour).to eq(3.6)
     expect(described_class.for_sector("Atendimento").hour_cost).to eq(30)
     expect(described_class.for_sector("Staff").hour_cost).to eq(30)
   end

@@ -1,7 +1,8 @@
 import type { PointsRule } from '@/types/management'
 
-// Mirrors Management::PointsRule: one hour of in-person training costs the hour of who teaches plus the hour of
-// who learns (monthly salary ÷ 220 h); the company's share of that saving becomes points (1 point = R$ 1 in rewards)
+// Mirrors Management::PointsRule: one hour of in-person training saves the hour of who teaches plus the hour of who
+// learns (monthly salary ÷ 220 h); the learner earns their own hour × the company's share per hour studied
+// (1 point = R$ 1 in rewards)
 export const HOURS_PER_MONTH = 220
 
 const round2 = (value: number) => Math.round(value * 100) / 100
@@ -14,8 +15,11 @@ export const learnerHourly = (rule: PointsRule) => hourlyFrom(rule.learner_salar
 
 export const hourCost = (rule: PointsRule) => round2(teacherHourly(rule) + learnerHourly(rule))
 
-export const pointsPerHour = (rule: PointsRule) => Math.round(hourCost(rule) * rule.reward_share)
+// Points come from the learner's own hour (their salary), never from who teaches
+export const pointsPerHour = (rule: PointsRule) =>
+  Math.round(learnerHourly(rule) * rule.reward_share * 10) / 10
 
-export const pointsFor = (hours: number, rule: PointsRule) => Math.round(hours * pointsPerHour(rule))
+export const pointsFor = (hours: number, rule: PointsRule) =>
+  Math.round(hours * learnerHourly(rule) * rule.reward_share)
 
 export const savedFor = (hours: number, rule: PointsRule) => Math.round(hours * hourCost(rule))

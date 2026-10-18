@@ -1,4 +1,4 @@
-import { hourCost } from '@/lib/pointsRule'
+import { hourCost, pointsPerHour } from '@/lib/pointsRule'
 import type { PointsRule, SectorTrainingCost } from '@/types/management'
 
 const SHARE_TITLES: Record<number, string> = { 0.2: 'Econômico', 0.4: 'Equilibrado', 0.6: 'Generoso' }
@@ -16,3 +16,6 @@ export const sectorRule = (company: PointsRule, cost: SectorTrainingCost | null)
   cost?.own
     ? { ...company, teacher_salary: cost.teacher_salary, learner_salary: cost.learner_salary }
     : company
+
+// Points the learner earns per hour studied, with a decimal comma (e.g. "3,6")
+export const pointsText = (rule: PointsRule) => pointsPerHour(rule).toLocaleString('pt-BR')
