@@ -92,6 +92,25 @@ RSpec.describe "Management dashboard", :inertia do
 
       expect(inertia.props[:dashboard][:competencies].pluck(:goal)).to all(eq(75))
     end
+
+    it "shows who studies the most, per work sector and per person, adding up to the same hours" do
+      get management_root_path
+
+      share = inertia.props[:dashboard][:study_share]
+      expect(share[:by_sector].pluck(:label)).to eq(%w[Atendimento Comercial Logística])
+      expect(share[:by_person].size).to eq(5)
+      expect(share[:by_person].last[:label]).to eq("Outros")
+      total = share[:by_sector].sum { |slice| slice[:hours] }
+      expect(share[:by_person].sum { |slice| slice[:hours] }).to eq(total)
+    end
+
+    it "keeps who studies the most as a snapshot of today, whatever the period" do
+      get management_root_path(period: "30d")
+      short = inertia.props[:dashboard][:study_share]
+      get management_root_path(period: "6m")
+
+      expect(inertia.props[:dashboard][:study_share]).to eq(short)
+    end
   end
 
   it "is only for management" do

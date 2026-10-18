@@ -1,6 +1,6 @@
 module Management
   # Example dashboard for the Atendimento team (14 people), per period: proof that the team is learning.
-  # Competencies and the manager's on-the-job review are a snapshot of today, so they don't change with the period.
+  # Competencies, the manager's on-the-job review and who studies the most are a snapshot of today, so they don't change with the period.
   class TeamDashboardMock
     PERIODS = {
       "30d" => {
@@ -42,7 +42,8 @@ module Management
         savings: savings,
         retention: retention,
         competencies: competencies,
-        on_the_job: on_the_job
+        on_the_job: on_the_job,
+        study_share: StudyShareMock.new.props
       }
     end
 

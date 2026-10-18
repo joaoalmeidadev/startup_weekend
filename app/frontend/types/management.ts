@@ -141,7 +141,11 @@ export type TeamDashboard = {
   retention: { review_accuracy: number; active_weekly: string; minutes_per_day: number }
   competencies: { name: string; before: number; now: number; goal: number }[]
   on_the_job: { source: string; items: { label: string; before: number; now: number; unit: string }[] }
+  study_share: { by_sector: StudyShareSlice[]; by_person: StudyShareSlice[] }
 }
+
+// Training hours replaced by completed contents, for one sector or person (or "Outros")
+export type StudyShareSlice = { label: string; hours: number }
 
 export type GoalLevelKey = 'easy' | 'medium' | 'hard'
 

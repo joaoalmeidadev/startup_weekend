@@ -96,6 +96,39 @@ describe('HomesShow', () => {
     expect(within(card).getByRole('table')).toHaveTextContent('Reclamações427175')
   })
 
+  it('shows who studies the most, per sector and per person, with the total in the center', () => {
+    render(<HomesShow />)
+
+    const bySector = screen
+      .getByRole('heading', { name: 'Estudo por setor' })
+      .closest('section') as HTMLElement
+    expect(within(bySector).getByRole('group', { name: 'Estudo por setor' })).toBeInTheDocument()
+    expect(within(bySector).getByText('103 h')).toBeInTheDocument()
+    expect(within(bySector).getByLabelText('Atendimento: 74 h (72%)')).toBeInTheDocument()
+    const byPerson = screen
+      .getByRole('heading', { name: 'Quem mais estuda' })
+      .closest('section') as HTMLElement
+    expect(within(byPerson).getByText('103 h')).toBeInTheDocument()
+    expect(within(byPerson).getByText('Carla 22%')).toBeInTheDocument()
+    expect(within(byPerson).getByText('Outros 28%')).toBeInTheDocument()
+  })
+
+  it('offers who studies the most as a table with hours and share', async () => {
+    render(<HomesShow />)
+
+    const card = screen.getByRole('heading', { name: 'Quem mais estuda' }).closest('section') as HTMLElement
+    await userEvent.click(within(card).getByRole('button', { name: /Ver tabela/ }))
+
+    const table = within(card).getByRole('table')
+    expect(
+      within(table)
+        .getAllByRole('columnheader')
+        .map((cell) => cell.textContent),
+    ).toEqual(['Pessoa', 'Horas', '%'])
+    expect(table).toHaveTextContent('Carla23 h22%')
+    expect(table).toHaveTextContent('Outros29 h28%')
+  })
+
   it('downloads the people report', () => {
     render(<HomesShow />)
 

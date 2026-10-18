@@ -244,6 +244,20 @@ export const teamDashboard: TeamDashboard = {
     source: 'Avaliação do gestor aos 30 dias',
     items: [{ label: 'Retrabalho por novato', before: 2.6, now: 1.6, unit: 'por mês' }],
   },
+  study_share: {
+    by_sector: [
+      { label: 'Atendimento', hours: 74 },
+      { label: 'Comercial', hours: 23 },
+      { label: 'Logística', hours: 6 },
+    ],
+    by_person: [
+      { label: 'Carla', hours: 23 },
+      { label: 'Diego', hours: 23 },
+      { label: 'Rafael', hours: 14 },
+      { label: 'Lucas', hours: 14 },
+      { label: 'Outros', hours: 29 },
+    ],
+  },
 }
 
 // Content area: library, journey builder catalog and goal

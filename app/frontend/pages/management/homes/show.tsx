@@ -6,6 +6,7 @@ import { OnTheJob, Retention } from './ImpactCards'
 import { BeforeAfter, LevelingOverTime } from './MetricsCharts'
 import { PeriodFilter } from './MetricsSummary'
 import { ProofFigures } from './ProofFigures'
+import { StudyShare } from './StudyShareCharts'
 
 // Real download: the people report is generated as CSV by the server
 function ExportButton() {
@@ -56,6 +57,7 @@ export default function HomesShow() {
           <Retention dashboard={dashboard} />
           <OnTheJob dashboard={dashboard} />
         </div>
+        <StudyShare dashboard={dashboard} />
       </div>
     </ManagementLayout>
   )
