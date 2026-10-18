@@ -8,18 +8,18 @@ type NavItem = { icon: string; label: string; href: string; sections?: string[];
 
 const NAV: NavItem[] = [
   { icon: 'dashboard', label: 'Dashboard', href: '/management', exact: true },
-  {
-    icon: 'library_books',
-    label: 'Biblioteca',
-    href: '/management/library',
-    sections: ['/management/library', '/management/modules', '/management/lesson_reviews'],
-  },
   { icon: 'route', label: 'Jornadas', href: '/management/journeys' },
   {
     icon: 'groups',
     label: 'Setores',
     href: '/management/sectors',
     sections: ['/management/sectors', '/management/people'],
+  },
+  {
+    icon: 'library_books',
+    label: 'Biblioteca',
+    href: '/management/library',
+    sections: ['/management/library', '/management/modules', '/management/lesson_reviews'],
   },
   { icon: 'redeem', label: 'Recompensas', href: '/management/rewards' },
 ]

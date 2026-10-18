@@ -118,9 +118,9 @@ describe('HomesShow', () => {
     const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
     expect(nav.getAllByRole('link').map((link) => link.textContent)).toEqual([
       'dashboardDashboard',
-      'library_booksBiblioteca',
       'routeJornadas',
       'groupsSetores',
+      'library_booksBiblioteca',
       'redeemRecompensas',
     ])
     expect(nav.getByRole('link', { name: /Dashboard/ })).toHaveAttribute('aria-current', 'page')
