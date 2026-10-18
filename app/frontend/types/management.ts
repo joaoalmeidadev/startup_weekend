@@ -51,7 +51,7 @@ export type LessonReview = {
   final: boolean
   breadcrumb: { label: string; href: string }[]
   module_name: string
-  publish_path: string
+  done_path: string
   team: string
   manual: { before: string; highlight: string; after: string; note: string; source: string }
   lesson: { minutes: number; title: string; intro: string; steps: LessonStep[] }
@@ -124,7 +124,7 @@ export type PersonDetail = Person & {
 export type NewModuleProps = {
   journey: { id: string; name: string } | null
   generated: { lessons: number; review_path: string }
-  nivela_products: ModuleSummary[]
+  competencies: string[]
 }
 
 export type TeamDashboard = {
@@ -140,18 +140,6 @@ export type TeamDashboard = {
   retention: { review_accuracy: number; active_weekly: string; minutes_per_day: number }
   competencies: { name: string; before: number; now: number; goal: number }[]
   on_the_job: { source: string; items: { label: string; before: number; now: number; unit: string }[] }
-}
-
-export type JourneyOutlineItem = { title: string; status: 'done' | 'new' | 'upcoming' }
-
-export type Publication = {
-  module_name: string
-  lessons: number
-  sector: string
-  audience_count: number
-  default_audiences: string[]
-  journey_outline: JourneyOutlineItem[]
-  done_path: string
 }
 
 export type GoalLevelKey = 'easy' | 'medium' | 'hard'

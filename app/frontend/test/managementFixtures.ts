@@ -11,7 +11,6 @@ import type {
   PeopleProps,
   Person,
   PersonDetail,
-  Publication,
   SectorGoal,
   TeamDashboard,
 } from '@/types/management'
@@ -111,7 +110,7 @@ export function lessonReview(overrides: Partial<LessonReview> = {}): LessonRevie
       { label: 'Módulo: Rotinas de atendimento', href: '/management/modules/rotinas-de-atendimento' },
     ],
     module_name: 'Rotinas de atendimento',
-    publish_path: '/management/modules/rotinas-de-atendimento/publish',
+    done_path: '/management/library',
     team: 'atendimento',
     manual: { before: 'Antes', highlight: 'destaque', after: '.', note: 'Nota', source: 'Manual · p. 14' },
     lesson: {
@@ -265,19 +264,6 @@ export const teamDashboard: TeamDashboard = {
   },
 }
 
-export const publication: Publication = {
-  module_name: 'Rotinas de atendimento',
-  lessons: 8,
-  sector: 'Atendimento',
-  audience_count: 32,
-  default_audiences: ['sector', 'newcomers'],
-  journey_outline: [
-    { title: '1. Base (Soft skills)', status: 'done' },
-    { title: '2. Trecho Empresa: Rotinas de atendimento', status: 'new' },
-  ],
-  done_path: '/management/library',
-}
-
 export const sectorWithoutGoal: SectorGoal = {
   ...sectorGoal,
   sector: 'Logística',
@@ -334,8 +320,6 @@ export const contentLibrary: ModuleSummary[] = [
   companyModule('uso-do-sistema', 'Uso do Sistema'),
   mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }),
 ]
-
-export const nivelaProducts: ModuleSummary[] = catalog[0].modules
 
 export const readyJourney: Journey['stretches'] = [
   { key: 'base', title: 'Base', modules: journey.stretches[0].modules },

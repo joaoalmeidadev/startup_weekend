@@ -110,7 +110,8 @@ export function TaskBanner({ final }: { final: boolean }) {
       {final ? (
         <p className="leading-relaxed">
           <strong className="font-semibold text-primary-container">Última lição:</strong> confira as
-          orientações finais de encerramento do chamado. Ao aprovar, você escolhe quem recebe o conteúdo.
+          orientações finais de encerramento do chamado. Ao aprovar, o conteúdo vai para a Biblioteca, pronto
+          para entrar nas jornadas.
         </p>
       ) : (
         <p className="leading-relaxed">

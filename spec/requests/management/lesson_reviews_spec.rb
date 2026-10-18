@@ -11,11 +11,12 @@ RSpec.describe "Management lesson review", :inertia do
       expect(inertia.props[:lesson_review]).to include(position: 2, total: 8, approved: 1, final: false)
     end
 
-    it "flags the last lesson so approving leads to publishing the module" do
+    it "flags the last lesson so approving saves the module in the library" do
       get management_lesson_review_path(8)
 
       expect(inertia.props[:lesson_review]).to include(position: 8, approved: 7, final: true,
-        publish_path: publish_management_learning_module_path("rotinas-de-atendimento"))
+        done_path: management_library_path)
+      expect(inertia.props[:lesson_review]).not_to have_key(:publish_path)
     end
 
     it "links the breadcrumb back to the journey and the module" do

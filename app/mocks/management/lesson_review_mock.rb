@@ -19,7 +19,7 @@ module Management
         final: @position == TOTAL,
         breadcrumb: breadcrumb,
         module_name: "Rotinas de atendimento",
-        publish_path: routes.publish_management_learning_module_path(MODULE_ID),
+        done_path: routes.management_library_path,
         team: "atendimento",
         manual: manual,
         lesson: lesson,

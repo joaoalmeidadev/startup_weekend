@@ -66,14 +66,19 @@ describe('LessonReviewsShow', () => {
     expect(steps.getByText('Revisar').closest('li')).toHaveAttribute('aria-current', 'step')
   })
 
-  it('goes on to publishing when the last lesson is approved', async () => {
+  it('saves the module in the library when the last lesson is approved', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
     page.props = { lesson_review: lessonReview({ position: 8, approved: 7, final: true }), manager }
     render(<LessonReviewsShow />)
 
-    await userEvent.click(screen.getByRole('button', { name: /Aprovar e escolher quem recebe/ }))
+    expect(screen.getByText(/Ao aprovar, o conteúdo vai para a Biblioteca/)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /Aprovar e salvar na Biblioteca/ }))
 
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(router.visit).toHaveBeenCalledWith('/management/modules/rotinas-de-atendimento/publish')
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '"Rotinas de atendimento" aprovado e salvo na Biblioteca (simulação).',
+    )
+    act(() => vi.runAllTimers())
+    expect(router.visit).toHaveBeenCalledWith('/management/library')
   })
 
   it('links the breadcrumb back to the journeys and the module', () => {

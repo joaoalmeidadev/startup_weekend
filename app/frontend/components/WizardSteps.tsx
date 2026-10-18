@@ -1,7 +1,12 @@
 import { Icon } from '@/components/Icon'
 
-// The "Novo conteúdo" assistant: upload, AI, review and publish share this indicator
-export const WIZARD_STEPS = ['Enviar o material', 'A IA cria as lições', 'Revisar', 'Publicar'] as const
+// AI path of "Novo conteúdo": upload, generation, review and saving in the library
+export const WIZARD_STEPS = [
+  'Enviar o material',
+  'A IA cria as lições',
+  'Revisar',
+  'Salvar na Biblioteca',
+] as const
 
 type StepState = 'done' | 'current' | 'next'
 
