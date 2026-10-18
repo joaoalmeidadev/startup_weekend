@@ -10,20 +10,26 @@ fazem? O gestor para o que está fazendo e corrige. Quem aqui já foi o 'veteran
 alguém para o que está fazendo para ensinar. O mesmo treinamento, repetido de pessoa para pessoa — e o gestor
 perde horas nisso todo mês. Pior: cada um aprende de um jeito, e ninguém mede se aprendeu."
 
-## 2. Vídeo (75s) — `~/Desktop/nivela-pitch.mp4`
-Dor → "Grave uma vez. Nivele todos." → 3 fatias (conteúdo, novo funcionário, jornada) → dashboard → fechamento.
+## 2. Vídeo (89s) — `~/Desktop/nivela-pitch.mp4`
+Pesquisa (16 empresas, 62%, gestor corrige, retrabalho 56%) → repetição de pessoa para pessoa → "Grave uma vez. Nivele
+todos." → módulos prontos Nivela → 3 fatias → dashboard ("Agora sabem") → "16 empresas ouvidas · 11 querem testar".
+Se usar o vídeo, a abertura falada pode ser mais curta (o vídeo já traz os números).
 Fale por cima só se quiser; o vídeo se sustenta sozinho.
 
 ## 3. Demo ao vivo (~2 min) — as 3 fatias + dashboard
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
-1. **Dashboard** abre direto. "Isto é o que o gestor vê: quanto da equipe já está nivelada, quem precisa de atenção."
-2. **Conteúdos → + Novo conteúdo**. "O treinamento que hoje é repassado de pessoa para pessoa: eu envio uma vez."
-   Clique em "Usar o arquivo de exemplo" → "Criar lições com IA".
-3. **Revisar lições**. "A IA transformou o manual em microlições. Eu confiro: à esquerda o manual, à direita o
-   que o funcionário vai ver. Nada vai para a equipe sem a minha aprovação." Mostre "Corrigir texto".
-   (Atalho para não aprovar 8 lições: abra `/management/lesson_reviews/8` e clique "Aprovar e escolher quem recebe".)
-4. **Publicar** (passo 4): "Setor Atendimento" e "Novatos" já vêm marcados → **Publicar**. "Pronto: 32 pessoas recebem."
+1. **Dashboard** abre direto. "Isto é o que o gestor vê: quanto da equipe já está nivelada e quem precisa de atenção."
+2. **Conteúdos**. Mostre a faixa "Como o conteúdo chega ao colaborador" (IA · Produtos Nivela · Empresa) e o bloco
+   **Produtos Nivela**: "Sem material? A Nivela já vem com 12 módulos para qualquer setor — os mais citados na nossa pesquisa."
+3. Abra **Onboarding Atendimento** (montador). Leia o topo: "Esta jornada substitui ~23h de repasse por novato, ≈ R$ 920
+   por contratação." À direita: "é exatamente o que o colaborador vê". Adicione um produto Nivela e mostre o valor mudar.
+4. **+ Novo conteúdo** → "Enviar material → a IA cria as lições" → "Usar o arquivo de exemplo" → **Criar lições com IA**.
+5. **Revisar lições**: "À esquerda o manual, à direita o que o funcionário vai ver. Nada vai para a equipe sem a minha
+   aprovação." (Atalho: `/management/lesson_reviews/8` → "Aprovar e escolher quem recebe".)
+6. **Publicar**: "Setor Atendimento" e "Novatos" já marcados → **Publicar**.
+7. (Se perguntarem da meta) **Conteúdos → Meta do setor**: "Começa num nível de mercado — Fácil, Médio, Difícil — e eu ajusto
+   por competência; a marca cinza é a referência dos meus veteranos."
 
 ### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)
 5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.
@@ -33,8 +39,10 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 6. **Minha jornada** → **Continuar aula** → vídeo → explicação → erre de propósito (dica) → acerte → **Parabéns + selo**.
    "5 minutos por dia, sem depender de ninguém para explicar."
 
-### Volta ao Dashboard (admin)
-7. Troque o período para **Últimos 30 dias**. "O gestor acompanha a evolução sem perguntar a ninguém."
+### Volta ao admin: Pessoas e Dashboard
+8. **Pessoas**: "Uma linha por pessoa: progresso, nota contra a meta, quando estudou e a previsão de quando nivela —
+   quem está atrasado aparece na hora."
+9. **Dashboard** → período **Últimos 30 dias**. "O gestor acompanha a evolução sem perguntar a ninguém."
 
 ## 4. Modelo e pedido (45s)
 - Tração: **16 empresas responderam a pesquisa e 11 aceitaram conversar** — é a fila de pilotos.
