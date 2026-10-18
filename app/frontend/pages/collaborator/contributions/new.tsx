@@ -99,7 +99,7 @@ export default function ContributionsNew() {
   return (
     <CollaboratorLayout>
       <Head title="Propor uma jornada" />
-      <div className="mx-auto flex w-full max-w-[35rem] flex-col gap-space-lg py-space-lg">
+      <div className="flex w-full max-w-3xl flex-col gap-space-lg py-space-lg">
         <Link
           href="/collaborator/contributions"
           className="inline-flex w-fit items-center gap-space-xs text-label-lg text-primary hover:underline"

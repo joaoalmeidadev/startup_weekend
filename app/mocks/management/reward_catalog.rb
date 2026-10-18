@@ -4,6 +4,7 @@ module Management
   class RewardCatalog
     # name, icon, category, cost in R$, stock (nil = unlimited), points when the reward costs nothing
     REWARDS = [
+      ["Barra de chocolate", "cookie", "Brinde", 10, 30],
       ["Caneca Nivela", "coffee", "Brinde", 25, 20],
       ["Vale-lanche", "lunch_dining", "Vale", 30, nil],
       ["Ingresso de cinema", "movie", "Experiência", 40, 10],

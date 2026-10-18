@@ -11,7 +11,7 @@ type RedeemModalProps = {
 export function RedeemModal({ reward, balance, onConfirm, onClose }: RedeemModalProps) {
   return (
     <Modal icon="redeem" title={`Trocar ${reward.points} pts por ${reward.name}?`} onClose={onClose}>
-      <p className="text-body-lg text-on-surface">{`Seu saldo fica em ${balance - reward.points} pts.`}</p>
+      <p className="text-body-md text-on-surface">{`Seu saldo fica em ${balance - reward.points} pts.`}</p>
       <p className="text-body-md text-on-surface-variant">
         O RH recebe o pedido e combina a entrega com você.
       </p>

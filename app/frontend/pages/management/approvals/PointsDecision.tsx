@@ -53,7 +53,7 @@ export function PointsDecision({ submission, rewardShare, awardedPoints, childre
         <p className="text-body-md text-on-surface">Decisão tomada: {awardedPoints} pts.</p>
       )}
       <p className="text-body-sm text-on-surface-variant">
-        É a mesma conta do estudo: as horas que ela informou, pelo salário dela.
+        É a mesma conta do estudo: as horas informadas, pelo salário de quem enviou.
       </p>
       {awardedPoints === null && children(points)}
     </section>

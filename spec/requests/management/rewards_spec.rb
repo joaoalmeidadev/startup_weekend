@@ -10,7 +10,7 @@ RSpec.describe "Management rewards", :inertia do
       expect_inertia.to render_component("management/rewards/show")
       expect(inertia.props[:points_rule]).to include(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
       expect(inertia.props).not_to include(:rule)
-      expect(inertia.props[:rewards].first).to include(name: "Caneca Nivela", icon: "coffee", category: "Brinde", cost: 25, points: 25)
+      expect(inertia.props[:rewards].first).to include(name: "Barra de chocolate", icon: "cookie", category: "Brinde", cost: 10, points: 10)
       expect(inertia.props[:ideas]).not_to be_empty
     end
 

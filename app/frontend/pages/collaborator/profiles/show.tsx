@@ -48,7 +48,7 @@ function ProfileSettings({ profile }: { profile: Profile }) {
           <button
             type="button"
             onClick={() => router.delete('/users/sign_out')}
-            className="flex min-h-[3.5rem] w-full items-center justify-center gap-space-sm rounded-xl bg-error-container/40 px-space-md transition-all hover:bg-error-container active:scale-[0.99]"
+            className="flex min-h-[3rem] w-full items-center justify-center gap-space-sm rounded-xl bg-error-container/40 px-space-md transition-all hover:bg-error-container active:scale-[0.99]"
           >
             <Icon name="logout" className="text-[1.5rem] text-error" />
             <span className="text-label-lg text-error">Sair da minha conta</span>
@@ -60,9 +60,9 @@ function ProfileSettings({ profile }: { profile: Profile }) {
         <button
           type="button"
           onClick={saveAndGoBack}
-          className="flex min-h-[4rem] w-full items-center justify-center gap-space-sm rounded-xl bg-primary-container px-space-lg text-on-primary shadow-md transition-all hover:bg-primary active:translate-y-[2px]"
+          className="flex min-h-[3rem] w-full items-center justify-center gap-space-sm rounded-xl bg-primary-container px-space-lg text-on-primary shadow-md transition-all hover:bg-primary active:translate-y-[2px]"
         >
-          <span className="text-headline-md">Salvar e Voltar para a Jornada</span>
+          <span className="text-label-lg">Salvar e voltar ao início</span>
           <Icon name="arrow_forward" className="text-[1.875rem]" />
         </button>
       </div>
@@ -88,7 +88,7 @@ export default function ProfilesShow() {
   return (
     <CollaboratorLayout>
       <Head title="Meu perfil" />
-      <div className="mx-auto flex w-full max-w-[35rem] flex-col gap-space-lg pb-space-xl">
+      <div className="flex w-full max-w-3xl flex-col gap-space-lg pb-space-xl">
         <div className="flex items-center gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
           <div className="relative shrink-0">
             <img
@@ -101,8 +101,8 @@ export default function ProfilesShow() {
             </div>
           </div>
           <div className="flex min-w-0 flex-col">
-            <span className="truncate text-headline-lg-mobile text-on-surface">{viewer.name}</span>
-            <span className="truncate text-body-lg text-on-surface-variant">
+            <span className="truncate text-headline-sm text-on-surface">{viewer.name}</span>
+            <span className="truncate text-body-md text-on-surface-variant">
               {viewer.sector} • {viewer.company}
             </span>
           </div>

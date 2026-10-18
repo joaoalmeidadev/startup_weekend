@@ -18,8 +18,8 @@ function ResultBlock({
   const color =
     tone === 'known' ? 'bg-tertiary-container text-on-primary' : 'bg-primary-container text-on-primary'
   return (
-    <section className="flex flex-col gap-space-sm rounded-2xl border-[1.5px] border-slate-200 bg-surface-container-lowest p-space-lg">
-      <h2 className="flex items-center gap-space-sm text-headline-md text-on-surface">
+    <section className="flex flex-col gap-space-sm rounded-xl bg-surface-container-lowest shadow-sm p-space-lg">
+      <h2 className="flex items-center gap-space-sm text-headline-sm text-on-surface">
         <span className={`flex size-10 items-center justify-center rounded-full ${color}`}>
           <Icon name={icon} className="text-[1.5rem]" />
         </span>
@@ -27,7 +27,7 @@ function ResultBlock({
       </h2>
       <ul className="flex flex-col gap-space-xs pl-space-xs">
         {items.map((item) => (
-          <li key={item} className="text-body-lg text-on-surface">
+          <li key={item} className="text-body-md text-on-surface">
             • {item}
           </li>
         ))}
@@ -44,7 +44,7 @@ export default function DiagnosticsResult() {
       <Head title="Seu resultado" />
       <div className="flex flex-col gap-space-xs pt-space-md">
         <h1 className="text-headline-xl text-on-surface">Pronto! Já conhecemos você.</h1>
-        <p className="text-body-xl text-on-surface-variant">
+        <p className="text-body-md text-on-surface-variant">
           Montamos sua jornada: <strong>{result.modules} módulos</strong>, uns {result.minutes_per_day}{' '}
           minutos por dia.
         </p>

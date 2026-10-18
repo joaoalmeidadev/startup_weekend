@@ -67,15 +67,14 @@ describe('HomesShow', () => {
     expect(bar).toHaveAttribute('aria-valuemax', '2')
   })
 
-  it('shows the badges, earned and still locked', () => {
+  it('shows only the earned badges, with no total to reach', () => {
     render(<HomesShow />)
 
-    const badges = screen.getByRole('region', { name: 'Meus selos' })
-    expect(within(badges).getByText('3 de 4')).toBeInTheDocument()
-    expect(within(badges).getByText('Nivelado em Atendimento').closest('li')).toHaveAttribute(
-      'data-earned',
-      'false',
-    )
+    const badges = screen.getByRole('region', { name: 'Meus selos conquistados' })
+    expect(within(badges).getAllByRole('listitem')).toHaveLength(3)
+    expect(within(badges).getByText('Base concluída')).toBeInTheDocument()
+    expect(within(badges).queryByText('Nivelado em Atendimento')).not.toBeInTheDocument()
+    expect(within(badges).queryByText('3 de 4')).not.toBeInTheDocument()
   })
 
   it('hides the next step when there is nothing left to do', () => {

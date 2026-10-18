@@ -48,7 +48,7 @@ describe('ApprovalsShow', () => {
     expect(pointsCard().getByText('3 h × R$ 12/h × 40% = 14 pts')).toBeInTheDocument()
     expect(pointsCard().getByLabelText('Pontos')).toHaveValue(14)
     expect(
-      pointsCard().getByText('É a mesma conta do estudo: as horas que ela informou, pelo salário dela.'),
+      pointsCard().getByText('É a mesma conta do estudo: as horas informadas, pelo salário de quem enviou.'),
     ).toBeInTheDocument()
   })
 

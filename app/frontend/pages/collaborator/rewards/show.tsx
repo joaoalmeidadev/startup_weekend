@@ -53,7 +53,7 @@ export default function RewardsShow() {
   return (
     <CollaboratorLayout>
       <Head title="Prêmios" />
-      <div className="mx-auto flex w-full max-w-[45rem] flex-col gap-space-lg py-space-lg">
+      <div className="flex w-full max-w-3xl flex-col gap-space-lg py-space-lg">
         <RewardsCatalog balance={props.balance} rewards={props.rewards} redeemed={props.redeemed} />
       </div>
     </CollaboratorLayout>

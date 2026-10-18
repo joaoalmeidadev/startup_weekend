@@ -16,9 +16,9 @@ RSpec.describe Management::RewardCatalog do
     end
   end
 
-  it "offers six rewards and a few ideas to register" do
+  it "offers seven rewards, one cheap enough for the first study points, and a few ideas" do
     expect(described_class.rewards.pluck(:name)).to eq(
-      ["Caneca Nivela", "Vale-lanche", "Ingresso de cinema", "Escolher a escala da semana", "Meio período de folga", "Dia de folga"]
+      ["Barra de chocolate", "Caneca Nivela", "Vale-lanche", "Ingresso de cinema", "Escolher a escala da semana", "Meio período de folga", "Dia de folga"]
     )
     expect(described_class.ideas.pluck(:name)).to include("Almoço com o gestor", "Vale-combustível")
     expect(described_class.ideas.first).to include(name: "Vale-combustível", cost: 50, points: 50)

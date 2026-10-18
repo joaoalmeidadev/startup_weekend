@@ -27,7 +27,7 @@ export function QuestionStep({ question, onDone }: QuestionStepProps) {
               type="button"
               aria-pressed={chosen}
               onClick={() => setPicked(index)}
-              className={`min-h-[4rem] w-full rounded-2xl border-[1.5px] p-space-md text-left text-body-lg transition-all ${tone}`}
+              className={`min-h-[3rem] w-full rounded-xl border-[1.5px] p-space-md text-left text-body-md transition-all ${tone}`}
             >
               {option.text}
             </button>
@@ -37,7 +37,7 @@ export function QuestionStep({ question, onDone }: QuestionStepProps) {
       {answer && (
         <p
           role="status"
-          className={`flex items-start gap-space-sm rounded-2xl p-space-md text-body-lg ${answer.correct ? 'bg-[#E8F5EC] text-tertiary-container' : 'bg-secondary-fixed text-on-secondary-container'}`}
+          className={`flex items-start gap-space-sm rounded-xl p-space-md text-body-md ${answer.correct ? 'bg-[#E8F5EC] text-tertiary-container' : 'bg-secondary-fixed text-on-secondary-container'}`}
         >
           <Icon name={answer.correct ? 'check_circle' : 'lightbulb'} className="text-[1.5rem]" />
           {answer.feedback}

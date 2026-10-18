@@ -44,7 +44,8 @@ check /collaborator/diagnostic/result
 
 expect_landing "colab@nivela.com" "/collaborator/home"
 for path in /collaborator/home /collaborator/journeys /collaborator/modules/rotinas-da-distribuidora \
-  /collaborator/lessons/rotinas-da-distribuidora /collaborator/profile; do
+  /collaborator/lessons/rotinas-da-distribuidora /collaborator/rewards /collaborator/contributions \
+  /collaborator/contributions/new /collaborator/profile; do
   check "$path"
 done
 

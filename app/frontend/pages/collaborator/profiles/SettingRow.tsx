@@ -27,15 +27,15 @@ export function SettingRow({
             <Icon name={icon} className="text-[1.75rem] text-primary" />
           </div>
           <div className="flex flex-col">
-            <span className="text-body-lg-bold text-on-surface">{title}</span>
-            <span className="text-body-lg text-on-surface-variant">{value}</span>
+            <span className="text-label-lg text-on-surface">{title}</span>
+            <span className="text-body-md text-on-surface-variant">{value}</span>
           </div>
         </div>
         <button
           type="button"
           aria-label={actionAriaLabel}
           onClick={onAction}
-          className="flex min-h-[3.5rem] shrink-0 items-center justify-center gap-space-xs rounded-xl bg-surface-container px-space-md transition-all hover:bg-surface-container-high active:scale-[0.98]"
+          className="flex min-h-[3rem] shrink-0 items-center justify-center gap-space-xs rounded-xl bg-surface-container px-space-md transition-all hover:bg-surface-container-high active:scale-[0.98]"
         >
           <Icon name={actionIcon} className="text-[1.375rem] text-on-surface" />
           <span className="text-label-lg text-on-surface">{actionLabel}</span>

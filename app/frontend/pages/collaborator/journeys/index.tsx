@@ -79,9 +79,9 @@ export default function JourneysIndex() {
   return (
     <CollaboratorLayout>
       <Head title="Jornadas" />
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-space-lg py-space-lg">
+      <div className="flex w-full max-w-3xl flex-col gap-space-lg py-space-lg">
         <div className="flex flex-col gap-1">
-          <h1 className="text-headline-md text-on-surface">Jornadas</h1>
+          <h1 className="text-headline-xl tracking-tight text-on-surface">Jornadas</h1>
           <p className="text-body-sm text-on-surface-variant">
             Faça uma jornada por vez. Você escolhe a ordem.
           </p>

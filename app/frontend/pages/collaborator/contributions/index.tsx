@@ -21,7 +21,7 @@ export default function ContributionsIndex() {
   return (
     <CollaboratorLayout>
       <Head title="Compartilhar conhecimento" />
-      <div className="mx-auto flex w-full max-w-[35rem] flex-col gap-space-lg py-space-lg">
+      <div className="flex w-full max-w-3xl flex-col gap-space-lg py-space-lg">
         <div className="flex flex-col gap-space-xs">
           <h1 className="text-headline-sm text-on-surface">Compartilhar conhecimento</h1>
           <p className="text-body-md text-on-surface-variant">
@@ -32,7 +32,7 @@ export default function ContributionsIndex() {
         <EarnedCard earned={earned} />
         <Link
           href="/collaborator/contributions/new"
-          className="flex h-14 w-full items-center justify-center gap-space-sm rounded-xl bg-primary-container text-label-lg text-on-primary shadow-sm hover:bg-primary"
+          className="flex h-12 w-full items-center justify-center gap-space-sm rounded-xl bg-primary-container text-label-lg text-on-primary shadow-sm hover:bg-primary"
         >
           <Icon name="add" className="text-[1.5rem]" />
           Propor uma jornada

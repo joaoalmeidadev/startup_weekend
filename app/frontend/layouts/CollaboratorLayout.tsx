@@ -7,19 +7,19 @@ import type { Viewer } from '@/types/collaborator'
 
 type NavItem = { href: string; icon: string; label: string; sections?: string[] }
 
-// Início is the gamified home (it took over Meu progresso); Jornadas also covers a journey's modules
+// Início is the gamified home; Jornadas also covers a journey's modules and lessons
 const NAV_ITEMS: NavItem[] = [
   {
     href: '/collaborator/home',
     icon: 'home',
     label: 'Início',
-    sections: ['/collaborator/home', '/collaborator/progress'],
+    sections: ['/collaborator/home'],
   },
   {
     href: '/collaborator/journeys',
     icon: 'alt_route',
     label: 'Jornadas',
-    sections: ['/collaborator/journey', '/collaborator/modules'],
+    sections: ['/collaborator/journeys', '/collaborator/modules', '/collaborator/lessons'],
   },
   { href: '/collaborator/rewards', icon: 'redeem', label: 'Prêmios' },
   { href: '/collaborator/contributions', icon: 'volunteer_activism', label: 'Compartilhar' },

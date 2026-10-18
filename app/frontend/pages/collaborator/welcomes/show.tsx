@@ -18,11 +18,11 @@ export default function WelcomesShow() {
       <Head title="Boas-vindas" />
       <div className="flex flex-col gap-space-xs pt-space-lg">
         <h1 className="text-headline-xl text-on-surface">Oi, {viewer.first_name}!</h1>
-        <p className="text-body-xl text-on-surface">
+        <p className="text-body-md text-on-surface">
           Aqui você aprende o que os colegas mais experientes sabem — no seu ritmo, 5 minutos por dia, sem
           depender de ninguém para explicar.
         </p>
-        <p className="text-body-lg text-on-surface-variant">
+        <p className="text-body-md text-on-surface-variant">
           Sua jornada na {viewer.company} tem 3 passos simples:
         </p>
       </div>
@@ -30,18 +30,18 @@ export default function WelcomesShow() {
         {STEPS.map((step, index) => (
           <li
             key={step.text}
-            className="flex items-center gap-space-md rounded-2xl border-[1.5px] border-slate-200 bg-surface-container-lowest p-space-md"
+            className="flex items-center gap-space-md rounded-xl bg-surface-container-lowest shadow-sm p-space-md"
           >
             <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-surface-container text-primary-container">
               <Icon name={step.icon} className="text-[2.25rem]" />
             </span>
-            <span className="text-headline-md text-on-surface">
+            <span className="text-headline-sm text-on-surface">
               {index + 1}. {step.text}
             </span>
           </li>
         ))}
       </ol>
-      <p className="text-body-lg text-on-surface-variant">
+      <p className="text-body-md text-on-surface-variant">
         Primeiro, um teste rápido para montar uma jornada só com o que você precisa.
       </p>
       <PrimaryButton onClick={() => router.visit('/collaborator/diagnostic')}>Começar</PrimaryButton>

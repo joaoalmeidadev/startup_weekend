@@ -25,7 +25,7 @@ export default function CollaboratorModuleShow() {
   return (
     <CollaboratorLayout>
       <Head title={module.name} />
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-space-lg py-space-lg">
+      <div className="flex w-full max-w-3xl flex-col gap-space-lg py-space-lg">
         <Link
           href="/collaborator/journeys"
           className="inline-flex w-fit items-center gap-1 text-label-lg text-primary"
@@ -35,7 +35,7 @@ export default function CollaboratorModuleShow() {
         </Link>
         <section className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-md">
           <h1 className="text-headline-lg text-on-surface">{module.name}</h1>
-          <span className="text-body-lg text-on-surface-variant">
+          <span className="text-body-md text-on-surface-variant">
             {module.done} de {total} lições · uns 5 minutos cada
           </span>
           <div
@@ -56,14 +56,14 @@ export default function CollaboratorModuleShow() {
             return (
               <li
                 key={lesson.title}
-                className="flex min-h-[4rem] items-center gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm"
+                className="flex min-h-[3rem] items-center gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm"
               >
                 <span
                   className={`flex size-11 shrink-0 items-center justify-center rounded-full ${style.circle}`}
                 >
                   <Icon name={style.icon} className="text-[1.5rem]" />
                 </span>
-                <span className={`text-body-lg ${style.text}`}>
+                <span className={`text-body-md ${style.text}`}>
                   {index + 1}. {lesson.title}
                 </span>
               </li>

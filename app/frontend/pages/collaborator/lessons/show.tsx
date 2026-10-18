@@ -23,7 +23,7 @@ function VideoStep({ lesson, onNext }: { lesson: MicroLesson; onNext: () => void
         type="button"
         aria-label="Assistir ao vídeo"
         onClick={() => notify('Aqui toca o vídeo de até 2 minutos.')}
-        className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl bg-primary"
+        className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl bg-primary"
       >
         <span className="flex size-20 items-center justify-center rounded-full bg-on-primary/90 text-primary">
           <Icon name="play_arrow" filled className="text-[3rem]" />
@@ -41,12 +41,12 @@ function ExplanationStep({ lesson, onNext }: { lesson: MicroLesson; onNext: () =
   return (
     <>
       <h1 className="text-headline-lg text-on-surface">{lesson.title}</h1>
-      <div className="flex flex-col gap-space-md rounded-2xl border-[1.5px] border-slate-200 bg-surface-container-lowest p-space-lg">
+      <div className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest shadow-sm p-space-lg">
         {lesson.explanation.map((sentence, index) => (
           <p
             key={sentence}
             className={
-              index === 0 ? 'text-body-xl font-semibold text-on-surface' : 'text-body-lg text-on-surface'
+              index === 0 ? 'text-body-md font-semibold text-on-surface' : 'text-body-md text-on-surface'
             }
           >
             {sentence}

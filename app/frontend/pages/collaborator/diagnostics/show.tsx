@@ -22,7 +22,7 @@ function OptionButton({
       role="radio"
       aria-checked={selected}
       onClick={onSelect}
-      className={`flex min-h-[4rem] w-full items-center gap-space-md rounded-2xl p-space-md text-left text-body-lg transition-all ${selected ? 'border-[3px] border-primary-container bg-[#E6F0F1]' : 'border-[1.5px] border-slate-200 bg-surface-container-lowest hover:bg-surface-container-low'}`}
+      className={`flex min-h-[3rem] w-full items-center gap-space-md rounded-xl p-space-md text-left text-body-md transition-all ${selected ? 'border-[3px] border-primary-container bg-[#E6F0F1]' : 'bg-surface-container-lowest shadow-sm hover:bg-surface-container-low'}`}
     >
       <span
         className={`flex size-7 shrink-0 items-center justify-center rounded-full border-2 ${selected ? 'border-tertiary-container bg-tertiary-container text-on-primary' : 'border-outline-variant'}`}
