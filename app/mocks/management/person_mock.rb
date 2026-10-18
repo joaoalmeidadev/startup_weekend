@@ -3,8 +3,8 @@ module Management
   class PersonMock
     FEEDBACK = {
       "leveled" => ["Resolve as reclamações sem precisar de ajuda.", "Ajuda os novatos do setor.", "Comunica-se com clareza com os clientes."],
-      "learning" => ["Explica as coisas com clareza.", "Pede ajuda quando tem dúvida.", "Ainda confunde os prazos de devolução."],
-      "attention" => ["É pontual e cuidadoso.", "Tem dificuldade com contas de porcentagem.", "Precisa de apoio para usar o sistema."]
+      "on_track" => ["Explica as coisas com clareza.", "Pede ajuda quando tem dúvida.", "Ainda confunde os prazos de devolução."],
+      "late" => ["É pontual e cuidadoso.", "Tem dificuldade com contas de porcentagem.", "Precisa de apoio para usar o sistema."]
     }.freeze
 
     def initialize(id)
@@ -13,9 +13,9 @@ module Management
     end
 
     def props
-      @person.slice(:name, :sector, :status, :role, :tenure, :alert, :achievement).compact.merge(
-        id: @person[:name].parameterize,
-        avatar_url: "/mocks/people/#{@person[:name].parameterize}.jpg",
+      PersonOverview.new(@person).props.merge(
+        role: @person[:role],
+        tenure: @person[:tenure],
         journey: journey,
         knows: competencies.first(@person[:completed]).last(3),
         learning: competencies.drop(@person[:completed]).first(3),

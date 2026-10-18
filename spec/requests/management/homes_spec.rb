@@ -51,6 +51,12 @@ RSpec.describe "Management dashboard", :inertia do
       expect(dashboard[:funnel].pluck(:count)).to eq([14, 12, 10, 9, 8])
       expect(dashboard[:days_to_level]).to be_a(Integer)
     end
+
+    it "compares each competency with the Atendimento sector goal (Médio, 75 pts)" do
+      get management_root_path
+
+      expect(inertia.props[:dashboard][:competencies].pluck(:goal)).to all(eq(75))
+    end
   end
 
   it "is only for management" do

@@ -44,12 +44,14 @@ module Management
 
     private
 
+    # Goals follow the Atendimento sector goal (see SectorGoalMock)
     def competencies
+      goal = SectorGoalMock.new("Atendimento").target
       [
-        {name: "Comunicação e Escuta Ativa", team_average: 82, goal: 80},
-        {name: "Reclamações de Entrega", team_average: 71, goal: 85},
-        {name: "Sistema de Pedidos", team_average: 68, goal: 75},
-        {name: "Postura e Empatia", team_average: 79, goal: 85}
+        {name: "Comunicação e Escuta Ativa", team_average: 82, goal: goal},
+        {name: "Reclamações de Entrega", team_average: 71, goal: goal},
+        {name: "Sistema de Pedidos", team_average: 68, goal: goal},
+        {name: "Postura e Empatia", team_average: 79, goal: goal}
       ]
     end
 
