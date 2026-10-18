@@ -1,7 +1,7 @@
 module Management
   # The badge, milestones and rewards of one person (rewards from the RewardCatalog)
   class PersonRewards
-    # What each kind of person already traded points for, priced by the RewardCatalog rule
+    # What each kind of person already traded points for (1 point = R$ 1 of the reward's cost)
     REDEEMED = {
       "leveled" => [["Meio período de folga", "12/09"], ["Vale-lanche", "28/08"]],
       "on_track" => [["Vale-lanche", "02/10"]],

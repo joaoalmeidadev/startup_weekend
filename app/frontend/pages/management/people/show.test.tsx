@@ -84,11 +84,11 @@ describe('PeopleShow', () => {
     render(<PeopleShow />)
 
     const rewards = within(screen.getByRole('region', { name: 'Recompensas' }))
-    expect(rewards.getByText('240 pts ganhos')).toBeInTheDocument()
-    expect(rewards.getByText('90 pts de saldo')).toBeInTheDocument()
-    const item = rewards.getByText('Vale-lanche R$ 30').closest('li') as HTMLElement
+    expect(rewards.getByText('272 pts ganhos')).toBeInTheDocument()
+    expect(rewards.getByText('242 pts de saldo')).toBeInTheDocument()
+    const item = rewards.getByText('Vale-lanche').closest('li') as HTMLElement
     expect(item).toHaveTextContent('02/10')
-    expect(item).toHaveTextContent('150 pts')
+    expect(item).toHaveTextContent('30 pts')
   })
 
   it('says when no reward was redeemed yet', () => {

@@ -4,14 +4,16 @@ import { Icon } from '@/components/Icon'
 import { useMockNotice } from '@/components/MockNotice'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { Reward, RewardsProps } from '@/types/management'
+import { PointsCalculator } from './PointsCalculator'
 import { RewardCard } from './RewardCard'
 import { RewardForm } from './RewardForm'
-import { IdeasBar, RecentRedemptions, RuleCard, Section } from './RewardSections'
+import { IdeasBar, RecentRedemptions, Section } from './RewardSections'
 
 type FormState = { idea: Reward | null } | null
 
-function RewardsScreen({ rule, rewards, ideas, redemptions, month }: RewardsProps) {
+function RewardsScreen({ points_rule, rewards, ideas, redemptions, month }: RewardsProps) {
   const notify = useMockNotice()
+  const [rule, setRule] = useState(points_rule)
   const [catalog, setCatalog] = useState(rewards)
   const [form, setForm] = useState<FormState>(null)
 
@@ -39,7 +41,7 @@ function RewardsScreen({ rule, rewards, ideas, redemptions, month }: RewardsProp
           Cadastrar recompensa
         </button>
       </section>
-      <RuleCard share={rule.share} />
+      <PointsCalculator rule={rule} onChange={setRule} onSave={() => notify('Regra salva (simulação).')} />
       <Section title="Catálogo">
         <div className="grid grid-cols-1 gap-space-md sm:grid-cols-2 xl:grid-cols-3">
           {catalog.map((reward) => (

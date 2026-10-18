@@ -1,9 +1,9 @@
 import { Icon } from '@/components/Icon'
-import type { Reward, RewardRule } from '@/types/management'
-import { brl, economics } from './rewardEconomics'
+import type { PointsRule, Reward } from '@/types/management'
+import { brl, hoursReplaced } from './rewardValue'
 
-export function RewardCard({ reward, rule }: { reward: Reward; rule: RewardRule }) {
-  const { saved, kept, keptShare } = economics(reward, rule)
+export function RewardCard({ reward, rule }: { reward: Reward; rule: PointsRule }) {
+  const hours = hoursReplaced(reward.points, rule)
   const id = `reward-${reward.id}`
   return (
     <article
@@ -26,9 +26,9 @@ export function RewardCard({ reward, rule }: { reward: Reward; rule: RewardRule 
       </div>
       <div className="flex flex-col gap-1 border-t border-surface-container-high pt-space-xs text-body-sm">
         <span className="text-on-surface">Custa {brl(reward.cost)}</span>
-        <span className="text-on-surface-variant">
-          Economia de treino ~{brl(saved)} · fica {brl(kept)} ({keptShare}%)
-        </span>
+        {hours && (
+          <span className="text-on-surface-variant">{`Equivale a ~${hours} h de treino substituído`}</span>
+        )}
         {reward.stock != null && <span className="text-on-surface-variant">{reward.stock} em estoque</span>}
       </div>
     </article>

@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Modal } from '@/components/Modal'
-import type { Reward, RewardRule } from '@/types/management'
-import { brl, economics, pointsFor, withinRule } from './rewardEconomics'
+import type { PointsRule, Reward } from '@/types/management'
+import { belowCost, hoursReplaced } from './rewardValue'
 
 const CATEGORIES = ['Folga', 'Experiência', 'Brinde', 'Vale']
 const FIELD =
@@ -37,23 +37,23 @@ function Field({ label, children }: { label: string; children: (id: string) => R
   )
 }
 
-function RuleCheck({ cost, points, rule }: { cost: number; points: number; rule: RewardRule }) {
-  if (!withinRule({ cost, points }, rule)) {
+function RuleCheck({ cost, points, rule }: { cost: number; points: number; rule: PointsRule }) {
+  if (belowCost({ cost, points })) {
     return (
-      <p className="text-body-sm text-error">Abaixo da regra: a empresa gastaria mais do que economiza.</p>
+      <p className="text-body-sm text-error">Abaixo do custo: a empresa pagaria mais do que a regra prevê.</p>
     )
   }
-  const { saved, kept, keptShare } = economics({ cost, points }, rule)
+  const hours = hoursReplaced(points, rule)
   return (
-    <p className="text-body-sm text-on-surface-variant">
-      Quem resgata já economizou ~{brl(saved)} em treino; a empresa fica com {brl(kept)} ({keptShare}%).
-    </p>
+    hours && (
+      <p className="text-body-sm text-on-surface-variant">{`Equivale a ~${hours} h de treino substituído`}</p>
+    )
   )
 }
 
 type RewardFormProps = {
   idea: Reward | null
-  rule: RewardRule
+  rule: PointsRule
   onSave: (reward: Reward) => void
   onClose: () => void
 }
@@ -62,13 +62,13 @@ export function RewardForm({ idea, rule, onSave, onClose }: RewardFormProps) {
   const [draft, setDraft] = useState(() => draftFrom(idea))
   const cost = Number(draft.cost || 0)
   const points = Number(draft.points || 0)
-  const ready = draft.name.trim() !== '' && draft.cost !== '' && withinRule({ cost, points }, rule)
+  const ready = draft.name.trim() !== '' && draft.cost !== '' && points > 0 && !belowCost({ cost, points })
 
   const changeCost = (value: string) =>
     setDraft((current) => ({
       ...current,
       cost: value,
-      points: current.pointsTouched ? current.points : String(pointsFor(Number(value || 0), rule)),
+      points: current.pointsTouched ? current.points : value,
     }))
 
   const save = () =>

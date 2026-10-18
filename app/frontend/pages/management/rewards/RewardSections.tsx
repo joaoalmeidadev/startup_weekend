@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { Icon } from '@/components/Icon'
 import type { Reward, RewardsProps } from '@/types/management'
 import { PersonAvatar } from '../people/PersonAvatar'
-import { brl } from './rewardEconomics'
+import { brl } from './rewardValue'
 
 export function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   const id = `section-${title.toLowerCase().replace(/\W+/g, '-')}`
@@ -15,27 +15,6 @@ export function Section({ title, hint, children }: { title: string; hint?: strin
         {hint && <p className="text-body-sm text-on-surface-variant">{hint}</p>}
       </div>
       {children}
-    </section>
-  )
-}
-
-// Only the manager sees this: the collaborator only sees points and rewards
-export function RuleCard({ share }: { share: number }) {
-  return (
-    <section
-      aria-labelledby="rule-title"
-      className="flex items-start gap-space-md rounded-xl bg-secondary-fixed/40 p-space-md"
-    >
-      <Icon name="savings" className="text-[1.75rem] text-primary" />
-      <div className="flex flex-col gap-1">
-        <h2 id="rule-title" className="text-label-lg text-on-surface">
-          Como funciona
-        </h2>
-        <p className="text-body-md text-on-surface-variant">
-          Cada hora estudada evita uma hora de alguém treinando. O prêmio devolve até{' '}
-          {Math.round(share * 100)}% dessa economia — a pessoa vê só os pontos.
-        </p>
-      </div>
     </section>
   )
 }
