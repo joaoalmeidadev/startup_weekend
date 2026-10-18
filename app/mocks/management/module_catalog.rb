@@ -21,10 +21,10 @@ module Management
       "seguranca-no-trabalho" => {name: "Segurança e Boas Práticas no Trabalho", competency: "Segurança", stretch: :sector, lessons: 3, status: "published", source: "nivela", teaching_hours: 2},
       "vendas-basico" => {name: "Vendas: o Básico para Quem Atende", competency: "Vendas", stretch: :sector, lessons: 5, status: "published", source: "nivela", teaching_hours: 3},
       "nossa-historia-e-valores" => {name: "Nossa História e Valores", competency: "Cultura", stretch: :company, lessons: 3, status: "published", source: "company", teaching_hours: 2, material: "Apresentação institucional.pdf"},
-      "rotinas-de-atendimento" => {name: "Rotinas de atendimento", competency: "Rotinas", stretch: :company, lessons: 8, status: "in_review", source: "ai", teaching_hours: 6, material: "Manual de SAC.pdf"},
+      "rotinas-de-atendimento" => {name: "Rotinas de atendimento", competency: "Rotinas", stretch: :company, lessons: 8, status: "in_review", source: "ai", teaching_hours: 6, teacher_salary: 5500, material: "Manual de SAC.pdf"},
       "politica-de-trocas" => {name: "Política de Trocas e Devoluções", competency: "Devoluções", stretch: :company, lessons: 5, status: "published", source: "ai", teaching_hours: 4, material: "Política comercial.pdf"},
-      "tratamento-de-reclamacoes" => {name: "Tratamento de Reclamações", competency: "Reclamações", stretch: :sector, lessons: 6, status: "draft", source: "company", teaching_hours: 5, material: "Escrito pelo RH"},
-      "uso-do-sistema" => {name: "Uso do Sistema", competency: "Sistema", stretch: :sector, lessons: 5, status: "draft", source: "company", teaching_hours: 4, material: "Escrito pelo RH"},
+      "tratamento-de-reclamacoes" => {name: "Tratamento de Reclamações", competency: "Reclamações", stretch: :sector, lessons: 6, status: "draft", source: "company", teaching_hours: 5, teacher_salary: 5500, material: "Escrito pelo RH"},
+      "uso-do-sistema" => {name: "Uso do Sistema", competency: "Sistema", stretch: :sector, lessons: 5, status: "draft", source: "company", teaching_hours: 4, teacher_salary: 3300, material: "Escrito pelo RH"},
       "conferencia-de-carga" => {name: "Conferência de Carga", competency: "Conferência", stretch: :sector, lessons: 5, status: "published", source: "ai", teaching_hours: 5, material: "Procedimento de expedição.pdf"},
       "seguranca-no-armazem" => {name: "Segurança no Armazém", competency: "Segurança", stretch: :sector, lessons: 4, status: "published", source: "ai", teaching_hours: 3, material: "Normas de segurança.pdf"}
     }.freeze
@@ -37,7 +37,7 @@ module Management
     def self.summary(id)
       mod = find(id)
       mod.slice(:id, :name, :competency, :lessons, :status, :source, :teaching_hours)
-        .merge(stretch: mod[:stretch].to_s, research_share: mod[:research_share])
+        .merge(stretch: mod[:stretch].to_s, research_share: mod[:research_share], teacher_salary: mod[:teacher_salary])
     end
 
     def self.all

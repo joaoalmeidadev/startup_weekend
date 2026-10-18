@@ -6,6 +6,7 @@ import {
   pointsFor,
   pointsPerHour,
   savedFor,
+  stepHourCost,
   teacherHourly,
 } from './pointsRule'
 
@@ -35,5 +36,10 @@ describe('pointsRule', () => {
     const logistics = { ...rule, teacher_salary: 3960, learner_salary: 1980 }
     expect(hourCost(logistics)).toBe(27)
     expect(pointsPerHour(logistics)).toBe(3.6)
+  })
+
+  it('uses the hour of who would give a content training, or the default one', () => {
+    expect(stepHourCost(rule, 5500)).toBe(35)
+    expect(stepHourCost(rule, null)).toBe(30)
   })
 })

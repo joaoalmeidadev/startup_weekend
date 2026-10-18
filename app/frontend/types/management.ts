@@ -77,6 +77,8 @@ export type ModuleSummary = {
   source: ContentSource
   stretch: StretchKey
   teaching_hours: number
+  // Monthly salary of who would give this in-person training; null = the default value
+  teacher_salary: number | null
   research_share: number | null
 }
 

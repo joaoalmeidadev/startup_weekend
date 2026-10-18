@@ -71,6 +71,13 @@ RSpec.describe "Management people", :inertia do
       expect(inertia.props[:person][:study]).to include(saved: 236, salary_informed: true)
     end
 
+    it "measures each content's saving with who would give that training" do
+      get management_person_path("rafael-lima")
+
+      # 8 h of contents with the default teacher (R$ 20 + 10) + Rotinas, 6 h with the supervisor (R$ 25 + 10)
+      expect(inertia.props[:person][:study]).to include(saved: 8 * 30 + 6 * 35)
+    end
+
     it "measures the saving with the sector value when the salary was not informed" do
       get management_person_path("bruna-costa")
 

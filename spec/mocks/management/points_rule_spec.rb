@@ -24,6 +24,13 @@ RSpec.describe Management::PointsRule do
     expect(rule.saved_for(9)).to eq(270)
   end
 
+  it "uses the hour of who would give that training when the content tells it" do
+    expect(rule.teacher_hourly_for(5500)).to eq(25)
+    expect(rule.teacher_hourly_for(nil)).to eq(20)
+    expect(rule.saved_for_step(5, teacher_salary: 5500, learner_hourly: 10)).to eq(175)
+    expect(rule.saved_for_step(4, teacher_salary: nil, learner_hourly: 9.5)).to eq(118)
+  end
+
   it "shares the company default with the pages" do
     expect(rule.props).to eq(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
   end

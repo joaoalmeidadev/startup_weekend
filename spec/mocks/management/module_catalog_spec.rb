@@ -58,4 +58,10 @@ RSpec.describe Management::ModuleCatalog do
     ])
     expect(described_class.by_source("nivela").first(4)).to eq(highlighted)
   end
+
+  it "tells who would give the in-person training of a company content" do
+    expect(described_class.summary("rotinas-de-atendimento")).to include(teacher_salary: 5500)
+    expect(described_class.summary("uso-do-sistema")).to include(teacher_salary: 3300)
+    expect(described_class.summary("conversa-clara")).to include(teacher_salary: nil)
+  end
 end

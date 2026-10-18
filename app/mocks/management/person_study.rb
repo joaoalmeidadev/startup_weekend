@@ -17,9 +17,12 @@ module Management
 
     def rule = @rule ||= PointsRule.for_sector(@person[:sector])
 
-    # R$ of in-person training saved: the person's own salary when informed, otherwise the sector value
+    # R$ of in-person training saved, content by content: who would give that training + the person's own hour
     def saved
-      rule.saved_with_learner(hours_done, rule.learner_hourly_for(@person[:salary]))
+      learner_hourly = rule.learner_hourly_for(@person[:salary])
+      done_modules.sum do |mod|
+        mod[:teaching_hours] * (rule.teacher_hourly_for(mod[:teacher_salary]) + learner_hourly)
+      end.round
     end
 
     def streak_days

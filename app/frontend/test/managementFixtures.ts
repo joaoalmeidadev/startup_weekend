@@ -152,6 +152,7 @@ const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleS
   source: 'nivela',
   stretch: 'base',
   teaching_hours: 3,
+  teacher_salary: null,
   research_share: null,
   ...overrides,
 })

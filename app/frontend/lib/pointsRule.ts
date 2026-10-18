@@ -23,3 +23,7 @@ export const pointsFor = (hours: number, rule: PointsRule) =>
   Math.round(hours * learnerHourly(rule) * rule.reward_share)
 
 export const savedFor = (hours: number, rule: PointsRule) => Math.round(hours * hourCost(rule))
+
+// One hour of a content's in-person training: who would give it (the content tells, or the default) + who learns
+export const stepHourCost = (rule: PointsRule, teacherSalary: number | null) =>
+  round2(hourlyFrom(teacherSalary ?? rule.teacher_salary) + learnerHourly(rule))

@@ -36,6 +36,13 @@ module Management
 
     def saved_with_learner(hours, learner_hourly) = (hours * (teacher_hourly + learner_hourly)).round
 
+    # The hour of who would give a content's in-person training, when the content tells it
+    def teacher_hourly_for(salary) = salary ? hourly(salary) : teacher_hourly
+
+    def saved_for_step(hours, teacher_salary:, learner_hourly:)
+      (hours * (teacher_hourly_for(teacher_salary) + learner_hourly)).round
+    end
+
     # Points come from the learner's own hour (their salary when informed), never from who teaches
     def points_per_hour(salary: nil) = (learner_hourly_for(salary) * @rule[:reward_share]).round(1)
 
