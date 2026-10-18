@@ -31,3 +31,10 @@ end
     puts "  ✓ Created #{role} (#{email} / 12345678)"
   end
 end
+
+# Newcomer for the onboarding demo: lands on the welcome screen until the diagnostic result
+User.find_or_create_by!(email: "novo@nivela.com") do |user|
+  user.password = "12345678"
+  user.role = :collaborator
+  puts "  ✓ Created collaborator newcomer (novo@nivela.com / 12345678)"
+end

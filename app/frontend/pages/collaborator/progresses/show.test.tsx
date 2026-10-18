@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { progress, viewer } from '@/test/collaboratorFixtures'
 import { page } from '@/test/inertiaMock'
@@ -20,27 +19,19 @@ describe('ProgressesShow', () => {
     expect(screen.getByText('Em breve')).toBeInTheDocument()
   })
 
-  it('highlights the collaborator own position in the ranking', () => {
+  it('shows how many modules are done in the whole journey', () => {
     render(<ProgressesShow />)
 
-    expect(screen.getByText('Você (Maria)')).toBeInTheDocument()
-    expect(screen.getByText('Lucas Mendes')).toBeInTheDocument()
+    expect(screen.getByText('1 de 3 módulos concluídos')).toBeInTheDocument()
   })
 
-  it('lets the collaborator choose how to appear in the ranking', async () => {
+  it('shows the evolution of each stretch: Base, Empresa and Setor', () => {
     render(<ProgressesShow />)
 
-    expect(screen.getByRole('radio', { name: /Mostrar meu nome: Maria/ })).toHaveAttribute(
-      'aria-checked',
-      'true',
-    )
-
-    await userEvent.click(screen.getByRole('radio', { name: /Não aparecer na lista/ }))
-
-    expect(screen.getByRole('radio', { name: /Não aparecer na lista/ })).toHaveAttribute(
-      'aria-checked',
-      'true',
-    )
-    expect(screen.getByRole('radio', { name: /Mostrar meu nome/ })).toHaveAttribute('aria-checked', 'false')
+    const bars = screen.getAllByRole('progressbar')
+    expect(bars.map((bar) => bar.getAttribute('aria-label'))).toEqual(['Base', 'Empresa', 'Setor'])
+    expect(bars[0]).toHaveAttribute('aria-valuenow', '1')
+    expect(bars[0]).toHaveAttribute('aria-valuemax', '1')
+    expect(bars[1]).toHaveAttribute('aria-valuenow', '0')
   })
 })

@@ -12,6 +12,7 @@ describe('ProfilesShow', () => {
     page.url = '/collaborator/profile'
     page.props = { profile, viewer }
     router.delete.mockClear()
+    router.visit.mockClear()
   })
 
   it('changes the reminder time through the modal', async () => {
@@ -25,26 +26,12 @@ describe('ProfilesShow', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('renames how the collaborator appears in the ranking', async () => {
+  it('offers to redo the diagnostic', async () => {
     render(<ProfilesShow />)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Alterar como apareço no ranking' }))
-    const input = screen.getByLabelText('Seu nome ou apelido')
-    await userEvent.clear(input)
-    await userEvent.type(input, 'Mari')
-    await userEvent.click(screen.getByRole('button', { name: 'Salvar nome' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Refazer meu diagnóstico' }))
 
-    expect(screen.getByText('Mostrando como: Mari')).toBeInTheDocument()
-  })
-
-  it('keeps the previous name when the field is left blank', async () => {
-    render(<ProfilesShow />)
-
-    await userEvent.click(screen.getByRole('button', { name: 'Alterar como apareço no ranking' }))
-    await userEvent.clear(screen.getByLabelText('Seu nome ou apelido'))
-    await userEvent.click(screen.getByRole('button', { name: 'Salvar nome' }))
-
-    expect(screen.getByText('Mostrando como: Maria Souza')).toBeInTheDocument()
+    expect(router.visit).toHaveBeenCalledWith('/collaborator/welcome')
   })
 
   it('signs out for real', async () => {

@@ -5,6 +5,7 @@ module Collaborator
     end
 
     def result
+      session[:onboarded] = true
       render inertia: {result: DiagnosticMock.new.result}
     end
   end

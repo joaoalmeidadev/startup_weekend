@@ -17,8 +17,7 @@ module Collaborator
           title: "Selo: Nivelado em Atendimento",
           description: "Complete todas as lições acima para receber seu certificado oficial da empresa."
         },
-        summary: {completed: 3, percent: 50},
-        extra_task: {text: "Avalie 2 colegas de equipe (2 min)", href: Rails.application.routes.url_helpers.collaborator_peer_review_path}
+        summary: {completed: 3, percent: 50}
       }
     end
 

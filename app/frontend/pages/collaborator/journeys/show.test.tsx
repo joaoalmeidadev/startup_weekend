@@ -32,19 +32,6 @@ describe('JourneysShow', () => {
     expect(within(current).getByText('Rotinas')).toBeInTheDocument()
   })
 
-  it('shows the pending peer review as an extra task', () => {
-    page.props = {
-      journey: { ...journey, extra_task: { text: 'Avalie 2 colegas', href: '/collaborator/peer_review' } },
-      viewer,
-    }
-    render(<JourneysShow />)
-
-    expect(screen.getByRole('link', { name: /Avalie 2 colegas/ })).toHaveAttribute(
-      'href',
-      '/collaborator/peer_review',
-    )
-  })
-
   it('tells the collaborator the journey is being prepared when it is empty', () => {
     page.props = { journey: { ...journey, sections: [] }, viewer }
     render(<JourneysShow />)

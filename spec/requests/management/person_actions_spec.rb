@@ -21,14 +21,4 @@ RSpec.describe "Management actions on a person", :inertia do
       expect(response).to have_http_status(:not_found)
     end
   end
-
-  describe "GET /management/people/:id/review" do
-    it "renders the manager review with the same statements colleagues answer" do
-      get management_person_review_path("maria-souza")
-
-      expect_inertia.to render_component("management/reviews/show")
-      expect(inertia.props[:review][:person]).to include(name: "Maria Souza")
-      expect(inertia.props[:review][:statements].size).to eq(3)
-    end
-  end
 end

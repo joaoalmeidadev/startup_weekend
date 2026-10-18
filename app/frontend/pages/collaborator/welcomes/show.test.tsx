@@ -22,4 +22,15 @@ describe('WelcomesShow', () => {
 
     expect(router.visit).toHaveBeenCalledWith('/collaborator/diagnostic')
   })
+
+  it('explains that the collaborator learns without depending on anyone', () => {
+    render(<WelcomesShow />)
+
+    expect(
+      screen.getByText(
+        'Aqui você aprende o que os colegas mais experientes sabem — no seu ritmo, 5 minutos por dia, sem depender de ninguém para explicar.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(3)
+  })
 })

@@ -4,8 +4,7 @@ module Collaborator
     def props
       {
         reminder_time: "09:00",
-        reminder_options: %w[08:00 09:00 13:30 17:00],
-        ranking_name: "Maria Souza"
+        reminder_options: %w[08:00 09:00 13:30 17:00]
       }
     end
   end

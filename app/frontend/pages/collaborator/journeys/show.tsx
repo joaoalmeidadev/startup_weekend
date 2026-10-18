@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { CollaboratorLayout } from '@/layouts/CollaboratorLayout'
 import type { Journey, Viewer } from '@/types/collaborator'
@@ -49,19 +49,6 @@ export default function JourneysShow() {
             <Icon name="arrow_forward" className="text-[2rem]" />
           </a>
         </section>
-
-        {journey.extra_task && (
-          <Link
-            href={journey.extra_task.href}
-            className="flex items-center gap-space-md rounded-xl border-[1.5px] border-slate-200 bg-surface-container-lowest p-space-md hover:bg-surface-container-low"
-          >
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-surface-container text-primary-container">
-              <Icon name="groups" className="text-[1.75rem]" />
-            </span>
-            <span className="flex-1 text-body-lg-bold text-on-surface">{journey.extra_task.text}</span>
-            <Icon name="chevron_right" className="text-[1.75rem] text-on-surface-variant" />
-          </Link>
-        )}
 
         <section className={`${CARD} flex flex-col gap-space-xl`}>
           <div className="flex items-center justify-between pb-space-sm">
