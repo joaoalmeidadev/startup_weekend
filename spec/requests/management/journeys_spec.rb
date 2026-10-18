@@ -37,9 +37,9 @@ RSpec.describe "Management journeys", :inertia do
       get management_journey_path("onboarding-atendimento")
 
       catalog = inertia.props[:catalog]
-      expect(catalog.pluck(:source)).to eq(%w[ai nivela company])
-      expect(catalog.second[:modules].pluck(:id)).to include("conversa-clara", "postura-e-empatia")
-      expect(catalog.first[:modules].pluck(:source).uniq).to eq(["ai"])
+      expect(catalog.pluck(:source)).to eq(%w[nivela ai company])
+      expect(catalog.first[:modules].pluck(:id)).to include("conversa-clara", "atendimento-ao-cliente")
+      expect(catalog.second[:modules].pluck(:source).uniq).to eq(["ai"])
     end
 
     it "brings the sector goal competencies the journey should cover" do
@@ -50,6 +50,22 @@ RSpec.describe "Management journeys", :inertia do
         competencies: ["Comunicação e Escuta Ativa", "Resolução de Reclamações de Entrega",
           "Uso do Sistema Interno de Pedidos", "Postura e Empatia com Clientes Difíceis", "Rotinas da Distribuidora"]
       )
+    end
+
+    it "offers the ready-made Nivela journey with Base and general sector products only" do
+      get management_journey_path("onboarding-atendimento")
+
+      ready = inertia.props[:ready_journey]
+      expect(ready.pluck(:key)).to eq(%w[base company sector])
+      expect(ready.flat_map { |stretch| stretch[:modules] }.pluck(:source).uniq).to eq(["nivela"])
+      expect(ready.third[:modules].pluck(:id)).to include("atendimento-ao-cliente")
+      expect(inertia.props[:start_ready]).to be(false)
+    end
+
+    it "starts from the ready-made journey when asked" do
+      get management_journey_path("onboarding-atendimento", ready: 1)
+
+      expect(inertia.props[:start_ready]).to be(true)
     end
 
     it "answers 404 for an unknown journey" do

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { useState } from 'react'
 import { Icon } from '@/components/Icon'
+import { ResearchShare } from '@/components/ResearchShare'
 import { SOURCES, SOURCE_ORDER, SourceBadge } from '@/components/SourceBadge'
 import type { ContentSource, LibraryModule } from '@/types/management'
 
@@ -48,11 +49,49 @@ function LibraryItem({ module }: { module: LibraryModule }) {
             <span>{module.lessons} lições</span>
             <span aria-hidden="true">·</span>
             <span>{journeysLabel(module.journeys_count)}</span>
+            <ResearchShare share={module.research_share} />
           </span>
         </span>
         <Icon name="chevron_right" className="text-[1.25rem] text-outline" />
       </Link>
     </li>
+  )
+}
+
+function NivelaShelf({ products, onShow }: { products: LibraryModule[]; onShow: () => void }) {
+  const lessons = products.reduce((total, module) => total + module.lessons, 0)
+  return (
+    <section
+      aria-labelledby="nivela-shelf-title"
+      className="flex flex-col justify-between gap-space-sm rounded-xl bg-surface-container-low p-space-md md:flex-row md:items-center"
+    >
+      <div className="flex items-start gap-space-sm">
+        <span
+          className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${SOURCES.nivela.className}`}
+        >
+          <Icon name={SOURCES.nivela.icon} className="text-[1.375rem]" />
+        </span>
+        <div className="flex flex-col">
+          <h3 id="nivela-shelf-title" className="text-label-lg text-on-surface">
+            Produtos Nivela
+          </h3>
+          <p className="text-body-sm text-on-surface-variant">
+            Prontos para usar, mesmo que sua empresa ainda não tenha material. Feitos para qualquer setor.
+          </p>
+          <span className="text-label-md text-primary">
+            {products.length} módulos · {lessons} lições disponíveis
+          </span>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onShow}
+        className="inline-flex w-fit shrink-0 items-center gap-1 text-label-md text-primary hover:underline"
+      >
+        Ver os produtos Nivela
+        <Icon name="arrow_forward" className="text-[1.125rem]" />
+      </button>
+    </section>
   )
 }
 
@@ -71,6 +110,10 @@ export function ContentLibrary({ library }: { library: LibraryModule[] }) {
         </h2>
         <FilterBar current={filter} onChange={setFilter} />
       </div>
+      <NivelaShelf
+        products={library.filter((module) => module.source === 'nivela')}
+        onShow={() => setFilter('nivela')}
+      />
       <ul className="grid grid-cols-1 gap-x-space-md gap-y-1 md:grid-cols-2">
         {visible.map((module) => (
           <LibraryItem key={module.id} module={module} />

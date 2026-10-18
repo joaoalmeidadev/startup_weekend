@@ -48,6 +48,15 @@ describe('LearningModulesNew', () => {
     expect(screen.queryByLabelText('Nome do conteúdo')).not.toBeInTheDocument()
   })
 
+  it('offers a one-click ready-made Nivela journey', () => {
+    render(<LearningModulesNew />)
+
+    expect(screen.getByRole('link', { name: /Começar com a jornada pronta/ })).toHaveAttribute(
+      'href',
+      '/management/journeys/onboarding-atendimento?ready=1',
+    )
+  })
+
   it('adds a ready-made Nivela product to the journey as a simulation', async () => {
     render(<LearningModulesNew />)
 

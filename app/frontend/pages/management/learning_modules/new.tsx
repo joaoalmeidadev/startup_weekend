@@ -127,6 +127,12 @@ function DoneStep({ generated }: { generated: NewModuleProps['generated'] }) {
   )
 }
 
+const DEFAULT_JOURNEY = 'onboarding-atendimento'
+
+function readyPathFor(journey: NewModuleProps['journey']) {
+  return `/management/journeys/${journey?.id ?? DEFAULT_JOURNEY}?ready=1`
+}
+
 function manualPathFor(journey: NewModuleProps['journey']) {
   const base = '/management/modules/new?mode=manual'
   return journey ? `${base}&journey=${journey.id}` : base
@@ -173,7 +179,11 @@ export default function LearningModulesNew() {
         <WizardSteps current={step} />
         <section className="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
           {step === 0 && origin === null && (
-            <OriginChoice manualPath={manualPathFor(journey)} onPick={setOrigin} />
+            <OriginChoice
+              manualPath={manualPathFor(journey)}
+              readyPath={readyPathFor(journey)}
+              onPick={setOrigin}
+            />
           )}
           {step === 0 && origin !== null && <ChangeOrigin onClick={() => setOrigin(null)} />}
           {step === 0 && origin === 'ai' && (

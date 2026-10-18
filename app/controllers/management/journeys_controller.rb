@@ -5,7 +5,7 @@ module Management
     end
 
     def show
-      render inertia: JourneyMock.new(params[:id]).props
+      render inertia: JourneyMock.new(params[:id], start_ready: params[:ready].present?).props
     end
   end
 end

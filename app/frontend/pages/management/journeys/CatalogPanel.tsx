@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Icon } from '@/components/Icon'
+import { ResearchShare } from '@/components/ResearchShare'
 import { SourceBadge } from '@/components/SourceBadge'
 import type { CatalogGroup, ModuleSummary, StretchKey } from '@/types/management'
 
@@ -7,7 +8,7 @@ type AddModule = (module: ModuleSummary, stretch: StretchKey) => void
 
 const HINTS: Record<CatalogGroup['source'], string> = {
   ai: 'Criados pela IA a partir dos seus materiais',
-  nivela: 'Prontos, entram no trecho Base',
+  nivela: 'Feitos para qualquer setor; entram no trecho sugerido',
   company: 'Escritos pela sua empresa',
 }
 
@@ -33,10 +34,10 @@ function StretchChoice({ onPick, onCancel }: { onPick: (key: StretchKey) => void
 
 type CatalogItemProps = { module: ModuleSummary; added: boolean; onAdd: AddModule }
 
-// Nivela products always go to Base; AI and company modules ask Empresa or Setor inline
+// Nivela products go to their suggested stretch; AI and company modules ask Empresa or Setor inline
 function CatalogItem({ module, added, onAdd }: CatalogItemProps) {
   const [choosing, setChoosing] = useState(false)
-  const add = () => (module.source === 'nivela' ? onAdd(module, 'base') : setChoosing(true))
+  const add = () => (module.source === 'nivela' ? onAdd(module, module.stretch) : setChoosing(true))
 
   return (
     <li className="flex flex-col gap-space-xs py-space-sm">
@@ -46,6 +47,7 @@ function CatalogItem({ module, added, onAdd }: CatalogItemProps) {
           <span className="text-body-sm text-on-surface-variant">
             {module.lessons} lições · substitui ~{module.teaching_hours}h
           </span>
+          <ResearchShare share={module.research_share} />
         </span>
         <button
           type="button"
@@ -89,6 +91,11 @@ export function CatalogPanel({ catalog, inJourney, onAdd }: CatalogPanelProps) {
         <section key={group.source} aria-label={`Catálogo: ${group.title}`} className="flex flex-col">
           <div className="flex flex-wrap items-center gap-space-sm">
             <SourceBadge source={group.source} />
+            {group.source === 'nivela' && (
+              <span className="rounded-full bg-tertiary-fixed px-space-sm py-0.5 text-label-sm font-bold text-on-tertiary-fixed-variant">
+                pronto para usar
+              </span>
+            )}
             <span className="text-body-sm text-on-surface-variant">{HINTS[group.source]}</span>
           </div>
           <ul className="flex flex-col divide-y divide-surface-container">

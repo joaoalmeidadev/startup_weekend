@@ -11,7 +11,7 @@ const FLOWS: Record<ContentSource, { steps: string[]; hint: string }> = {
   },
   nivela: {
     steps: ['Biblioteca Nivela', 'Jornada', 'Colaborador'],
-    hint: 'Matemática, português e comportamento prontos, mantidos pela Nivela.',
+    hint: 'Base e habilidades gerais de qualquer setor, prontas e mantidas pela Nivela.',
   },
   company: {
     steps: ['Você escreve', 'Jornada', 'Colaborador'],

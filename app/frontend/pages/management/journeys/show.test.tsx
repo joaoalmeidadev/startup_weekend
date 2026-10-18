@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { catalog, journey, journeyGoal, manager } from '@/test/managementFixtures'
+import { catalog, journey, journeyGoal, manager, readyJourney } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
 import JourneysShow from './show'
 
@@ -18,7 +18,14 @@ const namesIn = (title: string) =>
 describe('JourneysShow (montador de jornada)', () => {
   beforeEach(() => {
     page.url = '/management/journeys/onboarding-atendimento'
-    page.props = { journey, catalog, goal: journeyGoal, manager }
+    page.props = {
+      journey,
+      catalog,
+      goal: journeyGoal,
+      ready_journey: readyJourney,
+      start_ready: false,
+      manager,
+    }
   })
 
   it('sums up the value of the journey as an estimate', () => {
@@ -56,6 +63,42 @@ describe('JourneysShow (montador de jornada)', () => {
     expect(
       within(catalogGroup('Gerado por IA')).getByRole('button', { name: 'Adicionar Segurança no Armazém' }),
     ).toBeEnabled()
+  })
+
+  it('lists the ready-to-use Nivela products first', () => {
+    render(<JourneysShow />)
+
+    const groups = within(screen.getByRole('region', { name: 'Catálogo' })).getAllByRole('region')
+    expect(groups[0]).toHaveAccessibleName('Catálogo: Produtos Nivela')
+    expect(groups[0]).toHaveTextContent('pronto para usar')
+  })
+
+  it('puts a general Nivela product straight into its suggested stretch', async () => {
+    render(<JourneysShow />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Adicionar Atendimento ao Cliente' }))
+
+    expect(namesIn('Setor')).toEqual([expect.stringContaining('Atendimento ao Cliente')])
+  })
+
+  it('starts over with the ready-made Nivela journey in one click', async () => {
+    render(<JourneysShow />)
+
+    const ready = within(screen.getByRole('region', { name: 'Jornada pronta Nivela' }))
+    expect(ready.getByText(/3 módulos · ~10h de repasse/)).toBeInTheDocument()
+    await userEvent.click(ready.getByRole('button', { name: 'Começar com a jornada pronta' }))
+
+    expect(namesIn('Empresa')).toEqual([])
+    expect(namesIn('Setor')).toEqual([expect.stringContaining('Atendimento ao Cliente')])
+    expect(value()).toHaveTextContent('Substitui ~10h')
+    expect(screen.getByRole('status')).toHaveTextContent('Jornada pronta Nivela')
+  })
+
+  it('opens already on the ready-made journey when asked', () => {
+    page.props = { ...page.props, start_ready: true }
+    render(<JourneysShow />)
+
+    expect(namesIn('Setor')).toEqual([expect.stringContaining('Atendimento ao Cliente')])
   })
 
   it('puts a Nivela product straight into Base and updates the value', async () => {

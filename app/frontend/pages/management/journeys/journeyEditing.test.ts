@@ -3,7 +3,7 @@ import { catalog, journey } from '@/test/managementFixtures'
 import { addModule, moduleIds, moveModule, removeModule } from './journeyEditing'
 
 const baseIds = (stretches: typeof journey.stretches) => stretches[0].modules.map((m) => m.id)
-const postura = catalog[1].modules[2]
+const postura = catalog[0].modules[2]
 
 describe('journeyEditing', () => {
   it('swaps a module with its neighbour inside the stretch', () => {

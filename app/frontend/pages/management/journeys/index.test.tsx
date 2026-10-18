@@ -76,6 +76,29 @@ describe('JourneysIndex', () => {
     expect(library.getByRole('link', { name: /Uso do Sistema/ })).toHaveTextContent('Em nenhuma jornada')
   })
 
+  it('presents the Nivela products as a ready-made library for any sector', async () => {
+    render(<JourneysIndex />)
+
+    const ready = within(screen.getByRole('region', { name: 'Produtos Nivela' }))
+    expect(
+      ready.getByText(
+        'Prontos para usar, mesmo que sua empresa ainda não tenha material. Feitos para qualquer setor.',
+      ),
+    ).toBeInTheDocument()
+    expect(ready.getByText('2 módulos · 9 lições disponíveis')).toBeInTheDocument()
+
+    await userEvent.click(ready.getByRole('button', { name: /Ver os produtos Nivela/ }))
+    expect(screen.getByRole('button', { name: 'Produtos Nivela' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('highlights the skills the companies struggle with the most', () => {
+    render(<JourneysIndex />)
+
+    expect(screen.getByRole('link', { name: /Raciocínio Lógico/ })).toHaveTextContent(
+      'Citado por 56% das empresas',
+    )
+  })
+
   it('filters the library by origin', async () => {
     render(<JourneysIndex />)
 
@@ -91,7 +114,7 @@ describe('JourneysIndex', () => {
     ])
 
     await userEvent.click(screen.getByRole('button', { name: 'Todos' }))
-    expect(library.getAllByRole('link')).toHaveLength(3)
+    expect(library.getAllByRole('link')).toHaveLength(4)
   })
 
   it('keeps the journeys in their own section', () => {

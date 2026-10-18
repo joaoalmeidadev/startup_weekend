@@ -7,12 +7,13 @@ import type { ModuleSummary, NewModuleProps } from '@/types/management'
 
 type NivelaProductsProps = { products: ModuleSummary[]; journey: NewModuleProps['journey'] }
 
-// Ready-made Nivela library: adding is simulated and the product lands in the Base stretch
+// Ready-made Nivela library: adding is simulated and the product lands in its suggested stretch
 export function NivelaProducts({ products, journey }: NivelaProductsProps) {
   const notify = useMockNotice()
   const [added, setAdded] = useState<string[]>([])
-  const target = journey ? `na Base de ${journey.name}` : 'na Base da jornada'
   const add = (product: ModuleSummary) => {
+    const stretch = product.stretch === 'sector' ? 'no Setor' : 'na Base'
+    const target = journey ? `${stretch} de ${journey.name}` : `${stretch} da jornada`
     setAdded((ids) => [...ids, product.id])
     notify(`"${product.name}" entrou ${target} (simulação).`)
   }
@@ -22,7 +23,7 @@ export function NivelaProducts({ products, journey }: NivelaProductsProps) {
       <div className="flex flex-wrap items-center gap-space-sm">
         <SourceBadge source="nivela" />
         <span className="text-body-sm text-on-surface-variant">
-          Prontos e mantidos pela Nivela. Entram no trecho Base.
+          Prontos para usar, mesmo sem material da empresa. Entram na Base ou no Setor.
         </span>
       </div>
       <ul aria-label="Produtos Nivela" className="flex flex-col divide-y divide-surface-container">

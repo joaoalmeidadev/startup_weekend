@@ -82,6 +82,7 @@ export type ModuleSummary = {
   stretch: StretchKey
   teaching_hours: number
   covers: string
+  research_share: number | null
 }
 
 export type Stretch = { key: StretchKey; title: string; modules: ModuleSummary[] }
@@ -168,4 +169,10 @@ export type CatalogGroup = { source: ContentSource; title: string; modules: Modu
 
 export type JourneyGoal = { sector: string | null; competencies: string[] }
 
-export type JourneyBuilderProps = { journey: Journey; catalog: CatalogGroup[]; goal: JourneyGoal }
+export type JourneyBuilderProps = {
+  journey: Journey
+  catalog: CatalogGroup[]
+  goal: JourneyGoal
+  ready_journey: Stretch[]
+  start_ready: boolean
+}

@@ -32,10 +32,10 @@ function CardBody({
   )
 }
 
-type OriginChoiceProps = { manualPath: string; onPick: (origin: PickedOrigin) => void }
+type OriginChoiceProps = { manualPath: string; readyPath: string; onPick: (origin: PickedOrigin) => void }
 
 // First step of "Novo conteúdo": one big card per origin, the AI one recommended
-export function OriginChoice({ manualPath, onPick }: OriginChoiceProps) {
+export function OriginChoice({ manualPath, readyPath, onPick }: OriginChoiceProps) {
   return (
     <div className="flex flex-col gap-space-md">
       <h2 className="text-headline-sm text-on-surface">De onde vem este conteúdo?</h2>
@@ -79,11 +79,26 @@ export function OriginChoice({ manualPath, onPick }: OriginChoiceProps) {
             <CardBody
               source="nivela"
               title="Usar um produto Nivela"
-              hint="Matemática, português e comportamento, prontos para a Base."
+              hint="Comunicação, raciocínio, atendimento e mais. Prontos para qualquer setor."
             />
           </button>
         </li>
       </ul>
+      <Link
+        href={readyPath}
+        className="flex flex-col justify-between gap-space-sm rounded-xl bg-primary-fixed p-space-md text-on-primary-fixed hover:brightness-95 md:flex-row md:items-center"
+      >
+        <span className="flex items-center gap-space-sm">
+          <Icon name="bolt" className="text-[1.5rem]" />
+          <span className="flex flex-col">
+            <span className="text-label-lg">Começar com a jornada pronta</span>
+            <span className="text-body-sm">
+              Ainda sem material? Uma jornada só com produtos Nivela, montada em um clique e editável depois.
+            </span>
+          </span>
+        </span>
+        <Icon name="arrow_forward" className="text-[1.5rem]" />
+      </Link>
     </div>
   )
 }

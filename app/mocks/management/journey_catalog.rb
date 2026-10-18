@@ -4,6 +4,13 @@ module Management
   module JourneyCatalog
     STRETCHES = {base: "Base", company: "Empresa", sector: "Setor"}.freeze
 
+    # "Jornada pronta Nivela": only ready-made products, for a company that has no material yet
+    READY_MODULES = {
+      base: %w[raciocinio-logico interpretacao-de-instrucoes conversa-clara escrita-no-trabalho matematica-do-dia-a-dia],
+      company: [],
+      sector: %w[atendimento-ao-cliente resolucao-de-problemas trabalho-em-equipe]
+    }.freeze
+
     JOURNEYS = {
       "onboarding-atendimento" => {
         name: "Onboarding Atendimento", status: "active", people_in_progress: 14, badge: "Nivelado em Atendimento",

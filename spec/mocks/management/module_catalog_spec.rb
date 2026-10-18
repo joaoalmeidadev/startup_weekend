@@ -33,4 +33,20 @@ RSpec.describe Management::ModuleCatalog do
     )
     expect(described_class.summary("matematica-do-dia-a-dia")[:covers]).to eq("Matemática básica")
   end
+
+  it "offers ready-made Nivela products for general work skills beyond Base" do
+    nivela = described_class.by_source("nivela")
+
+    expect(nivela.pluck(:stretch).uniq).to contain_exactly("base", "sector")
+    expect(nivela.pluck(:id)).to include("atendimento-ao-cliente", "interpretacao-de-instrucoes", "vendas-basico")
+  end
+
+  it "highlights the skills companies struggle with the most, first" do
+    highlighted = described_class.by_source("nivela").select { |mod| mod[:research_share] }
+
+    expect(highlighted.pluck(:id, :research_share)).to eq([
+      ["raciocinio-logico", 56], ["interpretacao-de-instrucoes", 44], ["conversa-clara", 44], ["escrita-no-trabalho", 38]
+    ])
+    expect(described_class.by_source("nivela").first(4)).to eq(highlighted)
+  end
 end

@@ -127,6 +127,7 @@ const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleS
   stretch: 'base',
   teaching_hours: 3,
   covers: `Competência ${name}`,
+  research_share: null,
   ...overrides,
 })
 
@@ -258,19 +259,24 @@ const companyModule = (id: string, name: string, overrides: ModuleOverrides = {}
 
 export const catalog: CatalogGroup[] = [
   {
-    source: 'ai',
-    title: 'Gerado por IA',
-    modules: [
-      journey.stretches[1].modules[0],
-      aiModule('seguranca-no-armazem', 'Segurança no Armazém', { lessons: 5 }),
-    ],
-  },
-  {
     source: 'nivela',
     title: 'Produtos Nivela',
     modules: [
       ...journey.stretches[0].modules,
       mod('postura-e-empatia', 'Postura e Empatia', { lessons: 3, covers: 'Postura' }),
+      mod('atendimento-ao-cliente', 'Atendimento ao Cliente', {
+        stretch: 'sector',
+        lessons: 5,
+        teaching_hours: 4,
+      }),
+    ],
+  },
+  {
+    source: 'ai',
+    title: 'Gerado por IA',
+    modules: [
+      journey.stretches[1].modules[0],
+      aiModule('seguranca-no-armazem', 'Segurança no Armazém', { lessons: 5 }),
     ],
   },
   {
@@ -294,6 +300,13 @@ export const contentLibrary: LibraryModule[] = [
   inJourneys(journey.stretches[1].modules[0], 1),
   inJourneys(journey.stretches[0].modules[0], 2),
   inJourneys(companyModule('uso-do-sistema', 'Uso do Sistema'), 0),
+  inJourneys(mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }), 1),
 ]
 
-export const nivelaProducts: ModuleSummary[] = catalog[1].modules
+export const nivelaProducts: ModuleSummary[] = catalog[0].modules
+
+export const readyJourney: Journey['stretches'] = [
+  { key: 'base', title: 'Base', modules: journey.stretches[0].modules },
+  { key: 'company', title: 'Empresa', modules: [] },
+  { key: 'sector', title: 'Setor', modules: [catalog[0].modules[3]] },
+]

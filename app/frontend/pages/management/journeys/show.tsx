@@ -8,6 +8,7 @@ import type { Journey, JourneyBuilderProps, ModuleSummary, StretchKey } from '@/
 import { AudienceModal } from './AudienceModal'
 import { CatalogPanel } from './CatalogPanel'
 import { JourneyPreview } from './JourneyPreview'
+import { ReadyJourneyCard } from './ReadyJourneyCard'
 import { ValueSummary } from './ValueSummary'
 import { addModule, moduleIds, moveModule, removeModule } from './journeyEditing'
 import { journeyValue } from './journeyValue'
@@ -86,14 +87,18 @@ function JourneyHeader({ journey }: { journey: Journey }) {
 }
 
 // Catalog on the left, the collaborator's path on the right; the value on top follows every change
-function JourneyBuilder({ journey, catalog, goal }: JourneyBuilderProps) {
+function JourneyBuilder({ journey, catalog, goal, ready_journey, start_ready }: JourneyBuilderProps) {
   const notify = useMockNotice()
-  const [stretches, setStretches] = useState(journey.stretches)
+  const [stretches, setStretches] = useState(start_ready ? ready_journey : journey.stretches)
   const titleOf = (key: StretchKey) => stretches.find((stretch) => stretch.key === key)?.title
 
   const add = (module: ModuleSummary, key: StretchKey) => {
     setStretches((current) => addModule(current, key, module))
     notify(`"${module.name}" entrou em ${titleOf(key)}.`)
+  }
+  const applyReady = () => {
+    setStretches(ready_journey)
+    notify('Jornada pronta Nivela aplicada. Edite à vontade.')
   }
   const remove = (key: StretchKey, module: ModuleSummary) =>
     setStretches((current) => removeModule(current, key, module.id))
@@ -104,7 +109,10 @@ function JourneyBuilder({ journey, catalog, goal }: JourneyBuilderProps) {
     <>
       <ValueSummary value={journeyValue(stretches, goal)} />
       <div className="grid grid-cols-1 items-start gap-space-md lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-        <CatalogPanel catalog={catalog} inJourney={moduleIds(stretches)} onAdd={add} />
+        <div className="flex flex-col gap-space-md">
+          <ReadyJourneyCard ready={ready_journey} goal={goal} onApply={applyReady} />
+          <CatalogPanel catalog={catalog} inJourney={moduleIds(stretches)} onAdd={add} />
+        </div>
         <JourneyPreview stretches={stretches} badge={journey.badge} onMove={move} onRemove={remove} />
       </div>
     </>
@@ -112,14 +120,14 @@ function JourneyBuilder({ journey, catalog, goal }: JourneyBuilderProps) {
 }
 
 export default function JourneysShow() {
-  const { journey, catalog, goal } = usePage<JourneyBuilderProps>().props
+  const props = usePage<JourneyBuilderProps>().props
 
   return (
     <ManagementLayout>
-      <Head title={journey.name} />
+      <Head title={props.journey.name} />
       <div className="flex w-full flex-col gap-space-lg pt-space-md">
-        <JourneyHeader journey={journey} />
-        <JourneyBuilder journey={journey} catalog={catalog} goal={goal} />
+        <JourneyHeader journey={props.journey} />
+        <JourneyBuilder {...props} />
       </div>
     </ManagementLayout>
   )
