@@ -95,6 +95,31 @@ RSpec.describe "Management dashboard", :inertia do
       expect(dashboard[:time_to_level][:days]).to eq(38)
     end
 
+    it "adds up what Nivela gave back in 6 months: savings minus rewards and the platform" do
+      get management_root_path
+
+      dashboard = inertia.props[:dashboard]
+      net = dashboard[:return]
+      expect(net).to include(training_saved: dashboard[:savings][:amount], rework_count: 39, rework_avoided: 39 * 80,
+        platform_cost: 14 * 15 * 6)
+      expect(net[:assumptions]).to include(rework_cost: 80, price_per_person: 15, people: 14, months: 6)
+      # every listed redemption: 4 Canecas Nivela (R$ 25) and 4 Vale-lanches (R$ 30)
+      expect(net[:rewards_paid]).to eq(4 * 25 + 4 * 30)
+      expect_formula_to_hold(net)
+    end
+
+    it "counts only October rewards and one month of Nivela in the last 30 days" do
+      get management_root_path(period: "30d")
+      short = inertia.props[:dashboard][:return]
+      get management_root_path(period: "6m")
+      long = inertia.props[:dashboard][:return]
+
+      expect(short).to include(rework_count: 9, rework_avoided: 9 * 80, rewards_paid: 25 + 30, platform_cost: 14 * 15)
+      expect(short[:assumptions]).to include(months: 1)
+      expect(short[:rewards_paid]).not_to eq(long[:rewards_paid])
+      expect_formula_to_hold(short)
+    end
+
     it "compares each competency with the Atendimento sector goal (Médio, 75 pts)" do
       get management_root_path
 
@@ -119,6 +144,13 @@ RSpec.describe "Management dashboard", :inertia do
 
       expect(inertia.props[:dashboard][:study_share]).to eq(short)
     end
+  end
+
+  def expect_formula_to_hold(net)
+    gained = net[:training_saved] + net[:rework_avoided]
+    spent = net[:rewards_paid] + net[:platform_cost]
+    expect(net[:balance]).to eq(gained - spent)
+    expect(net[:return_per_real]).to eq(gained.fdiv(spent).round(1))
   end
 
   it "is only for management" do

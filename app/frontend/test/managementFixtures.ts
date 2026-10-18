@@ -283,6 +283,16 @@ export const teamDashboard: TeamDashboard = {
   knowledge_gain: { before: 48, now: 79 },
   time_to_level: { days: 46, before_days: 90 },
   savings: { new_hires: 9, hours: 207, amount: 6365, salaries: { informed: 6, total: 10 } },
+  return: {
+    training_saved: 6365,
+    rework_count: 39,
+    rework_avoided: 3120,
+    rewards_paid: 220,
+    platform_cost: 1260,
+    balance: 8005,
+    return_per_real: 6.4,
+    assumptions: { rework_cost: 80, price_per_person: 15, people: 14, months: 6 },
+  },
   retention: { review_accuracy: 86, active_weekly: '9 de 14', minutes_per_day: 5 },
   competencies: [{ name: 'Reclamações', before: 42, now: 71, goal: 75 }],
   on_the_job: {

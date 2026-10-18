@@ -5,6 +5,7 @@ import type { Manager, TeamDashboard } from '@/types/management'
 import { OnTheJob, Retention } from './ImpactCards'
 import { BeforeAfter, LevelingOverTime } from './MetricsCharts'
 import { PeriodFilter } from './MetricsSummary'
+import { NetReturn } from './NetReturn'
 import { ProofFigures } from './ProofFigures'
 import { StudyShare } from './StudyShareCharts'
 
@@ -49,6 +50,7 @@ export default function HomesShow() {
         <PageHeader company={manager.company} />
         <PeriodFilter dashboard={dashboard} />
         <ProofFigures dashboard={dashboard} />
+        <NetReturn dashboard={dashboard} />
         <div className="grid grid-cols-1 gap-space-md xl:grid-cols-2">
           <BeforeAfter dashboard={dashboard} />
           <LevelingOverTime dashboard={dashboard} />
