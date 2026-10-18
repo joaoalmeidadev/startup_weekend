@@ -31,6 +31,16 @@ RSpec.describe "Management sectors", :inertia do
       expect(levels["Staff"]).to include(label: "Fácil", target: 60)
       expect(levels["Logística"]).to be_nil
     end
+
+    it "tells the company training cost and which sectors have their own" do
+      get management_sectors_path
+
+      expect(inertia.props[:company_rule]).to include(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
+      costs = inertia.props[:sectors].to_h { |sector| [sector[:name], sector[:training_cost]] }
+      expect(costs["Logística"]).to include(own: true, teacher_salary: 3960, learner_salary: 1980)
+      expect(costs["Atendimento"]).to include(own: false, teacher_salary: 4400, learner_salary: 2200)
+      expect(costs["Staff"]).to be_nil
+    end
   end
 
   describe "GET /management/sectors/:slug" do
@@ -62,6 +72,20 @@ RSpec.describe "Management sectors", :inertia do
       reached = sector[:competencies].pluck(:reached)
       expect(reached.pluck(:of)).to all(eq(sector[:people].size))
       expect(reached).to all(satisfy { |row| row[:count].between?(0, row[:of]) })
+    end
+
+    it "tells the training cost of a work sector against the company one" do
+      get management_sector_path("logistica")
+
+      expect(inertia.props[:company_rule]).to include(teacher_salary: 4400, reward_share: 0.4)
+      expect(inertia.props[:training_cost]).to include(own: true, teacher_salary: 3960, learner_salary: 1980)
+    end
+
+    it "leaves the training cost out of a group, whose people already have a work sector" do
+      get management_sector_path("staff")
+
+      expect(inertia.props[:company_rule]).to be_present
+      expect(inertia.props[:training_cost]).to be_nil
     end
 
     it "shows a group with people from different sectors" do

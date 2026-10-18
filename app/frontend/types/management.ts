@@ -240,3 +240,12 @@ export type RewardsProps = {
 // What one hour of in-person training costs (monthly salaries of who teaches and who learns) and how much of
 // the saving becomes points
 export type PointsRule = { teacher_salary: number; learner_salary: number; reward_share: number }
+
+// Training cost of a work sector: its own salaries, or the company's ones when own is false. Groups have none.
+export type SectorTrainingCost = { own: boolean; teacher_salary: number; learner_salary: number }
+
+export type SectorRow = SectorSummary & { training_cost: SectorTrainingCost | null }
+
+export type SectorsIndexProps = { company_rule: PointsRule; sectors: SectorRow[] }
+
+export type SectorTrainingCostProps = { company_rule: PointsRule; training_cost: SectorTrainingCost | null }

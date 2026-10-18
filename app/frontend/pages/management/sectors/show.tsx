@@ -1,15 +1,16 @@
 import { Head, usePage } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
-import type { InviteSector, SectorDetail } from '@/types/management'
+import type { InviteSector, SectorDetail, SectorTrainingCostProps } from '@/types/management'
 import { InviteMenu } from '../people/InviteMenu'
 import { BackToSectors } from './Block'
 import { peopleCount } from './peopleCount'
 import { SectorGoal } from './SectorGoal'
 import { SectorKindTag } from './SectorKindTag'
 import { SectorPeople } from './SectorPeople'
+import { SectorTrainingCost } from './SectorTrainingCost'
 
-type SectorsShowProps = {
+type SectorsShowProps = SectorTrainingCostProps & {
   sector: SectorDetail
   invite_sectors: InviteSector[]
   library_competencies: string[]
@@ -26,6 +27,8 @@ export default function SectorsShow() {
     sector,
     invite_sectors: inviteSectors,
     library_competencies: libraryCompetencies,
+    company_rule: companyRule,
+    training_cost: trainingCost,
   } = usePage<SectorsShowProps>().props
 
   return (
@@ -49,6 +52,14 @@ export default function SectorsShow() {
           <SectorInvite sector={sector} sectors={inviteSectors} />
         </section>
         <SectorPeople sector={sector} />
+        {trainingCost && (
+          <SectorTrainingCost
+            key={sector.slug}
+            sector={sector.name}
+            companyRule={companyRule}
+            trainingCost={trainingCost}
+          />
+        )}
         <SectorGoal key={sector.slug} sector={sector} libraryCompetencies={libraryCompetencies} />
       </div>
     </ManagementLayout>
