@@ -92,7 +92,7 @@ export default function LearningModulesShow() {
         )}
         <div className="flex flex-col gap-space-xs">
           <span className="text-label-sm font-bold tracking-wider text-primary uppercase">
-            Módulo · Trecho {module.stretch}
+            Conteúdo da Biblioteca
           </span>
           <div className="flex items-center gap-space-sm">
             <h1 className="text-headline-xl tracking-tight text-on-surface">{module.name}</h1>

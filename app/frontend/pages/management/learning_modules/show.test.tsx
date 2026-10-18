@@ -48,4 +48,11 @@ describe('LearningModulesShow', () => {
     expect(screen.queryByRole('link', { name: /Revisar lições/ })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /Como acolher/ })).not.toBeInTheDocument()
   })
+
+  it('presents itself as a library content, with no stretch', () => {
+    render(<LearningModulesShow />)
+
+    expect(screen.getByText('Conteúdo da Biblioteca')).toBeInTheDocument()
+    expect(screen.queryByText(/Trecho/)).not.toBeInTheDocument()
+  })
 })
