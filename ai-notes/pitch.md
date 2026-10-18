@@ -28,7 +28,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 5. **Revisar lições**: "À esquerda o manual, à direita o que o funcionário vai ver. Nada vai para a equipe sem a minha
    aprovação." (Atalho: `/management/lesson_reviews/8` → "Aprovar e escolher quem recebe".)
 6. **Publicar**: "Setor Atendimento" e "Novatos" já marcados → **Publicar**.
-7. (Se perguntarem da meta) **Conteúdos → Meta do setor**: "Começa num nível de mercado — Fácil, Médio, Difícil — e eu ajusto
+7. (Se perguntarem da meta) aba **Meta do setor**: "Começa num nível de mercado — Fácil, Médio, Difícil — e eu ajusto
    por competência; a marca cinza é a referência dos meus veteranos."
 
 ### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)

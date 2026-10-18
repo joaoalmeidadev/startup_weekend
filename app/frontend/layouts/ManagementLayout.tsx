@@ -13,13 +13,10 @@ const NAV: NavItem[] = [
     icon: 'library_books',
     label: 'Conteúdos',
     href: '/management/journeys',
-    sections: [
-      '/management/journeys',
-      '/management/modules',
-      '/management/lesson_reviews',
-      '/management/sector_goal',
-    ],
+    sections: ['/management/journeys', '/management/modules', '/management/lesson_reviews'],
   },
+  { icon: 'tune', label: 'Meta do setor', href: '/management/sector_goal' },
+  { icon: 'redeem', label: 'Recompensas', href: '/management/rewards' },
 ]
 
 const ITEM = 'flex min-h-[3rem] w-full items-center gap-space-sm rounded-xl px-space-md transition-all'

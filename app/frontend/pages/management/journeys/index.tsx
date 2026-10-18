@@ -23,28 +23,6 @@ function StretchGuide() {
   )
 }
 
-function SectorGoalCard() {
-  return (
-    <Link
-      href="/management/sector_goal"
-      className="flex items-center justify-between gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm hover:bg-surface-container-low"
-    >
-      <span className="flex items-center gap-space-sm">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary-fixed text-on-secondary-container">
-          <Icon name="tune" className="text-[1.375rem]" />
-        </span>
-        <span className="flex flex-col">
-          <span className="text-label-lg text-on-surface">Meta do setor</span>
-          <span className="text-body-sm text-on-surface-variant">
-            Nível de mercado (Fácil, Médio ou Difícil), ajustável por competência
-          </span>
-        </span>
-      </span>
-      <Icon name="arrow_forward" className="text-[1.5rem] text-primary" />
-    </Link>
-  )
-}
-
 type JourneysScreenProps = { journeys: JourneySummary[]; library: LibraryModule[]; company: string }
 
 function JourneysSection({ journeys }: { journeys: JourneySummary[] }) {
@@ -85,7 +63,6 @@ function JourneysScreen({ journeys, library, company }: JourneysScreenProps) {
         </Link>
       </section>
       <SourceFlows />
-      <SectorGoalCard />
       <ContentLibrary library={library} />
       <JourneysSection journeys={journeys} />
     </div>

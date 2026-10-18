@@ -15,6 +15,14 @@ describe('SectorGoalsShow', () => {
     page.props = { sector_goal: sectorGoal, manager }
   })
 
+  it('has its own Meta tab in the navigation', () => {
+    render(<SectorGoalsShow />)
+
+    const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
+    expect(nav.getByRole('link', { name: /Meta/ })).toHaveAttribute('aria-current', 'page')
+    expect(nav.getByRole('link', { name: /Conteúdos/ })).not.toHaveAttribute('aria-current')
+  })
+
   it('offers the three market levels with Médio selected', () => {
     render(<SectorGoalsShow />)
 

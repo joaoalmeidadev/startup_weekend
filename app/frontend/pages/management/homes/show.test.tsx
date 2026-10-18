@@ -93,6 +93,8 @@ describe('HomesShow', () => {
       'dashboardDashboard',
       'groupPessoas',
       'library_booksConteúdos',
+      'tuneMeta do setor',
+      'redeemRecompensas',
     ])
     expect(nav.getByRole('link', { name: /Dashboard/ })).toHaveAttribute('aria-current', 'page')
     expect(screen.queryByRole('navigation', { name: 'Visão' })).not.toBeInTheDocument()

@@ -32,7 +32,7 @@ expect_landing "admin@nivela.com" "/management"
 for path in /management "/management?period=30d" /management/people /management/people/maria-souza \
   /management/journeys /management/journeys/onboarding-atendimento "/management/journeys/onboarding-atendimento?ready=1" /management/modules/rotinas-de-atendimento \
   /management/modules/new "/management/modules/new?mode=manual" /management/lesson_reviews/1 \
-  /management/lesson_reviews/8 /management/modules/rotinas-de-atendimento/publish /management/sector_goal; do
+  /management/lesson_reviews/8 /management/modules/rotinas-de-atendimento/publish /management/sector_goal /management/rewards; do
   check "$path"
 done
 

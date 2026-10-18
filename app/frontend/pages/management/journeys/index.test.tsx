@@ -127,12 +127,12 @@ describe('JourneysIndex', () => {
     ).toHaveLength(2)
   })
 
-  it('points to the sector goal as a market level', () => {
+  it('leaves the sector goal to its own tab', () => {
     render(<JourneysIndex />)
 
-    const card = screen.getByRole('link', { name: /Meta do setor/ })
-    expect(card).toHaveAttribute('href', '/management/sector_goal')
-    expect(card).toHaveTextContent('Nível de mercado (Fácil, Médio ou Difícil), ajustável por competência')
+    expect(
+      within(screen.getByRole('main')).queryByRole('link', { name: /Meta do setor/ }),
+    ).not.toBeInTheDocument()
   })
 
   it('keeps Conteúdos active in the navigation', () => {

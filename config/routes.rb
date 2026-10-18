@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     root "homes#show"
     resources :people, only: %i[index show]
     resource :sector_goal, only: :show
+    resource :rewards, only: :show
     resources :journeys, only: %i[index show]
     resources :learning_modules, only: %i[show new], path: "modules" do
       member { get :publish }
