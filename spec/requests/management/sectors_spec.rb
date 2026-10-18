@@ -32,14 +32,11 @@ RSpec.describe "Management sectors", :inertia do
       expect(levels["Logística"]).to be_nil
     end
 
-    it "tells the company training cost and which sectors have their own" do
+    it "no longer brings a company training cost to the list" do
       get management_sectors_path
 
-      expect(inertia.props[:company_rule]).to include(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
-      costs = inertia.props[:sectors].to_h { |sector| [sector[:name], sector[:training_cost]] }
-      expect(costs["Logística"]).to include(own: true, teacher_salary: 3960, learner_salary: 1980)
-      expect(costs["Atendimento"]).to include(own: false, teacher_salary: 4400, learner_salary: 2200)
-      expect(costs["Staff"]).to be_nil
+      expect(inertia.props).not_to have_key(:company_rule)
+      expect(inertia.props[:sectors]).to all(satisfy { |sector| !sector.key?(:training_cost) })
     end
   end
 

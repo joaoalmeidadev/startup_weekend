@@ -1,19 +1,17 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { manager, sectorsIndexProps } from '@/test/managementFixtures'
+import { manager, sectorSummaries } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
 import SectorsIndex from './index'
 
 vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).inertiaMock)
 
-const companyCard = () => within(screen.getByRole('region', { name: 'Custo do treino da empresa' }))
 const card = (name: string) => within(screen.getByRole('link', { name: new RegExp(`^${name}`) }))
 
 describe('SectorsIndex', () => {
   beforeEach(() => {
     page.url = '/management/sectors'
-    page.props = { ...sectorsIndexProps, manager }
+    page.props = { sectors: sectorSummaries, manager }
   })
 
   it('is the Setores tab of the navigation', () => {
@@ -55,58 +53,10 @@ describe('SectorsIndex', () => {
     expect(card('Atendimento').getByText('DF')).toBeInTheDocument()
   })
 
-  it('tells each work sector where its training cost comes from', () => {
+  it('has no company training cost: the cost now comes from each person and content', () => {
     render(<SectorsIndex />)
 
-    expect(card('Atendimento').getByText('Treino: padrão da empresa')).toBeInTheDocument()
-    expect(card('Logística').getByText('Treino: R$ 27/h (valor próprio)')).toBeInTheDocument()
-    expect(card('Staff').queryByText(/^Treino:/)).not.toBeInTheDocument()
-  })
-
-  it('sums up the company training cost', () => {
-    render(<SectorsIndex />)
-
-    expect(
-      companyCard().getByText(
-        '1 h de treino custa R$ 30 · quem estuda ganha 4 pts por hora · Equilibrado (40%)',
-      ),
-    ).toBeInTheDocument()
-    expect(
-      companyCard().getByText('Vale para todos os setores, menos os que têm valor próprio.'),
-    ).toBeInTheDocument()
-  })
-
-  it('edits the company training cost as a simulation', async () => {
-    render(<SectorsIndex />)
-
-    await userEvent.click(companyCard().getByRole('button', { name: 'Editar' }))
-    const dialog = within(screen.getByRole('dialog', { name: 'Custo do treino da empresa' }))
-    expect(dialog.getByText('Cada hora de estudo vira 4 pts para quem ganha R$ 2.200')).toBeInTheDocument()
-
-    fireEvent.change(dialog.getByLabelText('Salário mensal de quem ensina (R$)'), {
-      target: { value: '6600' },
-    })
-    await userEvent.click(dialog.getByRole('radio', { name: 'Generoso · 60%' }))
-    expect(dialog.getByText('Cada hora de estudo vira 6 pts para quem ganha R$ 2.200')).toBeInTheDocument()
-    await userEvent.click(dialog.getByRole('button', { name: 'Salvar' }))
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(screen.getByRole('status')).toHaveTextContent('Custo do treino salvo (simulação).')
-    expect(
-      companyCard().getByText(
-        '1 h de treino custa R$ 40 · quem estuda ganha 6 pts por hora · Generoso (60%)',
-      ),
-    ).toBeInTheDocument()
-  })
-
-  it('drops the changes when the edit is cancelled', async () => {
-    render(<SectorsIndex />)
-
-    await userEvent.click(companyCard().getByRole('button', { name: 'Editar' }))
-    await userEvent.click(screen.getByRole('radio', { name: 'Generoso · 60%' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }))
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(companyCard().getByText(/Equilibrado \(40%\)/)).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Custo do treino da empresa' })).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Treino:/)).not.toBeInTheDocument()
   })
 })

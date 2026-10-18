@@ -1,7 +1,6 @@
 import type {
   SectorTrainingCost,
   SectorTrainingCostProps,
-  SectorsIndexProps,
   PointsRule,
   RewardsProps,
   AudienceOption,
@@ -571,14 +570,6 @@ export const logisticsTrainingCost: SectorTrainingCost = {
   own: true,
   teacher_salary: 3960,
   learner_salary: 1980,
-}
-
-export const sectorsIndexProps: SectorsIndexProps = {
-  company_rule: pointsRule,
-  sectors: sectorSummaries.map((sector) => ({
-    ...sector,
-    training_cost: { Atendimento: companyCost, Logística: logisticsTrainingCost }[sector.name] ?? null,
-  })),
 }
 
 export const sectorTrainingCostProps: SectorTrainingCostProps = {

@@ -1,12 +1,10 @@
 import { Head, Link, usePage } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
-import type { Manager, SectorRow, SectorsIndexProps, SectorSummary } from '@/types/management'
+import type { Manager, SectorSummary } from '@/types/management'
 import { PersonAvatar } from '../people/PersonAvatar'
-import { CompanyTrainingCost } from './CompanyTrainingCost'
 import { peopleCount } from './peopleCount'
 import { SectorKindTag } from './SectorKindTag'
-import { hourText } from './trainingCostText'
 
 function goalText(level: SectorSummary['level']) {
   return level ? `Meta ${level.label} · ${level.target} pts` : 'Sem meta ainda'
@@ -24,19 +22,7 @@ function Faces({ people }: { people: SectorSummary['people'] }) {
   )
 }
 
-function TrainingCostLine({ cost }: { cost: SectorRow['training_cost'] }) {
-  if (!cost) return null
-  return (
-    <span className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
-      <Icon name="payments" className="text-[1.125rem]" />
-      {cost.own
-        ? `Treino: ${hourText({ ...cost, reward_share: 0 })} (valor próprio)`
-        : 'Treino: padrão da empresa'}
-    </span>
-  )
-}
-
-function SectorCard({ sector }: { sector: SectorRow }) {
+function SectorCard({ sector }: { sector: SectorSummary }) {
   return (
     <Link
       href={`/management/sectors/${sector.slug}`}
@@ -58,18 +44,13 @@ function SectorCard({ sector }: { sector: SectorRow }) {
         <Icon name="flag" className="text-[1.125rem]" />
         {goalText(sector.level)}
       </span>
-      <TrainingCostLine cost={sector.training_cost} />
       <Faces people={sector.people} />
     </Link>
   )
 }
 
 export default function SectorsIndex() {
-  const {
-    sectors,
-    company_rule: companyRule,
-    manager,
-  } = usePage<SectorsIndexProps & { manager: Manager }>().props
+  const { sectors, manager } = usePage<{ sectors: SectorSummary[]; manager: Manager }>().props
 
   return (
     <ManagementLayout>
@@ -92,7 +73,6 @@ export default function SectorsIndex() {
             <span>+ Novo setor</span>
           </Link>
         </section>
-        <CompanyTrainingCost initialRule={companyRule} />
         <section
           aria-label="Lista de setores"
           className="grid grid-cols-1 gap-space-md md:grid-cols-2 xl:grid-cols-3"
