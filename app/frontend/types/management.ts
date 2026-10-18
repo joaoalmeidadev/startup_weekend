@@ -107,7 +107,13 @@ export type PersonDetail = Person & {
     journeys: string[]
     modules: { name: string; status: 'done' | 'current' | 'locked' }[]
   }[]
-  study: { weekly_minutes: number; streak_days: number; lessons_done: number; review_accuracy: number }
+  study: {
+    weekly_minutes: number
+    streak_days: number
+    lessons_done: number
+    hours_done: number
+    review_accuracy: number
+  }
   competencies: { name: string; before: number; now: number; goal: number | null }[]
   badge: { label: string; earned: boolean; date: string | null; forecast: string }
   milestones: string[]
@@ -191,9 +197,7 @@ export type SectorCandidate = Pick<Person, 'id' | 'name' | 'sector' | 'avatar_ur
 
 export type NewSectorProps = { people: SectorCandidate[]; levels: GoalLevel[]; competencies: Competency[] }
 
-// Rewards: a point is worth `point_value` R$ of in-person training saved; a reward gives back at most `share` of it
-export type RewardRule = { point_value: number; share: number; min_points: number; hourly_cost: number }
-
+// Rewards: 1 point = R$ 1, so a reward costs at least as many points as reais
 export type Reward = {
   id: string
   name: string
@@ -212,7 +216,7 @@ export type Redemption = {
 }
 
 export type RewardsProps = {
-  rule: RewardRule
+  points_rule: PointsRule
   rewards: Reward[]
   ideas: Reward[]
   redemptions: Redemption[]

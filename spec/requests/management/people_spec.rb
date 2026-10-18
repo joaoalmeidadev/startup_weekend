@@ -49,7 +49,7 @@ RSpec.describe "Management people", :inertia do
     it "shows how the person studies" do
       get management_person_path("maria-souza")
 
-      expect(inertia.props[:person][:study]).to include(weekly_minutes: 35, streak_days: 3, lessons_done: 12, review_accuracy: 82)
+      expect(inertia.props[:person][:study]).to include(weekly_minutes: 35, streak_days: 3, lessons_done: 12, hours_done: 8, review_accuracy: 82)
     end
 
     it "compares the diagnostic with today in what the person has studied so far" do
@@ -69,12 +69,12 @@ RSpec.describe "Management people", :inertia do
       expect(person[:milestones]).to eq(["Concluiu a jornada Base Nivela", "3 dias seguidos de estudo"])
     end
 
-    it "shows the points earned and the rewards redeemed" do
+    it "earns points for the in-person training hours of the completed modules" do
       get management_person_path("maria-souza")
 
       rewards = inertia.props[:person][:rewards]
-      expect(rewards).to include(points: 240, balance: 177)
-      expect(rewards[:redeemed]).to eq([{"name" => "Vale-lanche", "date" => "02/10", "points" => 63}])
+      expect(rewards).to include(points: 272, balance: 242)
+      expect(rewards[:redeemed]).to eq([{"name" => "Vale-lanche", "date" => "02/10", "points" => 30}])
     end
 
     it "shows the earned badge of a leveled person" do
@@ -84,7 +84,8 @@ RSpec.describe "Management people", :inertia do
       expect(person[:badge]).to include(earned: true, date: "14/08")
       expect(person[:milestones]).to include("Concluiu a jornada Atendimento na prática", "Ganhou o selo Nivelado em Atendimento")
       expect(person[:rewards][:redeemed].size).to eq(2)
-      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 220)
+      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 105)
+      expect(person[:rewards]).to include(points: 782, balance: 677)
     end
 
     it "names the badge after the sector when no sector journey reaches the person" do

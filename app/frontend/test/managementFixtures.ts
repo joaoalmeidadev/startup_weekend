@@ -205,7 +205,7 @@ export const personDetail: PersonDetail = {
     },
     { title: 'Setor', journeys: [], modules: [] },
   ],
-  study: { weekly_minutes: 35, streak_days: 3, lessons_done: 12, review_accuracy: 82 },
+  study: { weekly_minutes: 35, streak_days: 3, lessons_done: 12, hours_done: 8, review_accuracy: 82 },
   competencies: [
     { name: 'Comunicação', before: 40, now: 70, goal: 75 },
     { name: 'Rotinas', before: 41, now: 53, goal: 75 },
@@ -213,9 +213,9 @@ export const personDetail: PersonDetail = {
   badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
   milestones: ['Concluiu a jornada Base Nivela', '3 dias seguidos de estudo'],
   rewards: {
-    points: 240,
-    balance: 90,
-    redeemed: [{ name: 'Vale-lanche R$ 30', date: '02/10', points: 150 }],
+    points: 272,
+    balance: 242,
+    redeemed: [{ name: 'Vale-lanche', date: '02/10', points: 30 }],
   },
 }
 
@@ -447,21 +447,22 @@ const reward = (id: string, name: string, icon: string, category: string, cost: 
 })
 
 export const rewardsProps: RewardsProps = {
-  rule: { point_value: 1.2, share: 0.4, min_points: 30, hourly_cost: 40 },
+  points_rule: { manager_hourly: 60, person_hourly: 25, reward_share: 0.4 },
   rewards: [
-    { ...reward('caneca-nivela', 'Caneca Nivela', 'coffee', 'Brinde', 25, 53), stock: 20 },
-    reward('dia-de-folga', 'Dia de folga', 'beach_access', 'Folga', 150, 313),
+    { ...reward('caneca-nivela', 'Caneca Nivela', 'coffee', 'Brinde', 25, 25), stock: 20 },
+    reward('escolher-a-escala-da-semana', 'Escolher a escala da semana', 'calendar_month', 'Folga', 0, 40),
+    reward('dia-de-folga', 'Dia de folga', 'beach_access', 'Folga', 150, 150),
   ],
-  ideas: [reward('almoco-com-o-gestor', 'Almoço com o gestor', 'restaurant', 'Experiência', 60, 125)],
+  ideas: [reward('almoco-com-o-gestor', 'Almoço com o gestor', 'restaurant', 'Experiência', 60, 60)],
   redemptions: [
     {
       person: { id: 'maria-souza', name: 'Maria Souza', avatar_url: null },
       reward: 'Vale-lanche',
       date: '02/10',
-      points: 63,
+      points: 30,
     },
   ],
-  month: { spent: 120, saved: 1200 },
+  month: { spent: 120, saved: 2890 },
 }
 
 export const pointsRule: PointsRule = { manager_hourly: 60, person_hourly: 25, reward_share: 0.4 }
