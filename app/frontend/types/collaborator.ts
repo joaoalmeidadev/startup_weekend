@@ -28,7 +28,6 @@ export type Journey = {
   sections: JourneySection[]
   badge: { title: string; description: string }
   summary: { completed: number; percent: number }
-  extra_task?: { text: string; href: string }
 }
 
 export type Badge = {
@@ -37,26 +36,20 @@ export type Badge = {
   earned: boolean
 }
 
-export type RankingEntry = {
-  position: number
+export type StretchProgress = {
   name: string
-  points: number
-  anonymous: boolean
-  current: boolean
+  completed: number
+  total: number
 }
-
-export type RankingVisibility = 'name' | 'anonymous' | 'hidden'
 
 export type Progress = {
   badges: Badge[]
-  ranking: RankingEntry[]
-  ranking_visibility: RankingVisibility
+  evolution: { completed: number; total: number; stretches: StretchProgress[] }
 }
 
 export type Profile = {
   reminder_time: string
   reminder_options: string[]
-  ranking_name: string
 }
 
 export type DiagnosticQuestion = {
@@ -83,12 +76,6 @@ export type MicroLesson = {
   explanation: string[]
   question: { prompt: string; options: { text: string; correct: boolean; feedback: string }[] }
   badge: string
-}
-
-export type PeerReview = {
-  colleagues: { name: string; sector: string }[]
-  statements: string[]
-  scale: string[]
 }
 
 export type CollaboratorModule = {

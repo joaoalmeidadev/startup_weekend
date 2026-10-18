@@ -44,17 +44,20 @@ export const progress: Progress = {
     { title: '5 Dias Seguidos', icon: 'local_fire_department', earned: true },
     { title: 'Nivelado no Setor', icon: 'lock', earned: false },
   ],
-  ranking: [
-    { position: 1, name: 'Lucas Mendes', points: 420, anonymous: false, current: false },
-    { position: 2, name: 'Maria', points: 340, anonymous: false, current: true },
-  ],
-  ranking_visibility: 'name',
+  evolution: {
+    completed: 1,
+    total: 3,
+    stretches: [
+      { name: 'Base', completed: 1, total: 1 },
+      { name: 'Empresa', completed: 0, total: 1 },
+      { name: 'Setor', completed: 0, total: 1 },
+    ],
+  },
 }
 
 export const profile: Profile = {
   reminder_time: '09:00',
   reminder_options: ['08:00', '09:00'],
-  ranking_name: 'Maria Souza',
 }
 
 export const diagnosticQuestions: DiagnosticQuestion[] = [

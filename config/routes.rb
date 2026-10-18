@@ -21,14 +21,12 @@ Rails.application.routes.draw do
     end
     resources :lessons, only: :show
     resources :learning_modules, only: :show, path: "modules"
-    resource :peer_review, only: :show
   end
 
   namespace :management do
     root "homes#show"
     resources :people, only: %i[index show] do
       resource :role_change, only: :show
-      resource :review, only: :show
     end
     resource :sector_goal, only: :show
     resources :journeys, only: %i[index show]

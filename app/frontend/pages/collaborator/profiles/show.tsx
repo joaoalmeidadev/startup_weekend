@@ -4,12 +4,11 @@ import { Icon } from '@/components/Icon'
 import { useMockNotice } from '@/components/MockNotice'
 import { CollaboratorLayout } from '@/layouts/CollaboratorLayout'
 import type { Profile, Viewer } from '@/types/collaborator'
-import { RankingNameModal } from './RankingNameModal'
 import { ReminderModal } from './ReminderModal'
 import { SettingRow } from './SettingRow'
 
 type ProfilePageProps = { profile: Profile; viewer: Viewer }
-type OpenModal = 'reminder' | 'name' | null
+type OpenModal = 'reminder' | null
 
 const BACK_TO_JOURNEY_DELAY_MS = 1200
 
@@ -17,7 +16,6 @@ const BACK_TO_JOURNEY_DELAY_MS = 1200
 function ProfileSettings({ profile }: { profile: Profile }) {
   const notify = useMockNotice()
   const [reminderTime, setReminderTime] = useState(profile.reminder_time)
-  const [rankingName, setRankingName] = useState(profile.ranking_name)
   const [openModal, setOpenModal] = useState<OpenModal>(null)
 
   const saveAndGoBack = () => {
@@ -36,15 +34,6 @@ function ProfileSettings({ profile }: { profile: Profile }) {
           actionLabel="Mudar horário"
           actionAriaLabel="Mudar horário do lembrete"
           onAction={() => setOpenModal('reminder')}
-        />
-        <SettingRow
-          icon="badge"
-          title="Como apareço no ranking"
-          value={`Mostrando como: ${rankingName}`}
-          actionIcon="edit"
-          actionLabel="Alterar"
-          actionAriaLabel="Alterar como apareço no ranking"
-          onAction={() => setOpenModal('name')}
         />
         <SettingRow
           icon="quiz"
@@ -84,16 +73,6 @@ function ProfileSettings({ profile }: { profile: Profile }) {
           options={profile.reminder_options}
           onConfirm={(time) => {
             setReminderTime(time)
-            setOpenModal(null)
-          }}
-          onClose={() => setOpenModal(null)}
-        />
-      )}
-      {openModal === 'name' && (
-        <RankingNameModal
-          current={rankingName}
-          onSave={(name) => {
-            setRankingName(name)
             setOpenModal(null)
           }}
           onClose={() => setOpenModal(null)}

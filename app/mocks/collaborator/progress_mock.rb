@@ -1,11 +1,10 @@
 module Collaborator
-  # Example badges and ranking from the Stitch "Meu progresso" screen
+  # Example badges and evolution from the Stitch "Meu progresso" screen (same numbers as JourneyMock)
   class ProgressMock
     def props
       {
         badges: badges,
-        ranking: ranking,
-        ranking_visibility: "name"
+        evolution: evolution
       }
     end
 
@@ -20,13 +19,11 @@ module Collaborator
       ]
     end
 
-    def ranking
-      [
-        {position: 1, name: "Lucas Mendes", points: 420, anonymous: false, current: false},
-        {position: 2, name: "Carla Silveira", points: 390, anonymous: false, current: false},
-        {position: 3, name: "Colaborador anônimo", points: 360, anonymous: true, current: false},
-        {position: 4, name: "Maria", points: 340, anonymous: false, current: true}
-      ]
+    def evolution
+      stretches = [stretch("Base", 2, 2), stretch("Empresa", 1, 2), stretch("Setor", 0, 2)]
+      {completed: stretches.sum { _1[:completed] }, total: stretches.sum { _1[:total] }, stretches: stretches}
     end
+
+    def stretch(name, completed, total) = {name: name, completed: completed, total: total}
   end
 end

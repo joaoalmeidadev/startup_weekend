@@ -18,8 +18,12 @@ export default function WelcomesShow() {
       <Head title="Boas-vindas" />
       <div className="flex flex-col gap-space-xs pt-space-lg">
         <h1 className="text-headline-xl text-on-surface">Oi, {viewer.first_name}!</h1>
-        <p className="text-body-xl text-on-surface-variant">
-          Bem-vinda à {viewer.company}. Sua jornada tem 3 passos simples:
+        <p className="text-body-xl text-on-surface">
+          Aqui você aprende o que os colegas mais experientes sabem — no seu ritmo, 5 minutos por dia, sem
+          depender de ninguém para explicar.
+        </p>
+        <p className="text-body-lg text-on-surface-variant">
+          Sua jornada na {viewer.company} tem 3 passos simples:
         </p>
       </div>
       <ol className="flex flex-col gap-space-md">

@@ -2,12 +2,11 @@ import { Head, Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { Icon } from '@/components/Icon'
 import { CollaboratorLayout } from '@/layouts/CollaboratorLayout'
-import type { Progress, Viewer } from '@/types/collaborator'
+import type { Progress } from '@/types/collaborator'
 import { BadgeGrid } from './BadgeGrid'
-import { RankingList } from './RankingList'
-import { VisibilityPicker } from './VisibilityPicker'
+import { StretchBars } from './StretchBars'
 
-type ProgressPageProps = { progress: Progress; viewer: Viewer }
+type ProgressPageProps = { progress: Progress }
 
 function Card({
   icon,
@@ -35,7 +34,7 @@ function Card({
 }
 
 export default function ProgressesShow() {
-  const { progress, viewer } = usePage<ProgressPageProps>().props
+  const { progress } = usePage<ProgressPageProps>().props
   const earned = progress.badges.filter((badge) => badge.earned).length
 
   return (
@@ -48,7 +47,7 @@ export default function ProgressesShow() {
             <h1 className="text-headline-xl text-on-surface">Meu Progresso</h1>
           </div>
           <p className="text-body-xl text-on-surface-variant">
-            Veja suas conquistas e sua posição nos estudos diários.
+            Veja seus selos e quanto você já avançou na jornada.
           </p>
         </div>
 
@@ -65,21 +64,11 @@ export default function ProgressesShow() {
           <BadgeGrid badges={progress.badges} />
         </Card>
 
-        <Card icon="leaderboard" title="Dedicação aos Estudos">
-          <div className="flex items-center gap-space-sm rounded-xl bg-surface-container-low p-space-md">
-            <Icon name="favorite" className="shrink-0 text-[1.625rem] text-primary" />
-            <span className="text-body-lg text-on-surface">
-              O ranking mede apenas sua dedicação aos estudos. Cada um aprende no seu ritmo!
-            </span>
-          </div>
-          <RankingList ranking={progress.ranking} />
-        </Card>
-
-        <Card icon="visibility" title="Privacidade no Ranking">
-          <p className="text-body-lg text-on-surface-variant">
-            Escolha como seus colegas verão você no quadro:
+        <Card icon="trending_up" title="Minha Evolução">
+          <p className="text-headline-md text-on-surface">
+            {progress.evolution.completed} de {progress.evolution.total} módulos concluídos
           </p>
-          <VisibilityPicker initial={progress.ranking_visibility} firstName={viewer.first_name} />
+          <StretchBars stretches={progress.evolution.stretches} />
         </Card>
 
         <div className="flex flex-col items-center pt-space-xs">
