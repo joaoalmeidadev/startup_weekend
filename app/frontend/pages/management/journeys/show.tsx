@@ -8,15 +8,7 @@ import { JourneyCalculator } from './JourneyCalculator'
 import { JourneyHeader } from './JourneyHeader'
 import { JourneyPreview } from './JourneyPreview'
 import { ReadyJourneyCard } from './ReadyJourneyCard'
-import {
-  addStep,
-  changeHours,
-  changeManualPoints,
-  moveStep,
-  removeStep,
-  stepModuleIds,
-  toSteps,
-} from './journeyEditing'
+import { addStep, changeHours, moveStep, removeStep, stepModuleIds, toSteps } from './journeyEditing'
 import { journeyValue } from './journeyValue'
 
 // The Biblioteca on the left, the participant's path on the right; the calculator on top follows every change
@@ -42,11 +34,11 @@ function JourneyBuilder(props: JourneyBuilderProps) {
       <JourneyHeader
         journey={journey}
         goal={goal}
-        points={value.points}
+        hours={value.hours}
         options={props.audience_options}
         people={props.people}
       />
-      <JourneyCalculator value={value} steps={steps} rule={points_rule} source={points_rule_source} />
+      <JourneyCalculator value={value} rule={points_rule} source={points_rule_source} />
       <div className="grid grid-cols-1 items-start gap-space-md lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <div className="flex flex-col gap-space-md">
           {ready_journey && (
@@ -66,9 +58,6 @@ function JourneyBuilder(props: JourneyBuilderProps) {
           onMove={(index, direction) => setSteps((current) => moveStep(current, index, direction))}
           onRemove={(module) => setSteps((current) => removeStep(current, module.id))}
           onHoursChange={(id, hours) => setSteps((current) => changeHours(current, id, hours))}
-          onManualPointsChange={(id, points) =>
-            setSteps((current) => changeManualPoints(current, id, points))
-          }
         />
       </div>
     </>

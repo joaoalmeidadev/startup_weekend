@@ -5,10 +5,7 @@ import type { ModuleSummary, PointsRule } from '@/types/management'
 import type { JourneyStep } from './journeyEditing'
 import { stepFormula } from './journeyFormula'
 
-type StepValueActions = {
-  onHoursChange: (moduleId: string, hours: number) => void
-  onManualPointsChange: (moduleId: string, points: number | null) => void
-}
+type StepValueActions = { onHoursChange: (moduleId: string, hours: number) => void }
 
 type PreviewActions = StepValueActions & {
   onMove: (index: number, direction: -1 | 1) => void
@@ -24,52 +21,28 @@ const NUMBER_INPUT =
 const hoursFrom = (input: HTMLInputElement) =>
   Number.isNaN(input.valueAsNumber) ? 0 : Math.max(0, input.valueAsNumber)
 
-const pointsFrom = (input: HTMLInputElement) =>
-  input.value === '' || Number.isNaN(input.valueAsNumber)
-    ? null
-    : Math.max(0, Math.round(input.valueAsNumber))
-
 type StepValueEditorProps = StepValueActions & { step: JourneyStep; rule: PointsRule }
 
-// The hours of training a content replaces and the math that turns them into points; typed points override the rule
-function StepValueEditor({ step, rule, onHoursChange, onManualPointsChange }: StepValueEditorProps) {
+// The hours of training a content replaces and the reais they save
+function StepValueEditor({ step, rule, onHoursChange }: StepValueEditorProps) {
   const { module } = step
 
   return (
-    <div className="flex flex-col items-center gap-1 text-body-sm text-on-surface-variant">
-      <div className="flex flex-wrap items-center justify-center gap-x-space-sm gap-y-1">
-        <label className="flex items-center gap-1">
-          Substitui
-          <input
-            type="number"
-            aria-label={`Horas de treino de ${module.name}`}
-            min={0}
-            step={0.5}
-            value={step.hours}
-            onChange={(event) => onHoursChange(module.id, hoursFrom(event.target))}
-            className={NUMBER_INPUT}
-          />
-          h
-        </label>
-        <span className="text-label-md text-on-surface">{stepFormula(step, rule)}</span>
-        {step.manualPoints !== null && (
-          <span className="rounded-full bg-secondary-fixed px-space-xs text-label-sm text-on-secondary-fixed">
-            manual
-          </span>
-        )}
-      </div>
+    <div className="flex flex-wrap items-center justify-center gap-x-space-sm gap-y-1 text-body-sm text-on-surface-variant">
       <label className="flex items-center gap-1">
-        Pontos manuais (opcional)
+        Substitui
         <input
           type="number"
-          aria-label={`Pontos manuais de ${module.name}`}
+          aria-label={`Horas de treino de ${module.name}`}
           min={0}
-          step={1}
-          value={step.manualPoints ?? ''}
-          onChange={(event) => onManualPointsChange(module.id, pointsFrom(event.target))}
+          step={0.5}
+          value={step.hours}
+          onChange={(event) => onHoursChange(module.id, hoursFrom(event.target))}
           className={NUMBER_INPUT}
         />
+        h
       </label>
+      <span className="text-label-md text-on-surface">{stepFormula(step, rule)}</span>
     </div>
   )
 }

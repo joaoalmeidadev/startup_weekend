@@ -1,8 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import type { PointsRule } from '@/types/management'
-import type { JourneyStep } from './journeyEditing'
-import { hourCostFormula, manualNote, pointsFormula, ruleSource, savedFormula } from './journeyFormula'
+import { hourCostFormula, ruleSource, savedFormula } from './journeyFormula'
 import { formatHours, formatReais, type JourneyValue } from './journeyValue'
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`
@@ -21,10 +20,8 @@ function Figure({ icon, figure, label }: { icon: string; figure: string; label: 
   )
 }
 
-// The arithmetic behind the big figures, so the admin sees how hours become reais and points
-function MathList({ value, steps, rule }: { value: JourneyValue; steps: JourneyStep[]; rule: PointsRule }) {
-  const note = manualNote(steps)
-
+// The arithmetic behind the big figures, so the admin sees how hours become reais
+function MathList({ value, rule }: { value: JourneyValue; rule: PointsRule }) {
   return (
     <div className="flex flex-col gap-1">
       <h3 id="calculator-math" className="text-label-md text-on-surface">
@@ -35,8 +32,6 @@ function MathList({ value, steps, rule }: { value: JourneyValue; steps: JourneyS
         className="flex flex-col gap-0.5 text-body-sm text-on-surface-variant"
       >
         <li>{savedFormula(value.hours, rule)}</li>
-        <li>{pointsFormula(steps, rule)}</li>
-        {note && <li>{note}</li>}
         <li>{hourCostFormula(rule)}</li>
       </ul>
     </div>
@@ -68,10 +63,11 @@ function StudyLine({ value }: { value: JourneyValue }) {
   )
 }
 
-type JourneyCalculatorProps = { value: JourneyValue; steps: JourneyStep[]; rule: PointsRule; source: string }
+type JourneyCalculatorProps = { value: JourneyValue; rule: PointsRule; source: string }
 
-// What the journey is worth by the points rule of who receives it, recalculated on every change to the path
-export function JourneyCalculator({ value, steps, rule, source }: JourneyCalculatorProps) {
+// What the journey is worth in hours of in-person training and the reais they save, by the hour cost of
+// who receives it, recalculated on every change to the path
+export function JourneyCalculator({ value, rule, source }: JourneyCalculatorProps) {
   return (
     <section
       aria-labelledby="calculator-title"
@@ -80,14 +76,12 @@ export function JourneyCalculator({ value, steps, rule, source }: JourneyCalcula
       <h2 id="calculator-title" className="text-label-lg text-on-surface">
         Calculadora da jornada
       </h2>
-      <div className="grid grid-cols-1 gap-space-md sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-space-md sm:grid-cols-2">
         <Figure icon="schedule" figure={`${formatHours(value.hours)} h`} label="de treino substituídas" />
         <Figure icon="savings" figure={formatReais(value.saved)} label="economizados" />
-        <Figure icon="stars" figure={`${value.points} pts`} label="na jornada" />
-        <Figure icon="redeem" figure={`até ${formatReais(value.points)}`} label="viram prêmios" />
       </div>
       <div className="flex flex-col gap-1 border-t border-surface-container-high pt-space-sm">
-        <MathList value={value} steps={steps} rule={rule} />
+        <MathList value={value} rule={rule} />
         <SourceLine source={source} />
         <StudyLine value={value} />
       </div>
