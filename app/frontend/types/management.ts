@@ -172,3 +172,8 @@ export type JourneyBuilderProps = {
   ready_journey: Stretch[]
   start_ready: boolean
 }
+
+// A work sector or a custom group of people (e.g. Staff), as offered when choosing who receives a journey
+export type SectorKind = 'sector' | 'group'
+
+export type AudienceOption = { name: string; kind: SectorKind; people_count: number }

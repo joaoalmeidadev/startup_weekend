@@ -1,4 +1,5 @@
 import type {
+  AudienceOption,
   CatalogGroup,
   Journey,
   JourneyGoal,
@@ -340,4 +341,11 @@ export const readyJourney: Journey['stretches'] = [
   { key: 'base', title: 'Base', modules: journey.stretches[0].modules },
   { key: 'company', title: 'Empresa', modules: [] },
   { key: 'sector', title: 'Setor', modules: [catalog[0].modules[3]] },
+]
+
+export const audienceOptions: AudienceOption[] = [
+  { name: 'Atendimento', kind: 'sector', people_count: 5 },
+  { name: 'Comercial', kind: 'sector', people_count: 3 },
+  { name: 'Logística', kind: 'sector', people_count: 2 },
+  { name: 'Staff', kind: 'group', people_count: 4 },
 ]
