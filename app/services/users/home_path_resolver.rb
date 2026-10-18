@@ -1,5 +1,5 @@
 module Users
-  # Where each user lands: collaborators follow their journey, everyone else manages.
+  # Where each user lands: collaborators start at their home, everyone else manages.
   class HomePathResolver
     include Rails.application.routes.url_helpers
 
@@ -8,7 +8,7 @@ module Users
     end
 
     def path
-      return collaborator_journey_path if @user.collaborator?
+      return collaborator_home_path if @user.collaborator?
 
       management_root_path
     end

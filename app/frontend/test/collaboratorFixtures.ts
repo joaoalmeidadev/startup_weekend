@@ -1,10 +1,9 @@
 import type {
   DiagnosticQuestion,
   DiagnosticResult,
-  Journey,
+  Learner,
   MicroLesson,
   Profile,
-  Progress,
   Viewer,
 } from '@/types/collaborator'
 
@@ -14,45 +13,6 @@ export const viewer: Viewer = {
   sector: 'Atendimento',
   company: 'Distribuidora Sul',
   avatar_url: '/mocks/maria-souza.jpg',
-}
-
-export const journey: Journey = {
-  today: { minutes: 5, owner: 'Distribuidora Sul' },
-  step: { current: 2, total: 3 },
-  sections: [
-    { title: '1. Base', lessons: [{ module_id: 'conversa-clara', title: 'Conversa Clara', status: 'done' }] },
-    {
-      title: '2. Empresa',
-      lessons: [
-        {
-          id: 'rotinas',
-          title: 'Rotinas',
-          status: 'current',
-          minutes: 5,
-          description: 'Fluxo de mercadorias.',
-        },
-      ],
-    },
-    { title: '3. Setor', lessons: [{ title: 'Uso do Sistema', status: 'locked' }] },
-  ],
-  badge: { title: 'Selo: Nivelado', description: 'Complete tudo.' },
-  summary: { completed: 1, percent: 33 },
-}
-
-export const progress: Progress = {
-  badges: [
-    { title: '5 Dias Seguidos', icon: 'local_fire_department', earned: true },
-    { title: 'Nivelado no Setor', icon: 'lock', earned: false },
-  ],
-  evolution: {
-    completed: 1,
-    total: 3,
-    stretches: [
-      { name: 'Base', completed: 1, total: 1 },
-      { name: 'Empresa', completed: 0, total: 1 },
-      { name: 'Setor', completed: 0, total: 1 },
-    ],
-  },
 }
 
 export const profile: Profile = {
@@ -82,7 +42,7 @@ export const microLesson: MicroLesson = {
   title: 'Rotinas da Distribuidora',
   module_name: 'Rotinas da Distribuidora',
   minutes: 5,
-  points: 20,
+  points: 23,
   video: { title: 'Do caminhão à prateleira', duration: '1:45' },
   explanation: ['Toda mercadoria passa pela conferência.'],
   question: {
@@ -93,4 +53,99 @@ export const microLesson: MicroLesson = {
     ],
   },
   badge: 'Rotinas da Distribuidora',
+}
+
+// Maria as Collaborator::Learner sends her: Base done, the company journey active, the sector one queued
+export const learner: Learner = {
+  name: 'Maria Souza',
+  journeys: [
+    {
+      id: 'base-nivela',
+      name: 'Base Nivela',
+      kind: 'base',
+      badge: 'Base Nivela concluída',
+      status: 'done',
+      steps: [
+        {
+          module_id: 'conversa-clara',
+          name: 'Conversa Clara',
+          hours: 3,
+          lessons: 4,
+          points: 11,
+          status: 'done',
+        },
+        {
+          module_id: 'matematica',
+          name: 'Matemática do Dia a Dia',
+          hours: 3,
+          lessons: 5,
+          points: 11,
+          status: 'done',
+        },
+      ],
+      points_total: 22,
+      points_earned: 22,
+    },
+    {
+      id: 'jeito-distribuidora-sul',
+      name: 'Jeito Distribuidora Sul',
+      kind: 'company',
+      badge: 'Jeito Distribuidora Sul',
+      status: 'active',
+      steps: [
+        {
+          module_id: 'historia',
+          name: 'Nossa História e Valores',
+          hours: 2,
+          lessons: 3,
+          points: 8,
+          status: 'done',
+        },
+        {
+          module_id: 'rotinas',
+          name: 'Rotinas de atendimento',
+          hours: 6,
+          lessons: 8,
+          points: 23,
+          status: 'current',
+        },
+      ],
+      points_total: 31,
+      points_earned: 8,
+    },
+    {
+      id: 'atendimento-na-pratica',
+      name: 'Atendimento na prática',
+      kind: 'sector',
+      badge: 'Nivelado em Atendimento',
+      status: 'queued',
+      steps: [
+        {
+          module_id: 'reclamacoes',
+          name: 'Tratamento de Reclamações',
+          hours: 5,
+          lessons: 6,
+          points: 19,
+          status: 'locked',
+        },
+        { module_id: 'sistema', name: 'Uso do Sistema', hours: 4, lessons: 5, points: 15, status: 'locked' },
+      ],
+      points_total: 34,
+      points_earned: 0,
+    },
+  ],
+  next_step: {
+    journey: 'Jeito Distribuidora Sul',
+    module_id: 'rotinas',
+    name: 'Rotinas de atendimento',
+    points: 23,
+  },
+  points: { study: 30, sharing: 8, total: 38, balance: 13 },
+  streak_days: 3,
+  badges: [
+    { title: 'Base concluída', icon: 'verified', earned: true },
+    { title: '3 dias seguidos', icon: 'local_fire_department', earned: true },
+    { title: 'Compartilhou conhecimento', icon: 'volunteer_activism', earned: true },
+    { title: 'Nivelado em Atendimento', icon: 'military_tech', earned: false },
+  ],
 }

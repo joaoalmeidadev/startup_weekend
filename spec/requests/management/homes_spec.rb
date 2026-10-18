@@ -158,6 +158,6 @@ RSpec.describe "Management dashboard", :inertia do
 
     get management_root_path
 
-    expect(response).to redirect_to(collaborator_journey_path)
+    expect(response).to redirect_to(collaborator_home_path)
   end
 end

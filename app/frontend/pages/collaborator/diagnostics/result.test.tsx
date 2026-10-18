@@ -21,6 +21,6 @@ describe('DiagnosticsResult', () => {
     expect(screen.getByText('• Porcentagem')).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: /Ver minha jornada/ }))
-    expect(router.visit).toHaveBeenCalledWith('/collaborator/journey')
+    expect(router.visit).toHaveBeenCalledWith('/collaborator/journeys')
   })
 })

@@ -1,5 +1,7 @@
 module Collaborator
   class DiagnosticsController < BaseController
+    skip_before_action :keep_newcomer_on_onboarding
+
     def show
       render inertia: {diagnostic: DiagnosticMock.new.props}
     end

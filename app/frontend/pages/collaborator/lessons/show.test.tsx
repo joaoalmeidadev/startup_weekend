@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { microLesson, viewer } from '@/test/collaboratorFixtures'
-import { page } from '@/test/inertiaMock'
+import { page, router } from '@/test/inertiaMock'
 import LessonsShow from './show'
 
 vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).inertiaMock)
@@ -44,7 +44,10 @@ describe('LessonsShow', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Anotar e avisar.' }))
     await userEvent.click(screen.getByRole('button', { name: /Concluir lição/ }))
 
-    expect(screen.getByText('+20 pontos')).toBeInTheDocument()
+    expect(screen.getByText('+23 pontos')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Parabéns!' })).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /Voltar para a jornada/ }))
+    expect(router.visit).toHaveBeenCalledWith('/collaborator/journeys')
   })
 })
