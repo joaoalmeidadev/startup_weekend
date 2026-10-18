@@ -25,17 +25,12 @@ Rails.application.routes.draw do
 
   namespace :management do
     root "homes#show"
-    resources :people, only: %i[index show] do
-      resource :role_change, only: :show
-    end
+    resources :people, only: %i[index show]
     resource :sector_goal, only: :show
     resources :journeys, only: %i[index show]
-    resources :learning_modules, only: %i[show new], path: "modules"
-    resource :settings, only: :show
-    resource :setup, only: :show
-    resource :team, only: :show
-    resources :companies, only: :index
-    resource :library, only: :show
+    resources :learning_modules, only: %i[show new], path: "modules" do
+      member { get :publish }
+    end
     resources :lesson_reviews, only: %i[index show]
   end
 

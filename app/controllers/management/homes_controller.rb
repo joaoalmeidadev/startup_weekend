@@ -1,7 +1,7 @@
 module Management
   class HomesController < BaseController
     def show
-      render inertia: {home: HomeMock.new.props}
+      render inertia: {dashboard: HomeMock.new(params[:period]).props}
     end
   end
 end

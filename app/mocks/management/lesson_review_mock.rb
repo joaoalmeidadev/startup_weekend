@@ -19,14 +19,12 @@ module Management
         final: @position == TOTAL,
         breadcrumb: breadcrumb,
         module_name: "Rotinas de atendimento",
-        journey_path: routes.management_journey_path(JOURNEY_ID),
+        publish_path: routes.publish_management_learning_module_path(MODULE_ID),
         team: "atendimento",
-        audience_count: 32,
         manual: manual,
         lesson: lesson,
         question: question,
-        other_questions: 1,
-        journey_outline: journey_outline
+        other_questions: 1
       }
     end
 
@@ -34,7 +32,7 @@ module Management
 
     def breadcrumb
       [
-        {label: "Jornadas", href: routes.management_journeys_path},
+        {label: "Conteúdos", href: routes.management_journeys_path},
         {label: "Onboarding Atendimento", href: routes.management_journey_path(JOURNEY_ID)},
         {label: "Módulo: Rotinas de atendimento", href: routes.management_learning_module_path(MODULE_ID)}
       ]
@@ -75,14 +73,6 @@ module Management
           {text: "C) Mandar ligar direto para a transportadora.", correct: false}
         ]
       }
-    end
-
-    def journey_outline
-      [
-        {title: "1. Base (Soft skills)", status: "done"},
-        {title: "2. Trecho Empresa: Rotinas de atendimento", status: "new"},
-        {title: "3. Setor: Atendimento ao Cliente", status: "upcoming"}
-      ]
     end
   end
 end

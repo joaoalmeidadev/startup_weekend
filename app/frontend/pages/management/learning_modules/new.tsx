@@ -1,50 +1,44 @@
 import { Head, Link, usePage } from '@inertiajs/react'
 import { useCallback, useEffect, useState } from 'react'
 import { Icon } from '@/components/Icon'
+import { WizardSteps } from '@/components/WizardSteps'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { NewModuleProps } from '@/types/management'
 
-const STEPS = ['Envie o arquivo', 'A IA cria as lições', 'Revise'] as const
 const SAMPLE_FILE = 'Manual de SAC.pdf'
+const SAMPLE_NAME = 'Rotinas de atendimento'
 const GENERATION_MS = 2500
 
-function StepIndicator({ current }: { current: number }) {
+function NameField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return (
-    <ol className="flex flex-wrap items-center gap-space-sm" aria-label="Etapas">
-      {STEPS.map((label, index) => {
-        const state = index < current ? 'done' : index === current ? 'current' : 'next'
-        return (
-          <li
-            key={label}
-            aria-current={state === 'current' ? 'step' : undefined}
-            className="flex items-center gap-space-xs"
-          >
-            <span
-              className={`flex size-8 items-center justify-center rounded-full text-label-md ${state === 'done' ? 'bg-tertiary-container text-on-primary' : state === 'current' ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface-variant'}`}
-            >
-              {state === 'done' ? <Icon name="check" className="text-[1.125rem]" /> : index + 1}
-            </span>
-            <span
-              className={`text-label-md ${state === 'next' ? 'text-on-surface-variant' : 'text-on-surface'}`}
-            >
-              {label}
-            </span>
-            {index < STEPS.length - 1 && (
-              <Icon name="chevron_right" className="text-[1.25rem] text-outline" />
-            )}
-          </li>
-        )
-      })}
-    </ol>
+    <div className="flex flex-col gap-space-xs">
+      <label htmlFor="content-name" className="text-label-lg text-on-surface">
+        Nome do conteúdo
+      </label>
+      <input
+        id="content-name"
+        type="text"
+        value={value}
+        placeholder="Ex.: Rotinas de atendimento"
+        onChange={(event) => onChange(event.target.value)}
+        className="h-12 w-full rounded-xl border-0 bg-surface-container-low px-space-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary-container"
+      />
+    </div>
   )
 }
 
-function UploadStep({ onStart }: { onStart: () => void }) {
+function UploadStep({ manualPath, onStart }: { manualPath: string; onStart: () => void }) {
+  const [name, setName] = useState('')
   const [fileName, setFileName] = useState<string | null>(null)
   const [simpleLanguage, setSimpleLanguage] = useState(true)
+  const pickSample = () => {
+    setFileName(SAMPLE_FILE)
+    if (!name.trim()) setName(SAMPLE_NAME)
+  }
 
   return (
     <div className="flex flex-col gap-space-md">
+      <NameField value={name} onChange={setName} />
       <label className="flex cursor-pointer flex-col items-center gap-space-sm rounded-xl border-2 border-dashed border-primary-fixed-dim bg-surface-container-low p-space-xl text-center hover:bg-surface-container">
         <Icon name="upload_file" className="text-[3rem] text-primary" />
         <span className="text-label-lg text-on-surface">
@@ -62,11 +56,7 @@ function UploadStep({ onStart }: { onStart: () => void }) {
         />
       </label>
       {!fileName && (
-        <button
-          type="button"
-          onClick={() => setFileName(SAMPLE_FILE)}
-          className="w-fit text-label-md text-primary underline"
-        >
+        <button type="button" onClick={pickSample} className="w-fit text-label-md text-primary underline">
           Usar o arquivo de exemplo ({SAMPLE_FILE})
         </button>
       )}
@@ -79,15 +69,20 @@ function UploadStep({ onStart }: { onStart: () => void }) {
         />
         <span className="text-body-md text-on-surface">Reescrever em linguagem simples</span>
       </label>
-      <button
-        type="button"
-        disabled={!fileName}
-        onClick={onStart}
-        className="inline-flex h-12 w-fit items-center gap-space-xs rounded-xl bg-primary px-space-lg text-label-lg text-on-primary hover:bg-primary-container disabled:opacity-50"
-      >
-        <Icon name="auto_awesome" className="text-[1.25rem]" />
-        Criar lições com IA
-      </button>
+      <div className="flex flex-wrap items-center gap-space-md">
+        <button
+          type="button"
+          disabled={!fileName || !name.trim()}
+          onClick={onStart}
+          className="inline-flex h-12 w-fit items-center gap-space-xs rounded-xl bg-primary px-space-lg text-label-lg text-on-primary hover:bg-primary-container disabled:opacity-50"
+        >
+          <Icon name="auto_awesome" className="text-[1.25rem]" />
+          Criar lições com IA
+        </button>
+        <Link href={manualPath} className="text-label-md text-primary hover:underline">
+          Prefiro escrever manualmente
+        </Link>
+      </div>
     </div>
   )
 }
@@ -130,6 +125,11 @@ function DoneStep({ generated }: { generated: NewModuleProps['generated'] }) {
   )
 }
 
+function manualPathFor(journey: NewModuleProps['journey']) {
+  const base = '/management/modules/new?mode=manual'
+  return journey ? `${base}&journey=${journey.id}` : base
+}
+
 export default function LearningModulesNew() {
   const { journey, generated } = usePage<NewModuleProps>().props
   const [step, setStep] = useState(0)
@@ -137,7 +137,7 @@ export default function LearningModulesNew() {
 
   return (
     <ManagementLayout>
-      <Head title="Criar módulo com IA" />
+      <Head title="Novo conteúdo" />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-space-lg pt-space-md">
         {journey && (
           <Link
@@ -149,14 +149,14 @@ export default function LearningModulesNew() {
           </Link>
         )}
         <div className="flex flex-col gap-space-xs">
-          <h1 className="text-headline-xl tracking-tight text-on-surface">Criar módulo com IA</h1>
+          <h1 className="text-headline-xl tracking-tight text-on-surface">Novo conteúdo</h1>
           <p className="text-body-md text-on-surface-variant">
-            Envie um material da empresa e a IA transforma em microlições de 5 minutos.
+            O treinamento que hoje é repassado de pessoa para pessoa — envie uma vez.
           </p>
         </div>
-        <StepIndicator current={step} />
+        <WizardSteps current={step} />
         <section className="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
-          {step === 0 && <UploadStep onStart={() => setStep(1)} />}
+          {step === 0 && <UploadStep manualPath={manualPathFor(journey)} onStart={() => setStep(1)} />}
           {step === 1 && <GeneratingStep lessons={generated.lessons} onDone={finishGeneration} />}
           {step === 2 && <DoneStep generated={generated} />}
         </section>

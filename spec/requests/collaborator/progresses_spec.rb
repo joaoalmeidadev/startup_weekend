@@ -20,7 +20,7 @@ RSpec.describe "Collaborator progress", :inertia do
 
       get collaborator_progress_path
 
-      expect(response).to redirect_to(management_team_path)
+      expect(response).to redirect_to(management_root_path)
     end
   end
 end

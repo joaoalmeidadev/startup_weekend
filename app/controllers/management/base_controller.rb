@@ -3,7 +3,7 @@ module Management
     before_action :authenticate_user!
     before_action :require_management
 
-    inertia_share manager: -> { ManagerMock.new(current_user).props }
+    inertia_share manager: -> { ManagerMock.new.props }
 
     private
 

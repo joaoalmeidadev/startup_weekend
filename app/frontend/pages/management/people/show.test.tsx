@@ -29,16 +29,10 @@ describe('PeopleShow', () => {
     expect(screen.getByText('• Explica as coisas com clareza.')).toBeInTheDocument()
   })
 
-  it('links to the review and the role change', () => {
+  it('no longer offers the review or the role change', () => {
     render(<PeopleShow />)
 
-    expect(screen.getByRole('link', { name: /Avaliar/ })).toHaveAttribute(
-      'href',
-      '/management/people/maria-souza/review',
-    )
-    expect(screen.getByRole('link', { name: /Mudar de função/ })).toHaveAttribute(
-      'href',
-      '/management/people/maria-souza/role_change',
-    )
+    expect(screen.queryByRole('link', { name: /Avaliar/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Mudar de função/ })).not.toBeInTheDocument()
   })
 })

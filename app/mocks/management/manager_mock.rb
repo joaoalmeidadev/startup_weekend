@@ -1,16 +1,10 @@
 module Management
-  # Example people behind the management area: the team manager has their own name
+  # Example person behind the management area: a single administrator sees every tab
   class ManagerMock
     COMPANY = "Distribuidora Sul"
 
-    def initialize(user = nil)
-      @user = user
-    end
-
     def props
-      return {name: "Rafael Costa", role_label: "Gestor · Atendimento", company: COMPANY} if @user&.manager?
-
-      {name: "Ana Lima", role_label: "RH", company: COMPANY}
+      {name: "Ana Lima", role_label: "Administradora", company: COMPANY}
     end
   end
 end

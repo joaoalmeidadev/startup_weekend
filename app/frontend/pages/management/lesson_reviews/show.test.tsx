@@ -59,26 +59,31 @@ describe('LessonReviewsShow', () => {
     expect(screen.getByRole('status')).toHaveTextContent('A IA está reprocessando')
   })
 
-  it('publishes the module when the last lesson is approved', async () => {
+  it('is step 3 of the new content assistant', () => {
+    render(<LessonReviewsShow />)
+
+    const steps = within(screen.getByRole('list', { name: 'Etapas' }))
+    expect(steps.getByText('Revisar').closest('li')).toHaveAttribute('aria-current', 'step')
+  })
+
+  it('goes on to publishing when the last lesson is approved', async () => {
     page.props = { lesson_review: lessonReview({ position: 8, approved: 7, final: true }), manager }
     render(<LessonReviewsShow />)
 
-    await userEvent.click(screen.getByRole('button', { name: /Aprovar e publicar na jornada/ }))
+    await userEvent.click(screen.getByRole('button', { name: /Aprovar e escolher quem recebe/ }))
 
-    expect(screen.getByRole('dialog', { name: 'Módulo publicado' })).toHaveTextContent(
-      '32 pessoas do Atendimento',
-    )
-    expect(router.visit).not.toHaveBeenCalled()
-
-    await userEvent.click(screen.getByRole('button', { name: /Voltar para Jornadas/ }))
-    expect(router.visit).toHaveBeenCalledWith('/management/journeys/onboarding-atendimento')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(router.visit).toHaveBeenCalledWith('/management/modules/rotinas-de-atendimento/publish')
   })
 
-  it('links the breadcrumb back to the journeys and the module', () => {
+  it('links the breadcrumb back to the contents and the module', () => {
     render(<LessonReviewsShow />)
 
     const breadcrumb = within(screen.getByRole('navigation', { name: 'Você está em' }))
-    expect(breadcrumb.getByRole('link', { name: 'Jornadas' })).toHaveAttribute('href', '/management/journeys')
+    expect(breadcrumb.getByRole('link', { name: 'Conteúdos' })).toHaveAttribute(
+      'href',
+      '/management/journeys',
+    )
     expect(breadcrumb.getByRole('link', { name: 'Módulo: Rotinas de atendimento' })).toHaveAttribute(
       'href',
       '/management/modules/rotinas-de-atendimento',

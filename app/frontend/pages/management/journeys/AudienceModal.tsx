@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Modal } from '@/components/Modal'
-import { AUDIENCES } from './NewJourneyModal'
+import { AUDIENCES, AudienceOptions } from '@/components/AudienceOptions'
 
 // Chips shown on the journey for each kind of audience
 const CHIP: Record<string, string> = { people: 'Pessoas específicas', newcomers: 'Novatos' }
@@ -31,25 +31,7 @@ export function AudienceModal({ current, onSave, onClose }: AudienceModalProps) 
 
   return (
     <Modal icon="group" title="Quem recebe esta jornada" onClose={onClose}>
-      <div className="flex flex-col gap-space-xs">
-        {AUDIENCES.map((audience) => (
-          <label
-            key={audience.value}
-            className="flex cursor-pointer items-start gap-space-sm rounded-xl bg-surface-container-low p-space-sm"
-          >
-            <input
-              type="checkbox"
-              checked={kinds.includes(audience.value)}
-              onChange={() => toggle(audience.value)}
-              className="mt-1 size-5 rounded border-outline text-primary-container focus:ring-primary-container"
-            />
-            <span className="flex flex-col">
-              <span className="text-label-md text-on-surface">{audience.label}</span>
-              <span className="text-body-sm text-on-surface-variant">{audience.hint}</span>
-            </span>
-          </label>
-        ))}
-      </div>
+      <AudienceOptions selected={kinds} onToggle={toggle} />
       <button
         type="button"
         disabled={kinds.length === 0}

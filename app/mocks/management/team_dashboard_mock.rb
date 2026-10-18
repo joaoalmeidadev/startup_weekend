@@ -1,5 +1,5 @@
 module Management
-  # Example metrics for the manager of the Atendimento team (14 people), per period.
+  # Example dashboard metrics for the Atendimento team (14 people), per period.
   # Competencies and the funnel are a snapshot of today, so they don't change with the period.
   class TeamDashboardMock
     PERIODS = {
