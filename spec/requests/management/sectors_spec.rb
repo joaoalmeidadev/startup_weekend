@@ -97,7 +97,7 @@ RSpec.describe "Management sectors", :inertia do
       expect(inertia.props[:people].first).to include(:id, :name, :sector, :avatar_url)
       expect(inertia.props[:levels].pluck(:target)).to eq([60, 75, 90])
       expect(inertia.props[:competencies].pluck(:name))
-        .to eq(["Comunicação Clara", "Raciocínio Lógico", "Escrita no Trabalho"])
+        .to eq(%w[Comunicação Raciocínio Escrita])
       expect(inertia.props[:competencies].pluck(:goal)).to all(be_nil)
     end
   end

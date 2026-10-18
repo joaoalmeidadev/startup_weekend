@@ -24,7 +24,7 @@ export function weeksToFinish(lessons: number) {
 }
 
 export function coveredCompetencies(modules: ModuleSummary[], goal: JourneyGoal) {
-  return goal.competencies.filter((competency) => modules.some((module) => module.covers === competency))
+  return goal.competencies.filter((competency) => modules.some((module) => module.competency === competency))
 }
 
 export function journeyValue(modules: ModuleSummary[], goal: JourneyGoal): JourneyValue {

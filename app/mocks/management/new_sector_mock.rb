@@ -2,9 +2,9 @@ module Management
   # Example form to create a work sector or a group: everyone to pick from, the levels and the Base competencies
   class NewSectorMock
     BASE_COMPETENCIES = [
-      ["Comunicação Clara", "record_voice_over"],
-      ["Raciocínio Lógico", "psychology"],
-      ["Escrita no Trabalho", "edit_note"]
+      ["Comunicação", "record_voice_over"],
+      ["Raciocínio", "psychology"],
+      ["Escrita", "edit_note"]
     ].freeze
 
     def props

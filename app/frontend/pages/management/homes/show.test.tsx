@@ -78,7 +78,7 @@ describe('HomesShow', () => {
   it('tells how much each competency grew since the diagnostic', () => {
     render(<HomesShow />)
 
-    const row = screen.getByText('Reclamações de Entrega').closest('li') as HTMLElement
+    const row = screen.getByText('Reclamações').closest('li') as HTMLElement
     expect(row).toHaveTextContent('42 → 71')
     fireEvent.focus(row)
 
@@ -93,7 +93,7 @@ describe('HomesShow', () => {
       .closest('section') as HTMLElement
     await userEvent.click(within(card).getByRole('button', { name: /Ver tabela/ }))
 
-    expect(within(card).getByRole('table')).toHaveTextContent('Reclamações de Entrega427175')
+    expect(within(card).getByRole('table')).toHaveTextContent('Reclamações427175')
   })
 
   it('downloads the people report', () => {

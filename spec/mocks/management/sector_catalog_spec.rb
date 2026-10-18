@@ -33,6 +33,13 @@ RSpec.describe Management::SectorCatalog do
     )
   end
 
+  it "names every goal competency with a single word" do
+    names = described_class.all.flat_map { |sector| sector[:competencies].map(&:first) }
+
+    expect(names).to all(match(/\A\p{L}+\z/))
+    expect(described_class.find("Atendimento")[:competencies].map(&:first)).to eq(%w[Comunicação Reclamações Sistema Empatia])
+  end
+
   it "finds a sector by its slug" do
     expect(described_class.find_by_slug("logistica")[:name]).to eq("Logística")
     expect(described_class.find_by_slug("nope")).to be_nil

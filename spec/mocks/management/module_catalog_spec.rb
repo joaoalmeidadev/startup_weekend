@@ -27,11 +27,20 @@ RSpec.describe Management::ModuleCatalog do
     end
   end
 
-  it "lists a summary with the origin, the hours and the goal competency it covers" do
+  it "lists a summary with the origin, the hours and the competency it trains" do
     expect(described_class.summary("conversa-clara")).to include(
-      source: "nivela", teaching_hours: 3, covers: "Comunicação e Escuta Ativa", stretch: "base"
+      source: "nivela", teaching_hours: 3, competency: "Comunicação", stretch: "base"
     )
-    expect(described_class.summary("matematica-do-dia-a-dia")[:covers]).to eq("Matemática básica")
+  end
+
+  it "names every competency with a single word" do
+    expect(described_class.all.pluck(:competency)).to all(match(/\A\p{L}+\z/))
+  end
+
+  it "has content for every competency of the Atendimento goal" do
+    goal = Management::SectorCatalog.find("Atendimento")[:competencies].map(&:first)
+
+    expect(described_class.all.pluck(:competency)).to include(*goal)
   end
 
   it "offers ready-made Nivela products for general work skills beyond Base" do

@@ -63,10 +63,10 @@ module Management
     def competencies
       goal = SectorCatalog.target("Atendimento")
       [
-        {name: "Comunicação e Escuta Ativa", before: 55, now: 82, goal: goal},
-        {name: "Reclamações de Entrega", before: 42, now: 71, goal: goal},
-        {name: "Sistema de Pedidos", before: 38, now: 68, goal: goal},
-        {name: "Postura e Empatia", before: 58, now: 79, goal: goal}
+        {name: "Comunicação", before: 55, now: 82, goal: goal},
+        {name: "Reclamações", before: 42, now: 71, goal: goal},
+        {name: "Sistema", before: 38, now: 68, goal: goal},
+        {name: "Empatia", before: 58, now: 79, goal: goal}
       ]
     end
 

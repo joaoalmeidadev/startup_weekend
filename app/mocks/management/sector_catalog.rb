@@ -11,27 +11,27 @@ module Management
     # Competencies: [name, icon, veterans average, [people who reach the goal, of]]
     SECTORS = [
       {name: "Atendimento", kind: "sector", level: "medium", competencies: [
-        ["Comunicação e Escuta Ativa", "record_voice_over", 88, [12, 14]],
-        ["Resolução de Reclamações de Entrega", "local_shipping", 92, [8, 14]],
-        ["Uso do Sistema Interno de Pedidos", "terminal", 85, [8, 14]],
-        ["Postura e Empatia com Clientes Difíceis", "sentiment_satisfied", 90, [10, 14]]
+        ["Comunicação", "record_voice_over", 88, [12, 14]],
+        ["Reclamações", "local_shipping", 92, [8, 14]],
+        ["Sistema", "terminal", 85, [8, 14]],
+        ["Empatia", "sentiment_satisfied", 90, [10, 14]]
       ]},
       {name: "Comercial", kind: "sector", level: "medium", competencies: [
-        ["Negociação com Clientes", "handshake", 84, [10, 16]],
-        ["Cálculo de Descontos e Margem", "calculate", 90, [9, 16]],
-        ["Cadastro de Pedidos", "receipt_long", 86, [12, 16]]
+        ["Vendas", "handshake", 84, [10, 16]],
+        ["Margem", "calculate", 90, [9, 16]],
+        ["Pedidos", "receipt_long", 86, [12, 16]]
       ]},
       # Logística has no goal yet
       {name: "Logística", kind: "sector", level: nil, competencies: [
-        ["Conferência e Expedição", "inventory_2"],
-        ["Matemática Básica", "calculate"],
-        ["Raciocínio Lógico", "psychology"]
+        ["Conferência", "inventory_2"],
+        ["Matemática", "calculate"],
+        ["Raciocínio", "psychology"]
       ]},
       {name: "Staff", kind: "group", level: "easy",
        members: ["Carla Silveira", "Diego Fernandes", "Lucas Pereira", "Rafael Lima"], competencies: [
-         ["Comunicação Clara", "record_voice_over"],
-         ["Raciocínio Lógico", "psychology"],
-         ["Trabalho em Equipe e Feedback", "diversity_3"]
+         ["Comunicação", "record_voice_over"],
+         ["Raciocínio", "psychology"],
+         ["Colaboração", "diversity_3"]
        ]}
     ].freeze
 

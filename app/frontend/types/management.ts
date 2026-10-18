@@ -77,7 +77,6 @@ export type ModuleSummary = {
   source: ContentSource
   stretch: StretchKey
   teaching_hours: number
-  covers: string
   research_share: number | null
 }
 

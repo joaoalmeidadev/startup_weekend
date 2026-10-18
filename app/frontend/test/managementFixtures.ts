@@ -147,12 +147,11 @@ const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleS
   source: 'nivela',
   stretch: 'base',
   teaching_hours: 3,
-  covers: `Competência ${name}`,
   research_share: null,
   ...overrides,
 })
 
-const conversaClara = mod('conversa-clara', 'Conversa Clara', { covers: 'Comunicação' })
+const conversaClara = mod('conversa-clara', 'Conversa Clara', { competency: 'Comunicação' })
 const matematica = mod('matematica', 'Matemática')
 const rotinas = mod('rotinas-de-atendimento', 'Rotinas', {
   status: 'in_review',
@@ -160,7 +159,7 @@ const rotinas = mod('rotinas-de-atendimento', 'Rotinas', {
   stretch: 'company',
   lessons: 8,
   teaching_hours: 6,
-  covers: 'Rotinas da Distribuidora',
+  competency: 'Rotinas',
 })
 
 export const journey: Journey = {
@@ -177,7 +176,7 @@ export const journey: Journey = {
 export const learningModule: LearningModule = {
   id: 'rotinas-de-atendimento',
   name: 'Rotinas de atendimento',
-  competency: 'Rotinas da Distribuidora',
+  competency: 'Rotinas',
   status: 'in_review',
   source: 'ai',
   material: 'Manual de SAC.pdf',
@@ -206,8 +205,8 @@ export const personDetail: PersonDetail = {
   ],
   study: { weekly_minutes: 35, streak_days: 3, lessons_done: 12, review_accuracy: 82 },
   competencies: [
-    { name: 'Comunicação clara', before: 40, now: 70, goal: 75 },
-    { name: 'Rotinas da Distribuidora', before: 41, now: 53, goal: 75 },
+    { name: 'Comunicação', before: 40, now: 70, goal: 75 },
+    { name: 'Rotinas', before: 41, now: 53, goal: 75 },
   ],
   badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
   milestones: ['Concluiu a jornada Base Nivela', '3 dias seguidos de estudo'],
@@ -235,7 +234,7 @@ export const teamDashboard: TeamDashboard = {
   time_to_level: { days: 46, before_days: 90 },
   savings: { new_hires: 9, hours: 207, amount: 8280 },
   retention: { review_accuracy: 86, active_weekly: '9 de 14', minutes_per_day: 5 },
-  competencies: [{ name: 'Reclamações de Entrega', before: 42, now: 71, goal: 75 }],
+  competencies: [{ name: 'Reclamações', before: 42, now: 71, goal: 75 }],
   on_the_job: {
     source: 'Avaliação do gestor aos 30 dias',
     items: [{ label: 'Retrabalho por novato', before: 2.6, now: 1.6, unit: 'por mês' }],
@@ -255,7 +254,7 @@ export const catalog: CatalogGroup[] = [
     modules: [
       conversaClara,
       matematica,
-      mod('postura-e-empatia', 'Postura e Empatia', { lessons: 3, covers: 'Postura' }),
+      mod('postura-e-empatia', 'Postura e Empatia', { lessons: 3, competency: 'Empatia' }),
       mod('atendimento-ao-cliente', 'Atendimento ao Cliente', {
         stretch: 'sector',
         lessons: 5,
@@ -278,7 +277,7 @@ export const catalog: CatalogGroup[] = [
 export const journeyGoal: JourneyGoal = {
   sector: 'Atendimento',
   slug: 'atendimento',
-  competencies: ['Comunicação', 'Postura', 'Rotinas da Distribuidora', 'Reclamações'],
+  competencies: ['Comunicação', 'Empatia', 'Rotinas', 'Reclamações'],
 }
 
 export const contentLibrary: ModuleSummary[] = [
@@ -373,7 +372,7 @@ export const sectorDetail: SectorDetail = {
       reached: { count: 2, of: 2 },
     },
     {
-      name: 'Sistema de Pedidos',
+      name: 'Sistema',
       icon: 'terminal',
       experts_average: 85,
       goal: 75,
@@ -412,7 +411,7 @@ export const groupDetail: SectorDetail = {
   level: 'easy',
   experts_count: 0,
   competencies: [
-    { name: 'Comunicação Clara', icon: 'record_voice_over', experts_average: null, goal: 60, reached: null },
+    { name: 'Comunicação', icon: 'record_voice_over', experts_average: null, goal: 60, reached: null },
   ],
 }
 
@@ -425,12 +424,12 @@ export const newSectorProps: NewSectorProps = {
   levels: goalLevels,
   competencies: [
     {
-      name: 'Comunicação Clara',
+      name: 'Comunicação',
       icon: 'record_voice_over',
       experts_average: null,
       goal: null,
       reached: null,
     },
-    { name: 'Raciocínio Lógico', icon: 'psychology', experts_average: null, goal: null, reached: null },
+    { name: 'Raciocínio', icon: 'psychology', experts_average: null, goal: null, reached: null },
   ],
 }

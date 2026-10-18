@@ -64,8 +64,7 @@ RSpec.describe "Management journeys", :inertia do
 
       expect(inertia.props[:goal]).to include(
         sector: "Atendimento", slug: "atendimento",
-        competencies: ["Comunicação e Escuta Ativa", "Resolução de Reclamações de Entrega",
-          "Uso do Sistema Interno de Pedidos", "Postura e Empatia com Clientes Difíceis"]
+        competencies: %w[Comunicação Reclamações Sistema Empatia]
       )
     end
 

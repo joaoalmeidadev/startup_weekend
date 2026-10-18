@@ -49,11 +49,11 @@ describe('SectorsNew', () => {
   it('moves the Base competencies rulers to the chosen level', async () => {
     render(<SectorsNew />)
 
-    expect(screen.queryByLabelText('Meta de Comunicação Clara')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Meta de Comunicação')).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('radio', { name: /Médio/ }))
 
-    expect(ruler('Comunicação Clara').value).toBe('75')
-    expect(ruler('Raciocínio Lógico').value).toBe('75')
+    expect(ruler('Comunicação').value).toBe('75')
+    expect(ruler('Raciocínio').value).toBe('75')
   })
 
   it('needs a name and a level, then creates the work sector (simulated)', async () => {

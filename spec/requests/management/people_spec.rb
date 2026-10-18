@@ -56,7 +56,7 @@ RSpec.describe "Management people", :inertia do
       get management_person_path("maria-souza")
 
       competencies = inertia.props[:person][:competencies]
-      expect(competencies.pluck(:name)).to eq(["Comunicação clara", "Matemática básica", "Cultura da empresa", "Rotinas da Distribuidora"])
+      expect(competencies.pluck(:name)).to eq(%w[Comunicação Matemática Cultura Rotinas])
       expect(competencies.first).to include(before: 40, now: 70, goal: 75)
       expect(competencies.last).to include(before: 41, now: 53)
     end

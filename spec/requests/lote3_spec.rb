@@ -28,7 +28,7 @@ RSpec.describe "Remaining mocked screens", :inertia do
       get new_management_learning_module_path
 
       competencies = inertia.props[:competencies]
-      expect(competencies).to include("Rotinas da Distribuidora", "Comunicação clara")
+      expect(competencies).to include("Rotinas", "Comunicação")
       expect(competencies).to eq(competencies.uniq.sort)
       expect(inertia.props).not_to have_key(:nivela_products)
     end

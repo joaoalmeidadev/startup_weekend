@@ -85,7 +85,7 @@ describe('SectorsShow', () => {
     await userEvent.click(screen.getByRole('radio', { name: /Difícil/ }))
 
     expect(ruler('Comunicação').value).toBe('90')
-    expect(ruler('Sistema de Pedidos').value).toBe('90')
+    expect(ruler('Sistema').value).toBe('90')
   })
 
   it('marks the level as Personalizado when a ruler is moved by hand', async () => {
