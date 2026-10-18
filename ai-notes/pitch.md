@@ -31,11 +31,11 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 5. No montador (**Atendimento na prática**): à esquerda a Biblioteca, à direita "Como o participante vê". Adicione um
    conteúdo e mostre a **Calculadora da jornada** mudar: "9 h de treino substituídas, R$ 765 economizados, 306 pts".
    Edite as horas de uma etapa ou digite pontos manuais para mostrar que o admin controla.
-7. **Recompensas** → **Calcular pontuação**: "1 h de treino custa o gestor + a pessoa (R$ 85); com 40% dessa
-   economia, cada hora vale 34 pts. 1 ponto = R$ 1." Digite o custo de um prêmio (ex.: R$ 50) e mostre quantas horas de treino ele representa.
 6. **Setores** → **Staff** (grupo): "Cada setor tem as suas pessoas e a sua meta. Grupos juntam gente de setores
    diferentes." Meta começa num nível de mercado — Fácil, Médio, Difícil — e ajusto por competência. Se der tempo,
    **+ Novo setor** mostra os 3 blocos: nome, pessoas, meta.
+7. **Recompensas** → **Calcular pontuação**: "1 h de treino custa o gestor + a pessoa (R$ 85); com 40% dessa
+   economia, cada hora vale 34 pts. 1 ponto = R$ 1." Digite o custo de um prêmio (ex.: R$ 50) e mostre quantas horas de treino ele representa.
 
 ### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)
 5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.
