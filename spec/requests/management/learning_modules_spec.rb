@@ -11,7 +11,8 @@ RSpec.describe "Management learning module", :inertia do
       lessons = inertia.props[:learning_module][:lessons]
       expect(lessons.size).to eq(8)
       expect(lessons.pluck(:status).tally).to eq("approved" => 1, "pending" => 7)
-      expect(inertia.props[:learning_module]).to include(competency: "Rotinas da Distribuidora", review_from: 2)
+      expect(inertia.props[:learning_module]).to include(competency: "Rotinas da Distribuidora", review_from: 2,
+        source: "ai", material: "Manual de SAC.pdf")
     end
 
     it "shows every lesson approved for a published module" do

@@ -1,18 +1,19 @@
-import { Head, Link, router, usePage } from '@inertiajs/react'
+import { Head, Link, usePage } from '@inertiajs/react'
 import { useState } from 'react'
 import { Icon } from '@/components/Icon'
 import { useMockNotice } from '@/components/MockNotice'
 import { StatusPill } from '@/components/StatusPill'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
-import type { Journey, ModuleSummary, StretchKey } from '@/types/management'
-import { AddModuleModal } from './AddModuleModal'
+import type { Journey, JourneyBuilderProps, ModuleSummary, StretchKey } from '@/types/management'
 import { AudienceModal } from './AudienceModal'
-import { StretchColumn } from './StretchColumn'
-import { addModule, moveModule } from './journeyEditing'
+import { CatalogPanel } from './CatalogPanel'
+import { JourneyPreview } from './JourneyPreview'
+import { ReadyJourneyCard } from './ReadyJourneyCard'
+import { ValueSummary } from './ValueSummary'
+import { addModule, moduleIds, moveModule, removeModule } from './journeyEditing'
+import { journeyValue } from './journeyValue'
 
-type JourneyPageProps = { journey: Journey; library: ModuleSummary[] }
-
-function JourneyHeader({ journey }: { journey: Journey }) {
+function AudienceLine({ journey }: { journey: Journey }) {
   const notify = useMockNotice()
   const [audience, setAudience] = useState(journey.audience)
   const [editing, setEditing] = useState(false)
@@ -21,6 +22,31 @@ function JourneyHeader({ journey }: { journey: Journey }) {
     setEditing(false)
     notify('Quem recebe foi atualizado (simulação).')
   }
+
+  return (
+    <div className="flex flex-wrap items-center gap-space-xs text-body-sm text-on-surface-variant">
+      <span>Quem recebe:</span>
+      {audience.map((chip) => (
+        <span key={chip} className="rounded-full bg-surface-container px-space-sm py-0.5 text-label-sm">
+          {chip}
+        </span>
+      ))}
+      <button
+        type="button"
+        onClick={() => setEditing(true)}
+        className="font-semibold text-primary hover:underline"
+      >
+        Alterar
+      </button>
+      {editing && (
+        <AudienceModal current={audience} onSave={saveAudience} onClose={() => setEditing(false)} />
+      )}
+    </div>
+  )
+}
+
+function JourneyHeader({ journey }: { journey: Journey }) {
+  const notify = useMockNotice()
 
   return (
     <section className="flex flex-col gap-space-md">
@@ -37,104 +63,71 @@ function JourneyHeader({ journey }: { journey: Journey }) {
             <h1 className="text-headline-xl tracking-tight text-on-surface">{journey.name}</h1>
             <StatusPill status={journey.status} />
           </div>
-          <div className="flex flex-wrap items-center gap-space-xs text-body-sm text-on-surface-variant">
-            <span>Quem recebe:</span>
-            {audience.map((chip) => (
-              <span key={chip} className="rounded-full bg-surface-container px-space-sm py-0.5 text-label-sm">
-                {chip}
-              </span>
-            ))}
-            <button
-              type="button"
-              onClick={() => setEditing(true)}
-              className="font-semibold text-primary hover:underline"
-            >
-              Alterar
-            </button>
-          </div>
+          <AudienceLine journey={journey} />
         </div>
-        <div className="flex items-center gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-secondary-fixed text-on-secondary-fixed">
-            <Icon name="military_tech" className="text-[1.375rem]" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-label-md text-on-surface">Selo: {journey.badge}</span>
-            <Link
-              href="/management/sector_goal"
-              className="text-body-sm font-semibold text-primary hover:underline"
-            >
-              Ver a meta desta jornada
-            </Link>
-          </div>
+        <div className="flex flex-col items-start gap-space-xs lg:items-end">
+          <button
+            type="button"
+            onClick={() => notify('Alterações publicadas para a equipe (simulação).')}
+            className="inline-flex h-12 items-center gap-space-xs rounded-xl bg-primary px-space-lg text-label-lg text-on-primary shadow-md hover:bg-primary-container"
+          >
+            <Icon name="publish" className="text-[1.25rem]" />
+            Publicar alterações
+          </button>
+          <Link
+            href="/management/sector_goal"
+            className="text-body-sm font-semibold text-primary hover:underline"
+          >
+            Ver a meta desta jornada
+          </Link>
         </div>
       </div>
-      {editing && (
-        <AudienceModal current={audience} onSave={saveAudience} onClose={() => setEditing(false)} />
-      )}
     </section>
   )
 }
 
-function JourneyEditor({ journey, library: initialLibrary }: JourneyPageProps) {
+// Catalog on the left, the collaborator's path on the right; the value on top follows every change
+function JourneyBuilder({ journey, catalog, goal, ready_journey, start_ready }: JourneyBuilderProps) {
   const notify = useMockNotice()
-  const [stretches, setStretches] = useState(journey.stretches)
-  const [library, setLibrary] = useState(initialLibrary)
-  const [adding, setAdding] = useState<StretchKey | null>(null)
-  const addingStretch = stretches.find((stretch) => stretch.key === adding)
+  const [stretches, setStretches] = useState(start_ready ? ready_journey : journey.stretches)
+  const titleOf = (key: StretchKey) => stretches.find((stretch) => stretch.key === key)?.title
 
-  const pick = (module: ModuleSummary) => {
-    setStretches((current) => addModule(current, 'base', module))
-    setLibrary((current) => current.filter((m) => m.id !== module.id))
-    setAdding(null)
-    notify(`"${module.name}" entrou na Base (simulação).`)
+  const add = (module: ModuleSummary, key: StretchKey) => {
+    setStretches((current) => addModule(current, key, module))
+    notify(`"${module.name}" entrou em ${titleOf(key)}.`)
   }
-  const create = (how: 'manual' | 'ai') => {
-    setAdding(null)
-    const mode = how === 'manual' ? '&mode=manual' : ''
-    router.visit(`/management/modules/new?journey=${journey.id}${mode}`)
+  const applyReady = () => {
+    setStretches(ready_journey)
+    notify('Jornada pronta Nivela aplicada. Edite à vontade.')
   }
+  const remove = (key: StretchKey, module: ModuleSummary) =>
+    setStretches((current) => removeModule(current, key, module.id))
+  const move = (key: StretchKey, index: number, direction: -1 | 1) =>
+    setStretches((current) => moveModule(current, key, index, direction))
 
   return (
     <>
-      <p className="text-body-md text-on-surface-variant">
-        O colaborador segue os módulos nesta ordem, um de cada vez. Quem já domina um assunto (pelo
-        diagnóstico) pula o módulo.
-      </p>
-      <div className="grid grid-cols-1 gap-space-md xl:grid-cols-3">
-        {stretches.map((stretch, index) => (
-          <StretchColumn
-            key={stretch.key}
-            stretch={stretch}
-            number={index + 1}
-            onMove={(moduleIndex, direction) =>
-              setStretches((current) => moveModule(current, stretch.key, moduleIndex, direction))
-            }
-            onAdd={() => setAdding(stretch.key)}
-          />
-        ))}
+      <ValueSummary value={journeyValue(stretches, goal)} />
+      <div className="grid grid-cols-1 items-start gap-space-md lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+        <div className="flex flex-col gap-space-md">
+          <ReadyJourneyCard ready={ready_journey} goal={goal} onApply={applyReady} />
+          <CatalogPanel catalog={catalog} inJourney={moduleIds(stretches)} onAdd={add} />
+        </div>
+        <JourneyPreview stretches={stretches} badge={journey.badge} onMove={move} onRemove={remove} />
       </div>
-      {addingStretch && (
-        <AddModuleModal
-          stretch={addingStretch}
-          library={library}
-          onPick={pick}
-          onCreate={create}
-          onClose={() => setAdding(null)}
-        />
-      )}
     </>
   )
 }
 
 export default function JourneysShow() {
-  const { journey, library } = usePage<JourneyPageProps>().props
+  const props = usePage<JourneyBuilderProps>().props
 
   return (
     <ManagementLayout>
-      <Head title={journey.name} />
+      <Head title={props.journey.name} />
       <div className="flex w-full flex-col gap-space-lg pt-space-md">
-        <JourneyHeader journey={journey} />
-        <JourneyEditor journey={journey} library={library} />
+        <JourneyHeader journey={props.journey} />
+        <JourneyBuilder {...props} />
       </div>
     </ManagementLayout>
   )

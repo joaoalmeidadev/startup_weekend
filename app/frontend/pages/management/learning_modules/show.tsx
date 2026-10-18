@@ -1,6 +1,7 @@
 import { Head, Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { Icon } from '@/components/Icon'
+import { SourceBadge } from '@/components/SourceBadge'
 import { StatusPill } from '@/components/StatusPill'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { LearningModule } from '@/types/management'
@@ -25,7 +26,10 @@ function ModuleFacts({ module }: { module: LearningModule }) {
         {module.competency}
       </Fact>
       <Fact icon="description" label="Origem">
-        {module.source}
+        <span className="flex flex-col items-start gap-1">
+          <SourceBadge source={module.source} />
+          {module.material}
+        </span>
       </Fact>
       <Fact icon="route" label="Usado nas jornadas">
         {module.used_in.map((journey, index) => (

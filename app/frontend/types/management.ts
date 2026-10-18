@@ -79,6 +79,11 @@ export type ModuleSummary = {
   competency: string
   lessons: number
   status: ModuleStatus
+  source: ContentSource
+  stretch: StretchKey
+  teaching_hours: number
+  covers: string
+  research_share: number | null
 }
 
 export type Stretch = { key: StretchKey; title: string; modules: ModuleSummary[] }
@@ -92,7 +97,8 @@ export type LearningModule = {
   name: string
   competency: string
   status: ModuleStatus
-  source: string
+  source: ContentSource
+  material: string
   stretch: string
   used_in: { id: string; name: string }[]
   lessons: { position: number; title: string; status: LessonStatus }[]
@@ -116,6 +122,7 @@ export type PersonDetail = Person & {
 export type NewModuleProps = {
   journey: { id: string; name: string } | null
   generated: { lessons: number; review_path: string }
+  nivela_products: ModuleSummary[]
 }
 
 export type TeamDashboard = {
@@ -150,3 +157,20 @@ export type Publication = {
 export type GoalLevelKey = 'easy' | 'medium' | 'hard'
 
 export type GoalLevel = { key: GoalLevelKey; label: string; target: number; hint: string }
+
+// Where a content comes from: AI from company material, the Nivela library or written by the company
+export type ContentSource = 'ai' | 'nivela' | 'company'
+
+export type LibraryModule = ModuleSummary & { journeys_count: number }
+
+export type CatalogGroup = { source: ContentSource; title: string; modules: ModuleSummary[] }
+
+export type JourneyGoal = { sector: string | null; competencies: string[] }
+
+export type JourneyBuilderProps = {
+  journey: Journey
+  catalog: CatalogGroup[]
+  goal: JourneyGoal
+  ready_journey: Stretch[]
+  start_ready: boolean
+}

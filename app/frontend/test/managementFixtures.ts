@@ -1,9 +1,12 @@
 import type {
+  CatalogGroup,
   Dashboard,
   Journey,
+  JourneyGoal,
   JourneySummary,
   LearningModule,
   LessonReview,
+  LibraryModule,
   Manager,
   ModuleSummary,
   PeopleProps,
@@ -144,12 +147,20 @@ export const journeySummaries: JourneySummary[] = [
   },
 ]
 
-const mod = (id: string, name: string, status: ModuleSummary['status'] = 'published'): ModuleSummary => ({
+type ModuleOverrides = Partial<Omit<ModuleSummary, 'id' | 'name'>>
+
+const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleSummary => ({
   id,
   name,
   competency: `Competência ${name}`,
   lessons: 4,
-  status,
+  status: 'published',
+  source: 'nivela',
+  stretch: 'base',
+  teaching_hours: 3,
+  covers: `Competência ${name}`,
+  research_share: null,
+  ...overrides,
 })
 
 export const journey: Journey = {
@@ -163,21 +174,36 @@ export const journey: Journey = {
     {
       key: 'base',
       title: 'Base',
-      modules: [mod('conversa-clara', 'Conversa Clara'), mod('matematica', 'Matemática')],
+      modules: [
+        mod('conversa-clara', 'Conversa Clara', { covers: 'Comunicação' }),
+        mod('matematica', 'Matemática'),
+      ],
     },
-    { key: 'company', title: 'Empresa', modules: [mod('rotinas-de-atendimento', 'Rotinas', 'in_review')] },
+    {
+      key: 'company',
+      title: 'Empresa',
+      modules: [
+        mod('rotinas-de-atendimento', 'Rotinas', {
+          status: 'in_review',
+          source: 'ai',
+          stretch: 'company',
+          lessons: 8,
+          teaching_hours: 6,
+          covers: 'Rotinas da Distribuidora',
+        }),
+      ],
+    },
     { key: 'sector', title: 'Setor', modules: [] },
   ],
 }
-
-export const library: ModuleSummary[] = [mod('escrita-no-trabalho', 'Escrita no Trabalho')]
 
 export const learningModule: LearningModule = {
   id: 'rotinas-de-atendimento',
   name: 'Rotinas de atendimento',
   competency: 'Rotinas da Distribuidora',
   status: 'in_review',
-  source: 'Manual de SAC.pdf',
+  source: 'ai',
+  material: 'Manual de SAC.pdf',
   stretch: 'Empresa',
   used_in: [{ id: 'onboarding-atendimento', name: 'Onboarding Atendimento' }],
   lessons: [
@@ -262,3 +288,63 @@ export const sectorWithoutGoal: SectorGoal = {
     { name: 'Conferência', icon: 'inventory_2', experts_average: null, goal: null, reached: null },
   ],
 }
+
+// Content area: library, journey builder catalog and goal
+const aiModule = (id: string, name: string, overrides: ModuleOverrides = {}) =>
+  mod(id, name, { source: 'ai', stretch: 'company', teaching_hours: 4, ...overrides })
+const companyModule = (id: string, name: string, overrides: ModuleOverrides = {}) =>
+  mod(id, name, { source: 'company', stretch: 'sector', teaching_hours: 5, ...overrides })
+
+export const catalog: CatalogGroup[] = [
+  {
+    source: 'nivela',
+    title: 'Produtos Nivela',
+    modules: [
+      ...journey.stretches[0].modules,
+      mod('postura-e-empatia', 'Postura e Empatia', { lessons: 3, covers: 'Postura' }),
+      mod('atendimento-ao-cliente', 'Atendimento ao Cliente', {
+        stretch: 'sector',
+        lessons: 5,
+        teaching_hours: 4,
+      }),
+    ],
+  },
+  {
+    source: 'ai',
+    title: 'Gerado por IA',
+    modules: [
+      journey.stretches[1].modules[0],
+      aiModule('seguranca-no-armazem', 'Segurança no Armazém', { lessons: 5 }),
+    ],
+  },
+  {
+    source: 'company',
+    title: 'Produtos da empresa',
+    modules: [companyModule('tratamento-de-reclamacoes', 'Tratamento de Reclamações', { lessons: 6 })],
+  },
+]
+
+export const journeyGoal: JourneyGoal = {
+  sector: 'Atendimento',
+  competencies: ['Comunicação', 'Postura', 'Rotinas da Distribuidora', 'Reclamações'],
+}
+
+const inJourneys = (module: ModuleSummary, journeys_count: number): LibraryModule => ({
+  ...module,
+  journeys_count,
+})
+
+export const contentLibrary: LibraryModule[] = [
+  inJourneys(journey.stretches[1].modules[0], 1),
+  inJourneys(journey.stretches[0].modules[0], 2),
+  inJourneys(companyModule('uso-do-sistema', 'Uso do Sistema'), 0),
+  inJourneys(mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }), 1),
+]
+
+export const nivelaProducts: ModuleSummary[] = catalog[0].modules
+
+export const readyJourney: Journey['stretches'] = [
+  { key: 'base', title: 'Base', modules: journey.stretches[0].modules },
+  { key: 'company', title: 'Empresa', modules: [] },
+  { key: 'sector', title: 'Setor', modules: [catalog[0].modules[3]] },
+]
