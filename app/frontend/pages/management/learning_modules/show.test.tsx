@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { learningModule, manager } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
@@ -48,16 +49,39 @@ describe('LearningModulesShow', () => {
     expect(screen.getByText('1 lições esperando sua revisão')).toBeInTheDocument()
   })
 
-  it('links every lesson to its review while the module is under review', () => {
+  const lessonItem = (title: RegExp) => screen.getByRole('button', { name: title })
+
+  it('opens each lesson with its text, the answer key and how much of the team gets it right', async () => {
     render(<LearningModulesShow />)
 
-    expect(screen.getByRole('link', { name: /Como acolher/ })).toHaveAttribute(
+    const first = lessonItem(/Boas-vindas/)
+    expect(first).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(first)
+
+    expect(first).toHaveAttribute('aria-expanded', 'true')
+    const panel = within(screen.getByRole('region', { name: 'Lição 1: Boas-vindas' }))
+    expect(panel.getByText('Rotina do SAC, passo 1.')).toBeInTheDocument()
+    expect(panel.getByText('Qual é o primeiro passo ao atender um cliente?')).toBeInTheDocument()
+    const right = panel.getByText('Cumprimentar, dizer o nome e ouvir até o fim').closest('li') as HTMLElement
+    expect(right).toHaveTextContent('Correta')
+    expect(panel.getByText('Ouvir primeiro deixa o cliente mais calmo.')).toBeInTheDocument()
+    expect(panel.getByText('92% da equipe acerta de primeira')).toBeInTheDocument()
+  })
+
+  it('links the lessons still under review to their review', async () => {
+    render(<LearningModulesShow />)
+
+    await userEvent.click(lessonItem(/Como acolher/))
+
+    const panel = within(screen.getByRole('region', { name: 'Lição 2: Como acolher' }))
+    expect(panel.getByText('Ainda sem respostas: a lição não foi publicada.')).toBeInTheDocument()
+    expect(panel.getByRole('link', { name: 'Revisar lição 2' })).toHaveAttribute(
       'href',
       '/management/lesson_reviews/2',
     )
   })
 
-  it('only lists lessons once the module is published', () => {
+  it('has no review links once the module is published', async () => {
     page.props = {
       learning_module: { ...learningModule, status: 'published', review_from: null },
       manager,
@@ -65,7 +89,21 @@ describe('LearningModulesShow', () => {
     render(<LearningModulesShow />)
 
     expect(screen.queryByRole('link', { name: /Revisar lições/ })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /Como acolher/ })).not.toBeInTheDocument()
+    await userEvent.click(lessonItem(/Como acolher/))
+    expect(screen.queryByRole('link', { name: /Revisar lição/ })).not.toBeInTheDocument()
+  })
+
+  it('tells the final assessment draws from the lessons and the team average', () => {
+    page.props = {
+      learning_module: { ...learningModule, assessment: { questions: 10, team_average: 80 } },
+      manager,
+    }
+    render(<LearningModulesShow />)
+
+    expect(
+      screen.getByText('10 perguntas sorteadas das lições ao lado — o gabarito está em cada lição.'),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Média da equipe: 80% de acerto')).toBeInTheDocument()
   })
 
   it('presents itself as a library content, with no stretch', () => {

@@ -15,6 +15,28 @@ RSpec.describe "Management learning module", :inertia do
         source: "ai", material: "Manual de SAC.pdf")
     end
 
+    it "brings each lesson with its text and answer key, three options and one right" do
+      get management_learning_module_path("rotinas-de-atendimento")
+
+      lessons = inertia.props[:learning_module][:lessons]
+      expect(lessons).to all(include(:text, :question))
+      expect(lessons.map { |lesson| lesson[:question][:options].size }).to all(eq(3))
+      expect(lessons.map { |lesson| lesson[:question][:options].count { |option| option[:correct] } }).to all(eq(1))
+      expect(lessons.second[:question][:prompt]).to include("atraso")
+    end
+
+    it "shows how much of the team gets each published lesson right" do
+      get management_learning_module_path("rotinas-de-atendimento")
+      lessons = inertia.props[:learning_module][:lessons]
+      expect(lessons.first[:team_accuracy]).to eq(92)
+      expect(lessons.second[:team_accuracy]).to be_nil
+      expect(inertia.props[:learning_module][:assessment]).to include(questions: 10, team_average: nil)
+
+      get management_learning_module_path("conversa-clara")
+      expect(inertia.props[:learning_module][:lessons].pluck(:team_accuracy)).to eq([92, 78, 85, 64])
+      expect(inertia.props[:learning_module][:assessment]).to include(team_average: 80)
+    end
+
     it "tells the in-person training it replaces and who would give it" do
       get management_learning_module_path("rotinas-de-atendimento")
       expect(inertia.props[:learning_module][:training]).to include(hours: 6, teacher_hourly: 25.0, default_teacher: false)

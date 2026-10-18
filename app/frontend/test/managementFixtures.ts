@@ -193,10 +193,40 @@ export const learningModule: LearningModule = {
   stretch: 'Empresa',
   used_in: [{ id: 'jeito-distribuidora-sul', name: 'Jeito Distribuidora Sul' }],
   lessons: [
-    { position: 1, title: 'Boas-vindas', status: 'approved' },
-    { position: 2, title: 'Como acolher', status: 'pending' },
+    {
+      position: 1,
+      title: 'Boas-vindas',
+      status: 'approved',
+      text: 'Rotina do SAC, passo 1.',
+      question: {
+        prompt: 'Qual é o primeiro passo ao atender um cliente?',
+        options: [
+          { text: 'Cumprimentar, dizer o nome e ouvir até o fim', correct: true },
+          { text: 'Pedir o número do pedido antes de ouvir', correct: false },
+          { text: 'Transferir direto para o supervisor', correct: false },
+        ],
+        explanation: 'Ouvir primeiro deixa o cliente mais calmo.',
+      },
+      team_accuracy: 92,
+    },
+    {
+      position: 2,
+      title: 'Como acolher',
+      status: 'pending',
+      text: 'Rotina do SAC, passo 2.',
+      question: {
+        prompt: 'O cliente liga irritado com um atraso. O que você faz?',
+        options: [
+          { text: 'Explicar que a culpa é do trânsito', correct: false },
+          { text: 'Acolher com calma e registrar o chamado em até 15 minutos', correct: true },
+          { text: 'Pedir para ligar para a transportadora', correct: false },
+        ],
+        explanation: 'O manual pede registro em até 15 minutos.',
+      },
+      team_accuracy: null,
+    },
   ],
-  assessment: { questions: 10 },
+  assessment: { questions: 10, team_average: null },
   review_from: 2,
 }
 

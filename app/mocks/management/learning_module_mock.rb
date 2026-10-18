@@ -8,6 +8,9 @@ module Management
       "Encerramento do chamado"
     ].freeze
 
+    # % of the team that gets each published lesson right at the first try
+    TEAM_ACCURACY = [92, 78, 85, 64, 88, 71, 90, 81].freeze
+
     def initialize(id)
       @module = ModuleCatalog.find(id)
     end
@@ -17,7 +20,7 @@ module Management
         stretch: JourneyCatalog::STRETCHES.fetch(@module[:stretch]),
         used_in: JourneyCatalog.using_module(@module[:id]).map { |journey| journey.slice(:id, :name) },
         lessons: lessons,
-        assessment: {questions: 10},
+        assessment: {questions: 10, team_average: team_average},
         review_from: review_from,
         training: training
       )
@@ -32,7 +35,12 @@ module Management
     end
 
     def lessons
-      (1..@module[:lessons]).map { |position| {position: position, title: lesson_title(position), status: lesson_status(position)} }
+      bank = LessonBank.new(@module)
+      (1..@module[:lessons]).map do |position|
+        status = lesson_status(position)
+        {position: position, title: lesson_title(position), status: status, text: bank.text(position),
+         question: bank.question(position), team_accuracy: (TEAM_ACCURACY[(position - 1) % TEAM_ACCURACY.size] if status == "approved")}
+      end
     end
 
     def lesson_title(position)
@@ -47,6 +55,13 @@ module Management
       when "draft" then "draft"
       else (position < LessonReviewMock::FIRST_PENDING) ? "approved" : "pending"
       end
+    end
+
+    def team_average
+      accuracies = lessons.filter_map { |lesson| lesson[:team_accuracy] }
+      return nil unless @module[:status] == "published" && accuracies.any?
+
+      (accuracies.sum.to_f / accuracies.size).round
     end
 
     def review_from

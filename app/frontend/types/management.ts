@@ -95,8 +95,17 @@ export type LearningModule = {
   material: string
   stretch: string
   used_in: { id: string; name: string }[]
-  lessons: { position: number; title: string; status: LessonStatus }[]
-  assessment: { questions: number }
+  lessons: {
+    position: number
+    title: string
+    status: LessonStatus
+    text: string
+    // The answer key: one question, three options and the right one
+    question: { prompt: string; options: { text: string; correct: boolean }[]; explanation: string }
+    // % of the team that gets it right at the first try; null until the lesson is published
+    team_accuracy: number | null
+  }[]
+  assessment: { questions: number; team_average: number | null }
   review_from: number | null
   // In-person training this content replaces and the hour of who would give it
   training: { hours: number; teacher_hourly: number; default_teacher: boolean }

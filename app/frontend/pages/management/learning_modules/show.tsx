@@ -128,8 +128,11 @@ export default function LearningModulesShow() {
               <h2 className="text-headline-sm text-on-surface">Avaliação final</h2>
             </div>
             <p className="text-body-md text-on-surface">
-              {module.assessment.questions} perguntas no fim do módulo.
+              {`${module.assessment.questions} perguntas sorteadas das lições ao lado — o gabarito está em cada lição.`}
             </p>
+            {module.assessment.team_average !== null && (
+              <p className="text-label-lg text-primary">{`Média da equipe: ${module.assessment.team_average}% de acerto`}</p>
+            )}
             <p className="text-body-sm text-on-surface-variant">
               A nota vira a pontuação de <strong>{module.competency}</strong> e é comparada com a meta da
               jornada para liberar o selo.
