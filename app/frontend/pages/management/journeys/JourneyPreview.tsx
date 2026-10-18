@@ -3,7 +3,7 @@ import { Icon } from '@/components/Icon'
 import { SourceBadge } from '@/components/SourceBadge'
 import type { ModuleSummary, PointsRule } from '@/types/management'
 import type { JourneyStep } from './journeyEditing'
-import { stepPoints } from './journeyValue'
+import { stepFormula } from './journeyFormula'
 
 type StepValueActions = {
   onHoursChange: (moduleId: string, hours: number) => void
@@ -29,10 +29,10 @@ const pointsFrom = (input: HTMLInputElement) =>
     ? null
     : Math.max(0, Math.round(input.valueAsNumber))
 
-type StepValueEditorProps = StepValueActions & { step: JourneyStep; points: number }
+type StepValueEditorProps = StepValueActions & { step: JourneyStep; rule: PointsRule }
 
-// The hours of training a content replaces and its points; typed points override the rule
-function StepValueEditor({ step, points, onHoursChange, onManualPointsChange }: StepValueEditorProps) {
+// The hours of training a content replaces and the math that turns them into points; typed points override the rule
+function StepValueEditor({ step, rule, onHoursChange, onManualPointsChange }: StepValueEditorProps) {
   const { module } = step
 
   return (
@@ -51,7 +51,7 @@ function StepValueEditor({ step, points, onHoursChange, onManualPointsChange }: 
           />
           h
         </label>
-        <span className="text-label-md text-on-surface">{points} pts</span>
+        <span className="text-label-md text-on-surface">{stepFormula(step, rule)}</span>
         {step.manualPoints !== null && (
           <span className="rounded-full bg-secondary-fixed px-space-xs text-label-sm text-on-secondary-fixed">
             manual
@@ -96,7 +96,7 @@ function PathStop({ step, rule, index, isLast, onMove, onRemove, ...valueActions
           <SourceBadge source={module.source} />
           {module.lessons} lições
         </span>
-        <StepValueEditor step={step} points={stepPoints(step, rule)} {...valueActions} />
+        <StepValueEditor step={step} rule={rule} {...valueActions} />
         <div className="flex items-center gap-1">
           <button
             type="button"

@@ -163,6 +163,8 @@ export type JourneyBuilderProps = {
   audience_options: AudienceOption[]
   people: string[]
   points_rule: PointsRule
+  // Where the rule comes from, e.g. "Atendimento · padrão da empresa" or "menor valor entre ..."
+  points_rule_source: string
 }
 
 export type NewJourneyProps = { audience_options: AudienceOption[]; people: string[] }
