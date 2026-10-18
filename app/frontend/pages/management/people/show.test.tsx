@@ -57,6 +57,8 @@ describe('PeopleShow', () => {
     expect(study.getByText('3 dias')).toBeInTheDocument()
     expect(study.getByText('12')).toBeInTheDocument()
     expect(study.getByText('82%')).toBeInTheDocument()
+    expect(study.getByText('8 h')).toBeInTheDocument()
+    expect(study.getByText('de treino substituídas')).toBeInTheDocument()
     const row = study.getByText('Comunicação').closest('li') as HTMLElement
     expect(row).toHaveTextContent('40 → 70')
   })
