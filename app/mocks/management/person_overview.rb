@@ -21,6 +21,8 @@ module Management
     def goal = SectorCatalog.target(@person[:sector])
 
     def progress
+      return {percent: 0, current_module: nil} if module_ids.empty?
+
       {percent: @person[:completed] * 100 / module_ids.size, current_module: current_module}
     end
 
@@ -47,9 +49,6 @@ module Management
       module_id && ModuleCatalog.find(module_id)[:name]
     end
 
-    def module_ids
-      modules = JourneyCatalog.find(@person[:journey_id])[:modules]
-      JourneyCatalog::STRETCHES.keys.flat_map { |key| modules[key] }
-    end
+    def module_ids = @module_ids ||= JourneyCatalog.path_for(@person).values.flatten
   end
 end

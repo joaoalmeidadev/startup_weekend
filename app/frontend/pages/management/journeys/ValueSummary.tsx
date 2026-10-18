@@ -34,9 +34,15 @@ export function ValueSummary({ value }: { value: JourneyValue }) {
       >
         ~{plural(value.weeks, 'semana', 'semanas')} a 5 min/dia
       </ValueTile>
-      <ValueTile icon="flag" title={`Cobre ${value.covered} de ${value.total} competências da meta`}>
-        Meta do setor no nível de mercado escolhido
-      </ValueTile>
+      {value.total > 0 ? (
+        <ValueTile icon="flag" title={`Cobre ${value.covered} de ${value.total} competências da meta`}>
+          Meta do setor no nível de mercado escolhido
+        </ValueTile>
+      ) : (
+        <ValueTile icon="flag" title="Sem meta de setor para comparar">
+          Quem recebe são pessoas escolhidas uma a uma
+        </ValueTile>
+      )}
     </section>
   )
 }

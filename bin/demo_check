@@ -30,7 +30,7 @@ expect_landing() {
 
 expect_landing "admin@nivela.com" "/management"
 for path in /management "/management?period=30d" /management/people /management/people/maria-souza \
-  /management/journeys /management/journeys/onboarding-atendimento "/management/journeys/onboarding-atendimento?ready=1" /management/modules/rotinas-de-atendimento \
+  /management/journeys /management/journeys/new /management/journeys/atendimento-na-pratica "/management/journeys/base-nivela?ready=1" /management/modules/rotinas-de-atendimento \
   /management/modules/new /management/lesson_reviews/1 /management/lesson_reviews/8 \
   /management/sectors /management/sectors/atendimento /management/sectors/staff /management/sectors/new \
   /management/rewards /management/library; do

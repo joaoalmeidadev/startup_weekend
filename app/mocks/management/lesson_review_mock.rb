@@ -4,7 +4,7 @@ module Management
   class LessonReviewMock
     TOTAL = 8
     FIRST_PENDING = 2
-    JOURNEY_ID = "onboarding-atendimento"
+    JOURNEY_ID = "jeito-distribuidora-sul"
     MODULE_ID = "rotinas-de-atendimento"
 
     def initialize(position)
@@ -33,7 +33,7 @@ module Management
     def breadcrumb
       [
         {label: "Jornadas", href: routes.management_journeys_path},
-        {label: "Onboarding Atendimento", href: routes.management_journey_path(JOURNEY_ID)},
+        {label: "Jeito Distribuidora Sul", href: routes.management_journey_path(JOURNEY_ID)},
         {label: "Módulo: Rotinas de atendimento", href: routes.management_learning_module_path(MODULE_ID)}
       ]
     end

@@ -1,34 +1,22 @@
-import type { ModuleSummary, Stretch, StretchKey } from '@/types/management'
+import type { ModuleSummary } from '@/types/management'
 
-export function moveModule(
-  stretches: Stretch[],
-  key: StretchKey,
-  index: number,
-  direction: -1 | 1,
-): Stretch[] {
-  return stretches.map((stretch) => {
-    const target = index + direction
-    if (stretch.key !== key || target < 0 || target >= stretch.modules.length) return stretch
-    const modules = [...stretch.modules]
-    ;[modules[index], modules[target]] = [modules[target], modules[index]]
-    return { ...stretch, modules }
-  })
+// Editing the ordered list of modules the participant goes through
+export function moveModule(modules: ModuleSummary[], index: number, direction: -1 | 1): ModuleSummary[] {
+  const target = index + direction
+  if (target < 0 || target >= modules.length) return modules
+  const moved = [...modules]
+  ;[moved[index], moved[target]] = [moved[target], moved[index]]
+  return moved
 }
 
-export function addModule(stretches: Stretch[], key: StretchKey, module: ModuleSummary): Stretch[] {
-  return stretches.map((stretch) =>
-    stretch.key === key ? { ...stretch, modules: [...stretch.modules, module] } : stretch,
-  )
+export function addModule(modules: ModuleSummary[], module: ModuleSummary): ModuleSummary[] {
+  return [...modules, module]
 }
 
-export function removeModule(stretches: Stretch[], key: StretchKey, moduleId: string): Stretch[] {
-  return stretches.map((stretch) =>
-    stretch.key === key
-      ? { ...stretch, modules: stretch.modules.filter((module) => module.id !== moduleId) }
-      : stretch,
-  )
+export function removeModule(modules: ModuleSummary[], moduleId: string): ModuleSummary[] {
+  return modules.filter((module) => module.id !== moduleId)
 }
 
-export function moduleIds(stretches: Stretch[]) {
-  return new Set(stretches.flatMap((stretch) => stretch.modules.map((module) => module.id)))
+export function moduleIds(modules: ModuleSummary[]) {
+  return new Set(modules.map((module) => module.id))
 }

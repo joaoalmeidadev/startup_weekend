@@ -1,10 +1,15 @@
 import { Link } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { StatusPill } from '@/components/StatusPill'
-import type { JourneySummary } from '@/types/management'
-import { STRETCHES } from './stretches'
+import type { AudienceOption, JourneySummary } from '@/types/management'
+import { KindTag } from './KindTag'
+import { audienceChips } from './audience'
 
-export function JourneyCard({ journey }: { journey: JourneySummary }) {
+const contentsCount = (count: number) => `${count} ${count === 1 ? 'conteúdo' : 'conteúdos'}`
+
+type JourneyCardProps = { journey: JourneySummary; audienceOptions: AudienceOption[] }
+
+export function JourneyCard({ journey, audienceOptions }: JourneyCardProps) {
   const active = journey.status === 'active'
 
   return (
@@ -16,31 +21,27 @@ export function JourneyCard({ journey }: { journey: JourneySummary }) {
         className={`absolute top-0 bottom-0 left-0 w-1.5 ${active ? 'bg-primary-container' : 'bg-outline-variant'}`}
       />
       <div className="flex items-start justify-between gap-space-sm">
-        <h2 className="text-headline-sm font-bold text-on-surface">{journey.name}</h2>
+        <div className="flex flex-col gap-space-xs">
+          <KindTag kind={journey.kind} />
+          <h2 className="text-headline-sm font-bold text-on-surface">{journey.name}</h2>
+        </div>
         <StatusPill status={journey.status} />
       </div>
       <div className="flex flex-wrap gap-space-xs">
-        {journey.audience.map((audience) => (
+        {audienceChips(journey.audience, audienceOptions).map((chip) => (
           <span
-            key={audience}
+            key={chip}
             className="inline-flex items-center gap-1 rounded-full bg-surface-container px-space-sm py-1 text-label-sm text-on-surface-variant"
           >
             <Icon name="group" className="text-[0.875rem]" />
-            {audience}
+            {chip}
           </span>
         ))}
       </div>
-      <ol className="flex items-center gap-space-xs" aria-label="Módulos por trecho">
-        {STRETCHES.map((stretch, index) => (
-          <li key={stretch.key} className="flex items-center gap-space-xs">
-            {index > 0 && <Icon name="arrow_forward" className="text-[0.875rem] text-outline" />}
-            <span className="flex items-center gap-1 rounded-lg bg-surface-container-low px-space-sm py-1 text-label-md text-on-surface">
-              <Icon name={stretch.icon} className="text-[1rem] text-primary" />
-              {stretch.title} · {journey.modules_per_stretch[stretch.key]}
-            </span>
-          </li>
-        ))}
-      </ol>
+      <span className="flex items-center gap-1 text-label-md text-on-surface">
+        <Icon name="library_books" className="text-[1rem] text-primary" />
+        {contentsCount(journey.modules_count)}
+      </span>
       <div className="mt-auto flex items-center justify-between border-t border-surface-container pt-space-sm text-body-sm text-on-surface-variant">
         <span>
           {journey.people_in_progress > 0

@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     get "sector_goal", to: redirect("/management/sectors")
     resource :rewards, only: :show
     resource :library, only: :show
-    resources :journeys, only: %i[index show]
+    resources :journeys, only: %i[index show new]
     resources :learning_modules, only: %i[show new], path: "modules"
     resources :lesson_reviews, only: %i[index show]
   end

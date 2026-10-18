@@ -95,7 +95,7 @@ describe('PeopleIndex', () => {
     await userEvent.click(screen.getByRole('button', { name: /Por e-mail/ }))
   }
 
-  it('invites people by e-mail into a sector, showing the journey they get', async () => {
+  it('invites people by e-mail into a sector, showing the journeys they get', async () => {
     render(<PeopleIndex />)
     await openEmailInvite()
 
@@ -104,10 +104,21 @@ describe('PeopleIndex', () => {
     expect(send).toBeDisabled()
 
     await userEvent.selectOptions(within(screen.getByRole('dialog')).getByLabelText('Setor'), 'Atendimento')
-    expect(screen.getByText('Recebe a jornada Onboarding Atendimento')).toBeInTheDocument()
+    expect(
+      screen.getByText('Recebe as jornadas Base Nivela, Jeito Distribuidora Sul e Atendimento na prática'),
+    ).toBeInTheDocument()
     await userEvent.click(send)
 
     expect(screen.getByRole('status')).toHaveTextContent('2 convites enviados para Atendimento (simulação).')
+  })
+
+  it('names the single journey a sector receives', async () => {
+    render(<PeopleIndex />)
+    await openEmailInvite()
+
+    await userEvent.selectOptions(within(screen.getByRole('dialog')).getByLabelText('Setor'), 'Logística')
+
+    expect(screen.getByText('Recebe a jornada Logística na prática')).toBeInTheDocument()
   })
 
   it('warns when the sector has no journey yet', async () => {

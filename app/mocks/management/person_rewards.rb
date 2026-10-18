@@ -9,10 +9,10 @@ module Management
     }.freeze
     BADGE_DATE = "14/08"
     STREAK_MILESTONE = 3
+    KIND_ORDER = JourneyCatalog::STRETCHES.keys.map(&:to_s).freeze
 
-    def initialize(person, journey, study)
+    def initialize(person, study)
       @person = person
-      @journey = journey
       @study = study
     end
 
@@ -21,8 +21,7 @@ module Management
     end
 
     def milestones
-      finished = @journey[:stretches].select { |stretch| stretch[:modules].all? { |mod| mod[:status] == "done" } }
-      finished.map { |stretch| "Concluiu o trecho #{stretch[:title]}" } + streak + earned_badge
+      finished_journeys.map { |journey| "Concluiu a jornada #{journey[:name]}" } + streak + earned_badge
     end
 
     def rewards
@@ -34,7 +33,19 @@ module Management
 
     def leveled? = @person[:status] == "leveled"
 
-    def badge_label = JourneyCatalog.find(@person[:journey_id])[:badge]
+    def journeys = @journeys ||= JourneyCatalog.for_person(@person).sort_by { |journey| KIND_ORDER.index(journey[:kind]) }
+
+    def done_ids = JourneyCatalog.path_for(@person).values.flatten.first(@person[:completed])
+
+    def finished_journeys
+      done = done_ids
+      journeys.select { |journey| journey[:modules].any? && (journey[:modules] - done).empty? }
+    end
+
+    # The sector journey names the badge; without one, the person levels in their sector
+    def badge_label
+      journeys.find { |journey| journey[:kind] == "sector" }&.dig(:badge) || "Nivelado em #{@person[:sector]}"
+    end
 
     def streak
       days = @study.streak_days

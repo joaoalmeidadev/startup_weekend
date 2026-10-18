@@ -37,9 +37,13 @@ const person = (overrides: Partial<Person> & Pick<Person, 'id' | 'name' | 'secto
 export const peopleProps: PeopleProps = {
   summary: { leveled: 1, on_track: 1, late: 1 },
   sectors: [
-    { name: 'Atendimento', count: 2, journey: 'Onboarding Atendimento' },
-    { name: 'Comercial', count: 0, journey: null },
-    { name: 'Logística', count: 1, journey: 'Onboarding Logística' },
+    {
+      name: 'Atendimento',
+      count: 2,
+      journeys: ['Base Nivela', 'Jeito Distribuidora Sul', 'Atendimento na prática'],
+    },
+    { name: 'Comercial', count: 0, journeys: [] },
+    { name: 'Logística', count: 1, journeys: ['Logística na prática'] },
   ],
   people: [
     person({
@@ -102,22 +106,34 @@ export function lessonReview(overrides: Partial<LessonReview> = {}): LessonRevie
 
 export const journeySummaries: JourneySummary[] = [
   {
-    id: 'onboarding-atendimento',
-    name: 'Onboarding Atendimento',
+    id: 'atendimento-na-pratica',
+    name: 'Atendimento na prática',
+    kind: 'sector',
     status: 'active',
-    audience: ['Setor Atendimento', 'Novatos'],
-    people_in_progress: 14,
+    audience: { type: 'sectors', names: ['Atendimento'] },
+    people_in_progress: 5,
     badge: 'Nivelado em Atendimento',
-    modules_per_stretch: { base: 2, company: 2, sector: 2 },
+    modules_count: 2,
   },
   {
     id: 'promocao-para-lider',
     name: 'Promoção para líder',
+    kind: 'company',
     status: 'draft',
-    audience: ['3 pessoas selecionadas'],
+    audience: { type: 'sectors', names: ['Staff'] },
     people_in_progress: 0,
-    badge: 'Nivelado em Liderança',
-    modules_per_stretch: { base: 2, company: 0, sector: 0 },
+    badge: 'Pronto para liderar',
+    modules_count: 3,
+  },
+  {
+    id: 'mentoria',
+    name: 'Mentoria',
+    kind: 'base',
+    status: 'active',
+    audience: { type: 'people', names: ['Maria Souza', 'Rafael Lima', 'Bruna Costa'] },
+    people_in_progress: 3,
+    badge: 'Mentoria concluída',
+    modules_count: 1,
   },
 ]
 
@@ -137,38 +153,26 @@ const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleS
   ...overrides,
 })
 
+const conversaClara = mod('conversa-clara', 'Conversa Clara', { covers: 'Comunicação' })
+const matematica = mod('matematica', 'Matemática')
+const rotinas = mod('rotinas-de-atendimento', 'Rotinas', {
+  status: 'in_review',
+  source: 'ai',
+  stretch: 'company',
+  lessons: 8,
+  teaching_hours: 6,
+  covers: 'Rotinas da Distribuidora',
+})
+
 export const journey: Journey = {
-  id: 'onboarding-atendimento',
-  name: 'Onboarding Atendimento',
+  id: 'base-nivela',
+  name: 'Base Nivela',
+  kind: 'base',
   status: 'active',
-  audience: ['Setor Atendimento'],
-  people_in_progress: 14,
-  badge: 'Nivelado em Atendimento',
-  stretches: [
-    {
-      key: 'base',
-      title: 'Base',
-      modules: [
-        mod('conversa-clara', 'Conversa Clara', { covers: 'Comunicação' }),
-        mod('matematica', 'Matemática'),
-      ],
-    },
-    {
-      key: 'company',
-      title: 'Empresa',
-      modules: [
-        mod('rotinas-de-atendimento', 'Rotinas', {
-          status: 'in_review',
-          source: 'ai',
-          stretch: 'company',
-          lessons: 8,
-          teaching_hours: 6,
-          covers: 'Rotinas da Distribuidora',
-        }),
-      ],
-    },
-    { key: 'sector', title: 'Setor', modules: [] },
-  ],
+  audience: { type: 'sectors', names: ['Atendimento', 'Staff'] },
+  people_in_progress: 9,
+  badge: 'Base Nivela concluída',
+  modules: [conversaClara, matematica, rotinas],
 }
 
 export const learningModule: LearningModule = {
@@ -179,7 +183,7 @@ export const learningModule: LearningModule = {
   source: 'ai',
   material: 'Manual de SAC.pdf',
   stretch: 'Empresa',
-  used_in: [{ id: 'onboarding-atendimento', name: 'Onboarding Atendimento' }],
+  used_in: [{ id: 'jeito-distribuidora-sul', name: 'Jeito Distribuidora Sul' }],
   lessons: [
     { position: 1, title: 'Boas-vindas', status: 'approved' },
     { position: 2, title: 'Como acolher', status: 'pending' },
@@ -192,22 +196,22 @@ export const personDetail: PersonDetail = {
   ...peopleProps.people[1],
   role: 'Atendente',
   tenure: '1 mês de casa',
-  journey: {
-    id: 'onboarding-atendimento',
-    name: 'Onboarding Atendimento',
-    stretches: [
-      { title: 'Base', modules: [{ name: 'Conversa Clara', status: 'done' }] },
-      { title: 'Empresa', modules: [{ name: 'Rotinas', status: 'current' }] },
-      { title: 'Setor', modules: [] },
-    ],
-  },
+  path: [
+    { title: 'Base', journeys: ['Base Nivela'], modules: [{ name: 'Conversa Clara', status: 'done' }] },
+    {
+      title: 'Empresa',
+      journeys: ['Jeito Distribuidora Sul'],
+      modules: [{ name: 'Rotinas', status: 'current' }],
+    },
+    { title: 'Setor', journeys: [], modules: [] },
+  ],
   study: { weekly_minutes: 35, streak_days: 3, lessons_done: 12, review_accuracy: 82 },
   competencies: [
     { name: 'Comunicação clara', before: 40, now: 70, goal: 75 },
     { name: 'Rotinas da Distribuidora', before: 41, now: 53, goal: 75 },
   ],
   badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
-  milestones: ['Concluiu o trecho Base', '3 dias seguidos de estudo'],
+  milestones: ['Concluiu a jornada Base Nivela', '3 dias seguidos de estudo'],
   rewards: {
     points: 240,
     balance: 90,
@@ -250,7 +254,8 @@ export const catalog: CatalogGroup[] = [
     source: 'nivela',
     title: 'Produtos Nivela',
     modules: [
-      ...journey.stretches[0].modules,
+      conversaClara,
+      matematica,
       mod('postura-e-empatia', 'Postura e Empatia', { lessons: 3, covers: 'Postura' }),
       mod('atendimento-ao-cliente', 'Atendimento ao Cliente', {
         stretch: 'sector',
@@ -262,10 +267,7 @@ export const catalog: CatalogGroup[] = [
   {
     source: 'ai',
     title: 'Gerado por IA',
-    modules: [
-      journey.stretches[1].modules[0],
-      aiModule('seguranca-no-armazem', 'Segurança no Armazém', { lessons: 5 }),
-    ],
+    modules: [rotinas, aiModule('seguranca-no-armazem', 'Segurança no Armazém', { lessons: 5 })],
   },
   {
     source: 'company',
@@ -276,21 +278,19 @@ export const catalog: CatalogGroup[] = [
 
 export const journeyGoal: JourneyGoal = {
   sector: 'Atendimento',
+  slug: 'atendimento',
   competencies: ['Comunicação', 'Postura', 'Rotinas da Distribuidora', 'Reclamações'],
 }
 
 export const contentLibrary: ModuleSummary[] = [
-  journey.stretches[1].modules[0],
-  journey.stretches[0].modules[0],
+  rotinas,
+  conversaClara,
   companyModule('uso-do-sistema', 'Uso do Sistema'),
   mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }),
 ]
 
-export const readyJourney: Journey['stretches'] = [
-  { key: 'base', title: 'Base', modules: journey.stretches[0].modules },
-  { key: 'company', title: 'Empresa', modules: [] },
-  { key: 'sector', title: 'Setor', modules: [catalog[0].modules[3]] },
-]
+// The ready-made Base Nivela: Nivela base products only
+export const readyJourney: ModuleSummary[] = [conversaClara, matematica, catalog[0].modules[2]]
 
 export const audienceOptions: AudienceOption[] = [
   { name: 'Atendimento', kind: 'sector', people_count: 5 },

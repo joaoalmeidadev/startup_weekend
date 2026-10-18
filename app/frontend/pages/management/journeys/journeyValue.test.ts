@@ -4,14 +4,14 @@ import { formatReais, journeyValue, weeksToFinish } from './journeyValue'
 
 describe('journeyValue', () => {
   it('adds up the hand-off hours the journey replaces and prices them at R$ 40 an hour', () => {
-    const value = journeyValue(journey.stretches, journeyGoal)
+    const value = journeyValue(journey.modules, journeyGoal)
 
     expect(value.hours).toBe(12)
     expect(value.cost).toBe(480)
   })
 
-  it('counts modules and lessons across the three stretches', () => {
-    const value = journeyValue(journey.stretches, journeyGoal)
+  it('counts modules and lessons of the whole journey', () => {
+    const value = journeyValue(journey.modules, journeyGoal)
 
     expect(value.modules).toBe(3)
     expect(value.lessons).toBe(16)
@@ -19,16 +19,14 @@ describe('journeyValue', () => {
   })
 
   it('counts the goal competencies covered by at least one module', () => {
-    const value = journeyValue(journey.stretches, journeyGoal)
+    const value = journeyValue(journey.modules, journeyGoal)
 
     expect(value.covered).toBe(2)
     expect(value.total).toBe(4)
   })
 
   it('is all zero for an empty journey', () => {
-    const empty = journey.stretches.map((stretch) => ({ ...stretch, modules: [] }))
-
-    expect(journeyValue(empty, journeyGoal)).toEqual({
+    expect(journeyValue([], journeyGoal)).toEqual({
       hours: 0,
       cost: 0,
       modules: 0,

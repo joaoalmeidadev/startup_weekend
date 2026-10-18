@@ -7,7 +7,7 @@ import LearningModulesNew from './new'
 
 vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).inertiaMock)
 
-const journey = { id: 'onboarding-atendimento', name: 'Onboarding Atendimento' }
+const journey = { id: 'atendimento-na-pratica', name: 'Atendimento na prática' }
 
 function renderForm(props: { journey?: typeof journey | null } = {}) {
   page.props = {
@@ -48,9 +48,9 @@ describe('LearningModulesNew', () => {
   it('goes back to the journey it was opened from', () => {
     renderForm({ journey })
 
-    expect(screen.getByRole('link', { name: 'Voltar para Onboarding Atendimento' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Voltar para Atendimento na prática' })).toHaveAttribute(
       'href',
-      '/management/journeys/onboarding-atendimento',
+      '/management/journeys/atendimento-na-pratica',
     )
   })
 
@@ -137,7 +137,7 @@ describe('LearningModulesNew', () => {
     await userEvent.click(screen.getByRole('button', { name: /Salvar na Biblioteca/ }))
 
     act(() => vi.runAllTimers())
-    expect(router.visit).toHaveBeenCalledWith('/management/journeys/onboarding-atendimento')
+    expect(router.visit).toHaveBeenCalledWith('/management/journeys/atendimento-na-pratica')
   })
 
   it('lets the manager keep a sent file as a company product', async () => {
