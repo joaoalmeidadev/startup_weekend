@@ -98,6 +98,8 @@ export type LearningModule = {
   lessons: { position: number; title: string; status: LessonStatus }[]
   assessment: { questions: number }
   review_from: number | null
+  // In-person training this content replaces and the hour of who would give it
+  training: { hours: number; teacher_hourly: number; default_teacher: boolean }
 }
 
 export type PersonDetail = Person & {

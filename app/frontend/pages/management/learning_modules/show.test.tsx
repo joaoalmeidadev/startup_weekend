@@ -19,6 +19,25 @@ describe('LearningModulesShow', () => {
     expect(screen.getByText('Manual de SAC.pdf')).toBeInTheDocument()
   })
 
+  it('tells the in-person training it replaces and who would give it', () => {
+    render(<LearningModulesShow />)
+
+    expect(screen.getByText('Substitui 6 h de treino com quem ganha R$ 25/h')).toBeInTheDocument()
+  })
+
+  it('says when the training uses the default value', () => {
+    page.props = {
+      ...page.props,
+      learning_module: {
+        ...learningModule,
+        training: { hours: 3, teacher_hourly: 20, default_teacher: true },
+      },
+    }
+    render(<LearningModulesShow />)
+
+    expect(screen.getByText('Substitui 3 h de treino com o valor padrão (R$ 20/h)')).toBeInTheDocument()
+  })
+
   it('sends the reviewer to the first pending lesson', () => {
     render(<LearningModulesShow />)
 

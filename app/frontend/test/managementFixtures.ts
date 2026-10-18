@@ -189,6 +189,7 @@ export const learningModule: LearningModule = {
   status: 'in_review',
   source: 'ai',
   material: 'Manual de SAC.pdf',
+  training: { hours: 6, teacher_hourly: 25, default_teacher: false },
   stretch: 'Empresa',
   used_in: [{ id: 'jeito-distribuidora-sul', name: 'Jeito Distribuidora Sul' }],
   lessons: [

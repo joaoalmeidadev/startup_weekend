@@ -19,9 +19,22 @@ function Fact({ icon, label, children }: { icon: string; label: string; children
   )
 }
 
+const reais = (value: number) => `R$ ${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}`
+
+function trainingText({
+  hours,
+  teacher_hourly: teacherHourly,
+  default_teacher: byDefault,
+}: LearningModule['training']) {
+  const who = byDefault
+    ? `com o valor padrão (${reais(teacherHourly)}/h)`
+    : `com quem ganha ${reais(teacherHourly)}/h`
+  return `Substitui ${hours.toLocaleString('pt-BR')} h de treino ${who}`
+}
+
 function ModuleFacts({ module }: { module: LearningModule }) {
   return (
-    <section className="grid grid-cols-1 gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm md:grid-cols-3">
+    <section className="grid grid-cols-1 gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm md:grid-cols-2 xl:grid-cols-4">
       <Fact icon="flag" label="Competência treinada">
         {module.competency}
       </Fact>
@@ -30,6 +43,9 @@ function ModuleFacts({ module }: { module: LearningModule }) {
           <SourceBadge source={module.source} />
           {module.material}
         </span>
+      </Fact>
+      <Fact icon="schedule" label="Treino presencial">
+        {trainingText(module.training)}
       </Fact>
       <Fact icon="route" label="Usado nas jornadas">
         {module.used_in.map((journey, index) => (

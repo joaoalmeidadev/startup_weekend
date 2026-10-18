@@ -18,11 +18,18 @@ module Management
         used_in: JourneyCatalog.using_module(@module[:id]).map { |journey| journey.slice(:id, :name) },
         lessons: lessons,
         assessment: {questions: 10},
-        review_from: review_from
+        review_from: review_from,
+        training: training
       )
     end
 
     private
+
+    # The in-person training this content replaces and the hour of who would give it (the default when not told)
+    def training
+      {hours: @module[:teaching_hours], teacher_hourly: PointsRule.new.teacher_hourly_for(@module[:teacher_salary]),
+       default_teacher: @module[:teacher_salary].nil?}
+    end
 
     def lessons
       (1..@module[:lessons]).map { |position| {position: position, title: lesson_title(position), status: lesson_status(position)} }

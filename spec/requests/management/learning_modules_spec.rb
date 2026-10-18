@@ -15,6 +15,14 @@ RSpec.describe "Management learning module", :inertia do
         source: "ai", material: "Manual de SAC.pdf")
     end
 
+    it "tells the in-person training it replaces and who would give it" do
+      get management_learning_module_path("rotinas-de-atendimento")
+      expect(inertia.props[:learning_module][:training]).to include(hours: 6, teacher_hourly: 25.0, default_teacher: false)
+
+      get management_learning_module_path("conversa-clara")
+      expect(inertia.props[:learning_module][:training]).to include(hours: 3, teacher_hourly: 20.0, default_teacher: true)
+    end
+
     it "shows every lesson approved for a published module" do
       get management_learning_module_path("conversa-clara")
 
