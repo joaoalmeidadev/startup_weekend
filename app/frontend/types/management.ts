@@ -130,17 +130,15 @@ export type TeamDashboard = {
   period: string
   periods: { key: string; label: string }[]
   leveled: { count: number; total: number; change: number; change_label: string }
-  days_to_level: number
   leveled_over_time: { label: string; percent: number }[]
   company_target: number
-  competencies: { name: string; team_average: number; goal: number }[]
-  engagement: { label: string; value: string }[]
-  funnel: { stage: string; count: number }[]
+  knowledge_gain: { before: number; now: number }
+  time_to_level: { days: number; before_days: number }
+  savings: { new_hires: number; hours: number; amount: number }
+  retention: { review_accuracy: number; active_weekly: string; minutes_per_day: number }
+  competencies: { name: string; before: number; now: number; goal: number }[]
+  on_the_job: { source: string; items: { label: string; before: number; now: number; unit: string }[] }
 }
-
-export type AttentionItem = { icon: string; text: string; action: string; href: string }
-
-export type Dashboard = TeamDashboard & { attention: AttentionItem[] }
 
 export type JourneyOutlineItem = { title: string; status: 'done' | 'new' | 'upcoming' }
 

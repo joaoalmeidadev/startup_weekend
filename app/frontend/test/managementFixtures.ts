@@ -1,6 +1,5 @@
 import type {
   CatalogGroup,
-  Dashboard,
   Journey,
   JourneyGoal,
   JourneySummary,
@@ -239,30 +238,20 @@ export const teamDashboard: TeamDashboard = {
     { key: '6m', label: 'Últimos 6 meses' },
   ],
   leveled: { count: 8, total: 14, change: 43, change_label: 'em 6 meses' },
-  days_to_level: 38,
   leveled_over_time: [
     { label: 'set', percent: 45 },
     { label: 'out', percent: 57 },
   ],
   company_target: 80,
-  competencies: [{ name: 'Reclamações de Entrega', team_average: 71, goal: 85 }],
-  engagement: [{ label: 'Ativos na semana', value: '11 de 14' }],
-  funnel: [
-    { stage: 'Começaram a jornada', count: 14 },
-    { stage: 'Nivelados (selo)', count: 8 },
-  ],
-}
-
-export const dashboard: Dashboard = {
-  ...teamDashboard,
-  attention: [
-    {
-      icon: 'rate_review',
-      text: '7 lições da IA esperando sua revisão',
-      action: 'Revisar',
-      href: '/management/lesson_reviews',
-    },
-  ],
+  knowledge_gain: { before: 48, now: 79 },
+  time_to_level: { days: 46, before_days: 90 },
+  savings: { new_hires: 9, hours: 207, amount: 8280 },
+  retention: { review_accuracy: 86, active_weekly: '9 de 14', minutes_per_day: 5 },
+  competencies: [{ name: 'Reclamações de Entrega', before: 42, now: 71, goal: 75 }],
+  on_the_job: {
+    source: 'Avaliação do gestor aos 30 dias',
+    items: [{ label: 'Retrabalho por novato', before: 2.6, now: 1.6, unit: 'por mês' }],
+  },
 }
 
 export const publication: Publication = {

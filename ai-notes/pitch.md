@@ -19,7 +19,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 ## 3. Demo ao vivo (~2 min) — as 3 fatias + dashboard
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
-1. **Dashboard** abre direto. "Isto é o que o gestor vê: quanto da equipe já está nivelada e quem precisa de atenção."
+1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos."
 2. **Biblioteca** (o que alimenta as jornadas). Clique no filtro **Produtos Nivela**: "Sem material? A Nivela já vem
    com 12 módulos para qualquer setor — os mais citados na nossa pesquisa." Se perguntarem, "Entenda as origens" explica IA · Nivela · Empresa.
 3. **Jornadas** → abra **Onboarding Atendimento** (montador). "A Biblioteca alimenta; a jornada é o que o colaborador percorre." Leia o topo: "Esta jornada substitui ~23h de repasse por novato, ≈ R$ 920
@@ -42,7 +42,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 ### Volta ao admin: Pessoas e Dashboard
 8. **Pessoas**: "Uma linha por pessoa: progresso, nota contra a meta, quando estudou e a previsão de quando nivela —
    quem está atrasado aparece na hora."
-9. **Dashboard** → período **Últimos 30 dias**. "O gestor acompanha a evolução sem perguntar a ninguém."
+9. **Dashboard** → **Na prática**: "E o gestor viu no dia a dia: retrabalho dos novatos caiu 38%." Troque para **Últimos 30 dias** e mostre que os números acompanham o período.
 
 ## 4. Modelo e pedido (45s)
 - Tração: **16 empresas responderam a pesquisa e 11 aceitaram conversar** — é a fila de pilotos.

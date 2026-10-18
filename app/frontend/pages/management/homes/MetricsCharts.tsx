@@ -1,19 +1,18 @@
-import { BulletBars } from '@/components/charts/BulletBars'
 import { ChartCard, LegendKey } from '@/components/charts/ChartCard'
 import { CHART } from '@/components/charts/colors'
-import { FunnelBars } from '@/components/charts/FunnelBars'
+import { DumbbellBars } from '@/components/charts/DumbbellBars'
 import { LineChart } from '@/components/charts/LineChart'
-import type { Dashboard } from '@/types/management'
+import type { TeamDashboard } from '@/types/management'
 
-export function LevelingOverTime({ dashboard }: { dashboard: Dashboard }) {
+export function LevelingOverTime({ dashboard }: { dashboard: TeamDashboard }) {
+  const { leveled, company_target: target } = dashboard
   const points = dashboard.leveled_over_time
-  const step = dashboard.period === '30d' ? 'semana a semana' : 'mês a mês'
-  const target = dashboard.company_target
+  const percent = Math.round((leveled.count / leveled.total) * 100)
 
   return (
     <ChartCard
       title="Nivelamento ao longo do tempo"
-      subtitle={`% da equipe com o selo, ${step}`}
+      subtitle={`${percent}% da equipe nivelada · +${leveled.change} p.p. ${leveled.change_label}`}
       legend={
         <>
           <LegendKey color={CHART.team} label="Equipe" shape="line" />
@@ -30,43 +29,26 @@ export function LevelingOverTime({ dashboard }: { dashboard: Dashboard }) {
   )
 }
 
-export function CompetencyGoals({ dashboard }: { dashboard: Dashboard }) {
+export function BeforeAfter({ dashboard }: { dashboard: TeamDashboard }) {
   const competencies = dashboard.competencies
 
   return (
     <ChartCard
-      title="Equipe x meta por competência"
-      subtitle="Média da equipe (0–100) comparada à meta dos experientes"
+      title="Antes × depois por competência"
+      subtitle="Nota média da equipe (0–100) no diagnóstico e hoje"
       legend={
         <>
-          <LegendKey color={CHART.team} label="Média da equipe" />
+          <LegendKey color={CHART.axis} label="Diagnóstico" shape="ring" />
+          <LegendKey color={CHART.team} label="Hoje" shape="dot" />
           <LegendKey color={CHART.goal} label="Meta" shape="tick" />
         </>
       }
       table={{
-        headers: ['Competência', 'Equipe', 'Meta', 'Diferença'],
-        rows: competencies.map((c) => [c.name, c.team_average, c.goal, c.team_average - c.goal]),
+        headers: ['Competência', 'Antes', 'Hoje', 'Meta'],
+        rows: competencies.map((c) => [c.name, c.before, c.now, c.goal]),
       }}
     >
-      <BulletBars rows={competencies.map((c) => ({ name: c.name, value: c.team_average, goal: c.goal }))} />
-    </ChartCard>
-  )
-}
-
-export function JourneyFunnel({ dashboard }: { dashboard: Dashboard }) {
-  const funnel = dashboard.funnel
-  const share = (count: number) => `${Math.round((count / funnel[0].count) * 100)}%`
-
-  return (
-    <ChartCard
-      title="Funil da jornada"
-      subtitle="Quantas pessoas chegaram a cada etapa"
-      table={{
-        headers: ['Etapa', 'Pessoas', '% do início'],
-        rows: funnel.map((f) => [f.stage, f.count, share(f.count)]),
-      }}
-    >
-      <FunnelBars stages={funnel} />
+      <DumbbellBars rows={competencies} />
     </ChartCard>
   )
 }

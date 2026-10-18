@@ -66,6 +66,14 @@ export function ChartCard({ title, subtitle, legend, table, children, className 
   )
 }
 
+const MARKS = {
+  rect: 'h-2.5 w-3.5 rounded-sm',
+  line: 'h-0.5 w-4',
+  tick: 'h-3.5 w-1 rounded-full',
+  dot: 'size-3 rounded-full',
+  ring: 'size-3 rounded-full border-2',
+}
+
 export function LegendKey({
   color,
   label,
@@ -73,13 +81,13 @@ export function LegendKey({
 }: {
   color: string
   label: string
-  shape?: 'rect' | 'line' | 'tick'
+  shape?: keyof typeof MARKS
 }) {
-  const mark =
-    shape === 'line' ? 'h-0.5 w-4' : shape === 'tick' ? 'h-3.5 w-1 rounded-full' : 'h-2.5 w-3.5 rounded-sm'
+  // A ring is drawn by its border, every other mark by its fill
+  const style = shape === 'ring' ? { borderColor: color } : { backgroundColor: color }
   return (
     <span className="inline-flex items-center gap-space-xs">
-      <span className={`inline-block ${mark}`} style={{ backgroundColor: color }} />
+      <span className={`inline-block ${MARKS[shape]}`} style={style} />
       {label}
     </span>
   )

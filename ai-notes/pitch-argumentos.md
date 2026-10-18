@@ -82,6 +82,15 @@ Versão curta (para fechar): **"Grave uma vez. Nivele todos. Pague uma vez."**
 - Quem gastou, gastou **R$ 6–12 mil no ano** em treinamento e horas de gestor — e a maioria **não sabe medir**.
 - **11 de 16** deixaram contato para conversar: é a fila de pilotos.
 
+## 3c. O que o Dashboard mede (e por quê)
+Segue o modelo Kirkpatrick de avaliação de treinamento (aprendizado → comportamento → resultado):
+- **Aprendizado:** nota no diagnóstico × nota hoje (ganho antes × depois, não só a nota final).
+- **Velocidade:** dias até nivelar × como era no repasse (premissa: ~90 dias; pesquisas citam ~3 meses até um operacional ficar funcional, segundo supervisores — confirmar fonte antes de citar número).
+- **Resultado:** horas de repasse economizadas e R$ (mesmas premissas da seção 3: 23 h por novato × R$ 40/h).
+- **Retenção:** acerto nas revisões 30 dias depois — revisão espaçada e prática de recuperação têm base em pesquisa (Roediger & Karpicke, *Science*).
+- **Comportamento:** retrabalho e reclamações antes × depois, por **avaliação do gestor aos 30 dias** (é declarado, não medido pela plataforma — falar assim se perguntarem).
+- Tudo no mock é exemplo; não citar como resultado real.
+
 ## 4. Frases prontas para o palco
 - "O mesmo treinamento é pago três vezes: na hora do veterano, no curso de fora e no erro do novato."
 - "Cada vez que um veterano para para ensinar, a empresa paga duas horas por uma."

@@ -1,26 +1,29 @@
 module Management
-  # Example dashboard metrics for the Atendimento team (14 people), per period.
-  # Competencies and the funnel are a snapshot of today, so they don't change with the period.
+  # Example dashboard for the Atendimento team (14 people), per period: proof that the team is learning.
+  # Competencies and the manager's on-the-job review are a snapshot of today, so they don't change with the period.
   class TeamDashboardMock
     PERIODS = {
       "30d" => {
-        label: "30 dias", change: 7, days_to_level: 38,
+        label: "30 dias", change: 7, days_to_level: 38, gain: [52, 71], new_hires: 2,
         over_time: [["sem 1", 50], ["sem 2", 52], ["sem 3", 55], ["sem 4", 57]],
-        engagement: ["11 de 14", "1.284", "4,2 dias", "86"]
+        retention: [88, "11 de 14", 6]
       },
       "90d" => {
-        label: "90 dias", change: 21, days_to_level: 41,
+        label: "90 dias", change: 21, days_to_level: 41, gain: [50, 76], new_hires: 5,
         over_time: [["ago", 36], ["set", 45], ["out", 57]],
-        engagement: ["10 de 14", "3.902", "3,8 dias", "241"]
+        retention: [86, "10 de 14", 6]
       },
       "6m" => {
-        label: "6 meses", change: 43, days_to_level: 46,
+        label: "6 meses", change: 43, days_to_level: 46, gain: [48, 79], new_hires: 9,
         over_time: [["mai", 14], ["jun", 21], ["jul", 29], ["ago", 36], ["set", 45], ["out", 57]],
-        engagement: ["9 de 14", "7.410", "3,5 dias", "472"]
+        retention: [86, "9 de 14", 5]
       }
     }.freeze
     DEFAULT_PERIOD = "6m"
-    ENGAGEMENT_LABELS = ["Ativos por semana (média)", "Minutos estudados", "Sequência média", "Lições concluídas"].freeze
+    # Same assumptions as the journey builder and the pitch: hand-off hours per new hire and their hourly cost
+    HANDOFF_HOURS_PER_HIRE = 23
+    HANDOFF_HOURLY_COST = 40
+    DAYS_TO_LEVEL_BEFORE = 90
 
     def initialize(period = nil)
       @period = PERIODS.key?(period) ? period : DEFAULT_PERIOD
@@ -33,36 +36,48 @@ module Management
         period: @period,
         periods: PERIODS.map { |key, data| {key: key, label: "Últimos #{data[:label]}"} },
         leveled: {count: 8, total: 14, change: @data[:change], change_label: "em #{@data[:label]}"},
-        days_to_level: @data[:days_to_level],
         leveled_over_time: @data[:over_time].map { |label, percent| {label: label, percent: percent} },
         company_target: 80,
+        knowledge_gain: {before: @data[:gain].first, now: @data[:gain].last},
+        time_to_level: {days: @data[:days_to_level], before_days: DAYS_TO_LEVEL_BEFORE},
+        savings: savings,
+        retention: retention,
         competencies: competencies,
-        engagement: ENGAGEMENT_LABELS.zip(@data[:engagement]).map { |label, value| {label: label, value: value} },
-        funnel: funnel
+        on_the_job: on_the_job
       }
     end
 
     private
 
-    # Goals follow the Atendimento sector goal (see SectorGoalMock)
+    def savings
+      hours = @data[:new_hires] * HANDOFF_HOURS_PER_HIRE
+      {new_hires: @data[:new_hires], hours: hours, amount: hours * HANDOFF_HOURLY_COST}
+    end
+
+    def retention
+      accuracy, active_weekly, minutes = @data[:retention]
+      {review_accuracy: accuracy, active_weekly: active_weekly, minutes_per_day: minutes}
+    end
+
+    # Goals follow the Atendimento sector goal (see SectorGoalMock); "before" is the diagnostic average
     def competencies
       goal = SectorGoalMock.new("Atendimento").target
       [
-        {name: "Comunicação e Escuta Ativa", team_average: 82, goal: goal},
-        {name: "Reclamações de Entrega", team_average: 71, goal: goal},
-        {name: "Sistema de Pedidos", team_average: 68, goal: goal},
-        {name: "Postura e Empatia", team_average: 79, goal: goal}
+        {name: "Comunicação e Escuta Ativa", before: 55, now: 82, goal: goal},
+        {name: "Reclamações de Entrega", before: 42, now: 71, goal: goal},
+        {name: "Sistema de Pedidos", before: 38, now: 68, goal: goal},
+        {name: "Postura e Empatia", before: 58, now: 79, goal: goal}
       ]
     end
 
-    def funnel
-      [
-        {stage: "Começaram a jornada", count: 14},
-        {stage: "Concluíram a Base", count: 12},
-        {stage: "Concluíram Empresa", count: 10},
-        {stage: "Concluíram Setor", count: 9},
-        {stage: "Nivelados (selo)", count: 8}
-      ]
+    def on_the_job
+      {
+        source: "Avaliação do gestor aos 30 dias",
+        items: [
+          {label: "Retrabalho por novato", before: 2.6, now: 1.6, unit: "por mês"},
+          {label: "Reclamações de cliente", before: 8, now: 6, unit: "por mês"}
+        ]
+      }
     end
   end
 end

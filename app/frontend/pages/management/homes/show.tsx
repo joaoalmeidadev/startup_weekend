@@ -1,10 +1,11 @@
 import { Head, usePage } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
-import type { Dashboard, Manager } from '@/types/management'
-import { AttentionList } from './AttentionList'
-import { CompetencyGoals, JourneyFunnel, LevelingOverTime } from './MetricsCharts'
-import { Engagement, HeroFigure, PeriodFilter } from './MetricsSummary'
+import type { Manager, TeamDashboard } from '@/types/management'
+import { OnTheJob, Retention } from './ImpactCards'
+import { BeforeAfter, LevelingOverTime } from './MetricsCharts'
+import { PeriodFilter } from './MetricsSummary'
+import { ProofFigures } from './ProofFigures'
 
 // Real download: the people report is generated as CSV by the server
 function ExportButton() {
@@ -29,7 +30,7 @@ function PageHeader({ company }: { company: string }) {
         </span>
         <h1 className="text-headline-xl tracking-tight text-on-surface">Dashboard</h1>
         <p className="mt-space-xs text-body-md text-on-surface-variant">
-          Como a equipe está evoluindo até o selo Nivelado.
+          Como a Nivela está fazendo a equipe aprender.
         </p>
       </div>
       <ExportButton />
@@ -38,7 +39,7 @@ function PageHeader({ company }: { company: string }) {
 }
 
 export default function HomesShow() {
-  const { dashboard, manager } = usePage<{ dashboard: Dashboard; manager: Manager }>().props
+  const { dashboard, manager } = usePage<{ dashboard: TeamDashboard; manager: Manager }>().props
 
   return (
     <ManagementLayout>
@@ -46,15 +47,14 @@ export default function HomesShow() {
       <div className="flex w-full flex-col gap-space-lg pt-space-md">
         <PageHeader company={manager.company} />
         <PeriodFilter dashboard={dashboard} />
-        <div className="grid grid-cols-1 gap-space-md lg:grid-cols-3">
-          <HeroFigure dashboard={dashboard} />
-          <Engagement dashboard={dashboard} />
-        </div>
-        <AttentionList items={dashboard.attention} />
-        <LevelingOverTime dashboard={dashboard} />
+        <ProofFigures dashboard={dashboard} />
         <div className="grid grid-cols-1 gap-space-md xl:grid-cols-2">
-          <CompetencyGoals dashboard={dashboard} />
-          <JourneyFunnel dashboard={dashboard} />
+          <BeforeAfter dashboard={dashboard} />
+          <LevelingOverTime dashboard={dashboard} />
+        </div>
+        <div className="grid grid-cols-1 gap-space-md xl:grid-cols-2">
+          <Retention dashboard={dashboard} />
+          <OnTheJob dashboard={dashboard} />
         </div>
       </div>
     </ManagementLayout>
