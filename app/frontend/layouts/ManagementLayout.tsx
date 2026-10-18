@@ -85,7 +85,7 @@ export function ManagementLayout({ children }: { children: ReactNode }) {
   const { manager } = usePage<{ manager: Manager }>().props
 
   return (
-    <div className="theme-management min-h-screen bg-surface text-body-md text-on-surface">
+    <div className="min-h-screen bg-surface text-body-md text-on-surface">
       <MockNoticeProvider>
         <aside className="fixed top-0 left-0 z-40 hidden h-full w-72 flex-col justify-between bg-surface-container-low p-space-md lg:flex">
           <div className="flex flex-col gap-space-lg">

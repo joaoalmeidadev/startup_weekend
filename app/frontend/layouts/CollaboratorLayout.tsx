@@ -26,7 +26,9 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/collaborator/profile', icon: 'person', label: 'Perfil' },
 ]
 
-const ACTIVE = 'bg-primary-container text-on-primary text-body-lg-bold'
+// Same sizes and colors as ManagementLayout, so both sides of the platform look like one product
+const ITEM = 'flex min-h-[3rem] w-full items-center gap-space-sm rounded-xl px-space-md transition-all'
+const ACTIVE = 'bg-primary-container font-semibold text-on-primary shadow-[0_2px_12px_rgba(15,94,102,0.12)]'
 const INACTIVE = 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
 
 function AvatarBadge() {
@@ -44,74 +46,76 @@ export function CollaboratorLayout({ children }: { children: ReactNode }) {
     (item.sections ?? [item.href]).some((section) => url.startsWith(section))
 
   return (
-    <MockNoticeProvider>
-      <OfflineBanner />
-      <aside className="fixed top-0 left-0 z-50 hidden h-full w-72 flex-col justify-between bg-surface-container-lowest px-space-md py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)] lg:flex">
-        <div className="flex flex-col gap-space-lg">
-          <div className="flex items-center gap-space-sm px-space-xs">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary">
-              <Icon name="local_shipping" className="text-[1.5rem] text-on-primary" />
+    <div className="min-h-screen bg-surface text-body-md text-on-surface">
+      <MockNoticeProvider>
+        <OfflineBanner />
+        <aside className="fixed top-0 left-0 z-40 hidden h-full w-72 flex-col justify-between bg-surface-container-low p-space-md lg:flex">
+          <div className="flex flex-col gap-space-lg">
+            <div className="flex items-center gap-space-sm px-space-sm pt-space-xs">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-headline-md font-bold text-on-primary">
+                N
+              </div>
+              <div className="flex flex-col">
+                <span className="text-headline-sm leading-tight font-bold text-primary">Nivela</span>
+                <span className="text-label-sm font-semibold text-on-surface-variant">{viewer.company}</span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-headline-md leading-tight text-primary">{viewer.company}</span>
-              <span className="text-label-md text-on-surface-variant">Nivela Colaborador</span>
+            <nav className="flex flex-col gap-space-xs" aria-label="Principal">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive(item) ? 'page' : undefined}
+                  className={`${ITEM} ${isActive(item) ? ACTIVE : INACTIVE}`}
+                >
+                  <Icon name={item.icon} className="text-[1.5rem]" />
+                  <span className="text-label-lg">{item.label}</span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+          <div className="flex items-center gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+            <AvatarBadge />
+            <div className="flex min-w-0 flex-col">
+              <span className="truncate text-label-lg text-on-surface">{viewer.name}</span>
+              <span className="truncate text-label-sm font-semibold text-on-surface-variant">
+                {viewer.sector}
+              </span>
             </div>
           </div>
-          <nav className="flex flex-col gap-space-sm" aria-label="Principal">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={isActive(item) ? 'page' : undefined}
-                className={`flex min-h-[3.5rem] items-center gap-space-md rounded-xl p-space-md transition-colors ${isActive(item) ? ACTIVE : INACTIVE}`}
-              >
-                <Icon name={item.icon} className="text-[1.75rem]" />
-                <span className="text-label-lg">{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="flex items-center gap-space-sm rounded-xl bg-surface-container-low p-space-md">
-          <AvatarBadge />
-          <div className="flex min-w-0 flex-col">
-            <span className="truncate text-body-lg-bold text-on-surface">{viewer.name}</span>
-            <span className="truncate text-label-md text-on-surface-variant">{viewer.sector}</span>
+        </aside>
+
+        <header className="fixed top-0 right-0 left-0 z-30 flex h-16 items-center justify-between bg-surface/80 px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl lg:left-72 lg:justify-end">
+          <span className="text-headline-sm font-bold text-primary lg:hidden">Nivela</span>
+          <div className="flex items-center gap-space-sm">
+            <div className="hidden flex-col text-right sm:flex">
+              <span className="text-label-lg text-on-surface">{viewer.name}</span>
+              <span className="text-label-sm font-semibold text-on-surface-variant">{viewer.sector}</span>
+            </div>
+            <AvatarBadge />
           </div>
+        </header>
+
+        <div className="w-full lg:pl-72">
+          <main className="min-h-screen w-full px-space-lg pt-16 pb-28 lg:pb-space-xl">{children}</main>
         </div>
-      </aside>
 
-      <header className="fixed top-0 right-0 left-0 z-40 flex h-20 items-center justify-between bg-surface/80 px-gutter shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl lg:left-72">
-        <span className="text-headline-md font-bold text-primary">Nivela</span>
-        <div className="flex items-center gap-space-md">
-          <div className="hidden flex-col text-right sm:flex">
-            <span className="text-body-lg-bold text-on-surface">
-              {viewer.name} ({viewer.sector})
-            </span>
-            <span className="text-label-md text-on-surface-variant">{viewer.company}</span>
-          </div>
-          <AvatarBadge />
-        </div>
-      </header>
-
-      <main className="relative min-h-screen w-full bg-surface px-gutter pt-20 pb-28 lg:pb-0 lg:pl-[calc(18rem+1.25rem)]">
-        {children}
-      </main>
-
-      <nav
-        aria-label="Principal no celular"
-        className="fixed right-0 bottom-0 left-0 z-40 flex border-t border-slate-200 bg-surface-container-lowest lg:hidden"
-      >
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex min-h-[4.5rem] flex-1 flex-col items-center justify-center gap-1 text-label-md ${isActive(item) ? 'text-primary-container' : 'text-on-surface-variant'}`}
-          >
-            <Icon name={item.icon} className="text-[1.75rem]" filled={isActive(item)} />
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-    </MockNoticeProvider>
+        <nav
+          aria-label="Principal no celular"
+          className="fixed right-0 bottom-0 left-0 z-40 flex border-t border-outline-variant/40 bg-surface-container-lowest lg:hidden"
+        >
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex min-h-[4rem] flex-1 flex-col items-center justify-center gap-0.5 text-label-sm ${isActive(item) ? 'text-primary-container' : 'text-on-surface-variant'}`}
+            >
+              <Icon name={item.icon} className="text-[1.5rem]" filled={isActive(item)} />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </MockNoticeProvider>
+    </div>
   )
 }

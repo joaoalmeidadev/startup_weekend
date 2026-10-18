@@ -9,28 +9,29 @@ layer(base);
 @plugin '@tailwindcss/forms';
 
 /*
- * Design tokens from the Stitch export ("Clareza Acolhedora", ai-notes/stitch/telas_gerais).
+ * Design tokens from the Stitch exports: layout from "Clareza Acolhedora" (ai-notes/stitch/telas_gerais),
+ * colors from the management "Functional Clarity" palette, shared by the whole platform.
  * Names match the Stitch classes (bg-primary-container, text-body-lg, px-space-md...)
  * so the exported markup can be ported almost verbatim.
  */
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: #f9f9ff;
-  --color-surface: #f9f9ff;
-  --color-surface-bright: #f9f9ff;
-  --color-surface-dim: #cfdaf2;
+  --color-background: #e9fdff;
+  --color-surface: #e9fdff;
+  --color-surface-bright: #e9fdff;
+  --color-surface-dim: #c8dee0;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f0f3ff;
-  --color-surface-container: #e7eeff;
-  --color-surface-container-high: #dee8ff;
-  --color-surface-container-highest: #d8e3fb;
-  --color-surface-variant: #d8e3fb;
-  --color-on-surface: #111c2d;
+  --color-surface-container-low: #e1f8fa;
+  --color-surface-container: #dcf2f4;
+  --color-surface-container-high: #d6ecef;
+  --color-surface-container-highest: #d0e7e9;
+  --color-surface-variant: #d0e7e9;
+  --color-on-surface: #0a1f21;
   --color-on-surface-variant: #3f484a;
-  --color-on-background: #111c2d;
-  --color-inverse-surface: #263143;
-  --color-inverse-on-surface: #ecf1ff;
+  --color-on-background: #0a1f21;
+  --color-inverse-surface: #203436;
+  --color-inverse-on-surface: #dff5f7;
   --color-outline: #6f797a;
   --color-outline-variant: #bfc8ca;
 
@@ -51,11 +52,11 @@ layer(base);
   --color-on-secondary-fixed: #271900;
   --color-secondary-fixed-dim: #eec06f;
 
-  --color-tertiary: #00491c;
+  --color-tertiary: #00482d;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #006328;
-  --color-tertiary-fixed: #7ffc97;
-  --color-on-tertiary-container: #66e381;
+  --color-tertiary-container: #00623f;
+  --color-tertiary-fixed: #9bf5c4;
+  --color-on-tertiary-container: #83dcad;
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
@@ -135,30 +136,6 @@ layer(base);
   --color-success-bg: #ebf8f1;
 }
 
-/*
- * Management area ("Functional Clarity", ai-notes/stitch/metas_admin_para_colaborador):
- * same token names as the collaborator theme, with a cooler palette and a denser scale.
- */
-.theme-management {
-  --color-background: #e9fdff;
-  --color-surface: #e9fdff;
-  --color-surface-bright: #e9fdff;
-  --color-surface-dim: #c8dee0;
-  --color-surface-container-low: #e1f8fa;
-  --color-surface-container: #dcf2f4;
-  --color-surface-container-high: #d6ecef;
-  --color-surface-container-highest: #d0e7e9;
-  --color-surface-variant: #d0e7e9;
-  --color-on-surface: #0a1f21;
-  --color-on-background: #0a1f21;
-  --color-inverse-surface: #203436;
-  --color-inverse-on-surface: #dff5f7;
-  --color-tertiary: #00482d;
-  --color-tertiary-container: #00623f;
-  --color-on-tertiary-container: #83dcad;
-  --color-tertiary-fixed: #9bf5c4;
-}
-
 @layer base {
   /* Single scale knob: every size is in rem, so this shrinks the whole UI evenly (Stitch was designed at 16px) */
   html {
@@ -171,6 +148,6 @@ layer(base);
   }
 
   body {
-    @apply bg-surface text-body-lg text-on-surface antialiased;
+    @apply bg-surface text-body-md text-on-surface antialiased;
   }
 }
