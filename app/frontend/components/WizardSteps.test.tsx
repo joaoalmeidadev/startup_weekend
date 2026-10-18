@@ -11,7 +11,7 @@ describe('WizardSteps', () => {
       '1Enviar o materialchevron_right',
       '2A IA cria as liçõeschevron_right',
       '3Revisarchevron_right',
-      '4Publicar',
+      '4Salvar na Biblioteca',
     ])
   })
 
@@ -20,6 +20,6 @@ describe('WizardSteps', () => {
 
     expect(screen.getByText('Revisar').closest('li')).toHaveAttribute('aria-current', 'step')
     expect(screen.getByText('Enviar o material').closest('li')).toHaveTextContent('check')
-    expect(screen.getByText('Publicar').closest('li')).not.toHaveAttribute('aria-current')
+    expect(screen.getByText('Salvar na Biblioteca').closest('li')).not.toHaveAttribute('aria-current')
   })
 })

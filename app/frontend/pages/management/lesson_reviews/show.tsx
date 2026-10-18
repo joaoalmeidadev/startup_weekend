@@ -24,9 +24,13 @@ function LessonReviewScreen({ review }: { review: LessonReview }) {
   const [confirmingDiscard, setConfirmingDiscard] = useState(false)
 
   const approve = () => {
-    if (review.final) return router.visit(review.publish_path)
-    notify(`Lição ${review.position} aprovada! Carregando a lição ${review.position + 1}...`)
-    setTimeout(() => router.visit(`/management/lesson_reviews/${review.position + 1}`), NEXT_LESSON_DELAY_MS)
+    const next = review.final ? review.done_path : `/management/lesson_reviews/${review.position + 1}`
+    notify(
+      review.final
+        ? `"${review.module_name}" aprovado e salvo na Biblioteca (simulação).`
+        : `Lição ${review.position} aprovada! Carregando a lição ${review.position + 1}...`,
+    )
+    setTimeout(() => router.visit(next), NEXT_LESSON_DELAY_MS)
   }
   const saveDraft = () => {
     if (draft) setLesson(applyDraft(lesson, draft))
