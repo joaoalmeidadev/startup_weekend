@@ -26,7 +26,8 @@ Rails.application.routes.draw do
   namespace :management do
     root "homes#show"
     resources :people, only: %i[index show]
-    resource :sector_goal, only: :show
+    resources :sectors, only: %i[index show new], param: :slug
+    get "sector_goal", to: redirect("/management/sectors")
     resource :rewards, only: :show
     resource :library, only: :show
     resources :journeys, only: %i[index show]

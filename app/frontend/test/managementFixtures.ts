@@ -8,10 +8,13 @@ import type {
   LessonReview,
   Manager,
   ModuleSummary,
+  NewSectorProps,
   PeopleProps,
   Person,
   PersonDetail,
-  SectorGoal,
+  SectorDetail,
+  SectorMember,
+  SectorSummary,
   TeamDashboard,
 } from '@/types/management'
 
@@ -68,34 +71,6 @@ export const peopleProps: PeopleProps = {
       activity: 'há 3 dias · 15 min nesta semana',
       forecast: 'Nivelado ✓',
     }),
-  ],
-}
-
-export const sectorGoal: SectorGoal = {
-  sector: 'Atendimento',
-  sectors: ['Atendimento', 'Comercial'],
-  levels: [
-    { key: 'easy', label: 'Fácil', target: 60, hint: 'Funções de entrada.' },
-    { key: 'medium', label: 'Médio', target: 75, hint: 'O padrão do mercado.' },
-    { key: 'hard', label: 'Difícil', target: 90, hint: 'Clientes exigentes.' },
-  ],
-  level: 'medium',
-  experts_count: 5,
-  competencies: [
-    {
-      name: 'Comunicação',
-      icon: 'record_voice_over',
-      experts_average: 88,
-      goal: 75,
-      reached: { count: 12, of: 14 },
-    },
-    {
-      name: 'Sistema de Pedidos',
-      icon: 'terminal',
-      experts_average: 85,
-      goal: 75,
-      reached: { count: 8, of: 14 },
-    },
   ],
 }
 
@@ -264,16 +239,6 @@ export const teamDashboard: TeamDashboard = {
   },
 }
 
-export const sectorWithoutGoal: SectorGoal = {
-  ...sectorGoal,
-  sector: 'Logística',
-  level: null,
-  experts_count: 0,
-  competencies: [
-    { name: 'Conferência', icon: 'inventory_2', experts_average: null, goal: null, reached: null },
-  ],
-}
-
 // Content area: library, journey builder catalog and goal
 const aiModule = (id: string, name: string, overrides: ModuleOverrides = {}) =>
   mod(id, name, { source: 'ai', stretch: 'company', teaching_hours: 4, ...overrides })
@@ -333,3 +298,123 @@ export const audienceOptions: AudienceOption[] = [
   { name: 'Logística', kind: 'sector', people_count: 2 },
   { name: 'Staff', kind: 'group', people_count: 4 },
 ]
+
+// Sectors and groups: list, one sector (with and without goal), a group and the creation form
+const goalLevels: SectorDetail['levels'] = [
+  { key: 'easy', label: 'Fácil', target: 60, hint: 'Funções de entrada.' },
+  { key: 'medium', label: 'Médio', target: 75, hint: 'O padrão do mercado.' },
+  { key: 'hard', label: 'Difícil', target: 90, hint: 'Clientes exigentes.' },
+]
+
+const member = (
+  overrides: Partial<SectorMember> & Pick<SectorMember, 'id' | 'name' | 'sector' | 'status'>,
+) => ({
+  ...person(overrides),
+  role: 'Atendente',
+  ...overrides,
+})
+
+export const sectorSummaries: SectorSummary[] = [
+  {
+    name: 'Atendimento',
+    slug: 'atendimento',
+    kind: 'sector',
+    people_count: 5,
+    level: { label: 'Médio', target: 75 },
+    people: [
+      { id: 'maria-souza', name: 'Maria Souza', avatar_url: '/ms.jpg' },
+      { id: 'diego-fernandes', name: 'Diego Fernandes', avatar_url: null },
+    ],
+  },
+  { name: 'Logística', slug: 'logistica', kind: 'sector', people_count: 1, level: null, people: [] },
+  {
+    name: 'Staff',
+    slug: 'staff',
+    kind: 'group',
+    people_count: 4,
+    level: { label: 'Fácil', target: 60 },
+    people: [{ id: 'lucas-pereira', name: 'Lucas Pereira', avatar_url: null }],
+  },
+]
+
+export const sectorDetail: SectorDetail = {
+  name: 'Atendimento',
+  slug: 'atendimento',
+  kind: 'sector',
+  people: [
+    member({ id: 'maria-souza', name: 'Maria Souza', sector: 'Atendimento', status: 'on_track' }),
+    member({ id: 'diego-fernandes', name: 'Diego Fernandes', sector: 'Atendimento', status: 'leveled' }),
+  ],
+  levels: goalLevels,
+  level: 'medium',
+  experts_count: 2,
+  competencies: [
+    {
+      name: 'Comunicação',
+      icon: 'record_voice_over',
+      experts_average: 88,
+      goal: 75,
+      reached: { count: 2, of: 2 },
+    },
+    {
+      name: 'Sistema de Pedidos',
+      icon: 'terminal',
+      experts_average: 85,
+      goal: 75,
+      reached: { count: 1, of: 2 },
+    },
+  ],
+}
+
+export const sectorWithoutGoal: SectorDetail = {
+  ...sectorDetail,
+  name: 'Logística',
+  slug: 'logistica',
+  people: [member({ id: 'marcos-oliveira', name: 'Marcos Oliveira', sector: 'Logística', status: 'late' })],
+  level: null,
+  experts_count: 0,
+  competencies: [
+    { name: 'Conferência', icon: 'inventory_2', experts_average: null, goal: null, reached: null },
+  ],
+}
+
+export const groupDetail: SectorDetail = {
+  ...sectorDetail,
+  name: 'Staff',
+  slug: 'staff',
+  kind: 'group',
+  people: [
+    member({ id: 'diego-fernandes', name: 'Diego Fernandes', sector: 'Atendimento', status: 'leveled' }),
+    member({
+      id: 'lucas-pereira',
+      name: 'Lucas Pereira',
+      sector: 'Comercial',
+      status: 'leveled',
+      role: 'Vendedor interno',
+    }),
+  ],
+  level: 'easy',
+  experts_count: 0,
+  competencies: [
+    { name: 'Comunicação Clara', icon: 'record_voice_over', experts_average: null, goal: 60, reached: null },
+  ],
+}
+
+export const newSectorProps: NewSectorProps = {
+  people: [
+    { id: 'maria-souza', name: 'Maria Souza', sector: 'Atendimento', avatar_url: '/ms.jpg' },
+    { id: 'lucas-pereira', name: 'Lucas Pereira', sector: 'Comercial', avatar_url: null },
+    { id: 'marcos-oliveira', name: 'Marcos Oliveira', sector: 'Logística', avatar_url: null },
+  ],
+  levels: goalLevels,
+  competencies: [
+    {
+      name: 'Comunicação Clara',
+      icon: 'record_voice_over',
+      experts_average: null,
+      goal: null,
+      reached: null,
+    },
+    { name: 'Raciocínio Lógico', icon: 'psychology', experts_average: null, goal: null, reached: null },
+  ],
+}

@@ -33,15 +33,6 @@ export type Competency = {
   reached: { count: number; of: number } | null
 }
 
-export type SectorGoal = {
-  sector: string
-  sectors: string[]
-  levels: GoalLevel[]
-  level: GoalLevelKey | null
-  experts_count: number
-  competencies: Competency[]
-}
-
 export type LessonStep = { title: string; body: string; quote?: string }
 
 export type LessonReview = {
@@ -165,3 +156,29 @@ export type JourneyBuilderProps = {
 export type SectorKind = 'sector' | 'group'
 
 export type AudienceOption = { name: string; kind: SectorKind; people_count: number }
+
+export type SectorSummary = {
+  name: string
+  slug: string
+  kind: SectorKind
+  people_count: number
+  level: Pick<GoalLevel, 'label' | 'target'> | null
+  people: Pick<Person, 'id' | 'name' | 'avatar_url'>[]
+}
+
+export type SectorMember = Person & { role: string }
+
+export type SectorDetail = {
+  name: string
+  slug: string
+  kind: SectorKind
+  people: SectorMember[]
+  levels: GoalLevel[]
+  level: GoalLevelKey | null
+  experts_count: number
+  competencies: Competency[]
+}
+
+export type SectorCandidate = Pick<Person, 'id' | 'name' | 'sector' | 'avatar_url'>
+
+export type NewSectorProps = { people: SectorCandidate[]; levels: GoalLevel[]; competencies: Competency[] }

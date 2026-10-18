@@ -12,7 +12,12 @@ const OPTIONS: { kind: Kind; icon: string; title: string; hint: string }[] = [
   { kind: 'sheet', icon: 'upload_file', title: 'Por planilha (CSV/XLS)', hint: 'Importação em lote' },
 ]
 
-type InviteModalProps = { kind: Kind; sectors: PeopleProps['sectors']; onClose: () => void }
+type InviteModalProps = {
+  kind: Kind
+  sectors: PeopleProps['sectors']
+  initialSector: string
+  onClose: () => void
+}
 
 const plural = (count: number) => (count === 1 ? '1 convite enviado' : `${count} convites enviados`)
 
@@ -21,10 +26,10 @@ function sentMessage(emails: number, sector: string, created: boolean) {
   return `${plural(emails)} para ${sector} (simulação).`
 }
 
-function InviteModal({ kind, sectors, onClose }: InviteModalProps) {
+function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps) {
   const notify = useMockNotice()
   const [value, setValue] = useState('')
-  const [sector, setSector] = useState('')
+  const [sector, setSector] = useState(initialSector)
   const [newSector, setNewSector] = useState('')
   const creating = sector === NEW_SECTOR
   const sectorName = creating ? newSector.trim() : sector
@@ -85,7 +90,10 @@ function InviteModal({ kind, sectors, onClose }: InviteModalProps) {
   )
 }
 
-export function InviteMenu({ sectors }: { sectors: PeopleProps['sectors'] }) {
+type InviteMenuProps = { sectors: PeopleProps['sectors']; sector?: string; label?: string }
+
+// sector: the one already picked in the e-mail invite (e.g. from a sector page)
+export function InviteMenu({ sectors, sector = '', label = '+ Convidar pessoas' }: InviteMenuProps) {
   const [open, setOpen] = useState(false)
   const [kind, setKind] = useState<Kind | null>(null)
 
@@ -98,7 +106,7 @@ export function InviteMenu({ sectors }: { sectors: PeopleProps['sectors'] }) {
         className="inline-flex h-12 items-center justify-center gap-space-sm rounded-xl bg-primary px-space-lg text-label-lg text-on-primary shadow-md transition-all hover:bg-primary-container"
       >
         <Icon name="person_add" className="text-[1.25rem]" />
-        <span>+ Convidar pessoas</span>
+        <span>{label}</span>
       </button>
       {open && (
         <div className="absolute top-14 right-0 z-50 flex w-64 flex-col gap-1 rounded-xl bg-surface-container-lowest p-space-sm shadow-xl">
@@ -121,7 +129,9 @@ export function InviteMenu({ sectors }: { sectors: PeopleProps['sectors'] }) {
           ))}
         </div>
       )}
-      {kind && <InviteModal kind={kind} sectors={sectors} onClose={() => setKind(null)} />}
+      {kind && (
+        <InviteModal kind={kind} sectors={sectors} initialSector={sector} onClose={() => setKind(null)} />
+      )}
     </div>
   )
 }

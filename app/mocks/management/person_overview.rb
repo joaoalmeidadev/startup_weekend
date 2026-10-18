@@ -18,7 +18,7 @@ module Management
 
     def status_label = STATUS_LABELS.fetch(@person[:status])
 
-    def goal = SectorGoalMock.new(@person[:sector]).target
+    def goal = SectorCatalog.target(@person[:sector])
 
     def progress
       {percent: @person[:completed] * 100 / module_ids.size, current_module: current_module}

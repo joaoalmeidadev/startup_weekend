@@ -41,7 +41,7 @@ module Management
     def sector_goal_competencies
       return [] unless @journey[:sector]
 
-      SectorGoalMock.new(@journey[:sector]).props[:competencies].pluck(:name)
+      SectorCatalog.find(@journey[:sector])[:competencies].map(&:first)
     end
   end
 end

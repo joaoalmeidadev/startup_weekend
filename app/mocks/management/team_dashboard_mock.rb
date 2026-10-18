@@ -59,9 +59,9 @@ module Management
       {review_accuracy: accuracy, active_weekly: active_weekly, minutes_per_day: minutes}
     end
 
-    # Goals follow the Atendimento sector goal (see SectorGoalMock); "before" is the diagnostic average
+    # Goals follow the Atendimento sector goal (see SectorCatalog); "before" is the diagnostic average
     def competencies
-      goal = SectorGoalMock.new("Atendimento").target
+      goal = SectorCatalog.target("Atendimento")
       [
         {name: "Comunicação e Escuta Ativa", before: 55, now: 82, goal: goal},
         {name: "Reclamações de Entrega", before: 42, now: 71, goal: goal},
