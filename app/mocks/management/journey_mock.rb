@@ -15,10 +15,26 @@ module Management
     def props
       {journey: journey_props, catalog: catalog, goal: goal, ready_journey: ready_journey,
        start_ready: @start_ready && ready_journey.present?,
-       points_rule: PointsRule.new.props}.merge(JourneyAudienceMock.new.props)
+       points_rule: points_rule.props, points_rule_source: points_rule_source}.merge(JourneyAudienceMock.new.props)
     end
 
     private
+
+    # People picked one by one have no sector, so they use the company default
+    def receiving_sectors
+      audience = @journey[:audience]
+      (audience[:type] == "sectors") ? audience[:names] : []
+    end
+
+    def points_rule = @points_rule ||= PointsRule.cheapest(receiving_sectors)
+
+    def points_rule_source
+      names = receiving_sectors
+      return "padrão da empresa" if names.empty?
+      return "menor valor entre #{names.to_sentence(locale: :"pt-BR")}" if names.many?
+
+      "#{names.first} · #{PointsRule.own_cost?(names.first) ? "valor próprio" : "padrão da empresa"}"
+    end
 
     def journey_props
       @journey.slice(:id, :name, :kind, :status, :audience, :people_in_progress, :badge)

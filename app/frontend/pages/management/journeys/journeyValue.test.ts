@@ -9,7 +9,7 @@ describe('stepPoints', () => {
   it('turns the hours of training a step replaces into points by the admin rule', () => {
     const [tratamento] = toSteps(serviceJourney.modules)
 
-    expect(stepPoints(tratamento, pointsRule)).toBe(170)
+    expect(stepPoints(tratamento, pointsRule)).toBe(60)
   })
 
   it('uses the manual points when the admin typed them', () => {
@@ -24,7 +24,7 @@ describe('journeyValue', () => {
   it('adds up the training hours, what they save and the points of the whole journey', () => {
     const service = journeyValue(toSteps(serviceJourney.modules), journeyGoal, pointsRule)
 
-    expect(service).toMatchObject({ hours: 9, saved: 765, points: 306 })
+    expect(service).toMatchObject({ hours: 9, saved: 270, points: 108 })
   })
 
   it('follows edited hours and manual points', () => {
@@ -34,7 +34,7 @@ describe('journeyValue', () => {
       10,
     )
 
-    expect(value(edited)).toMatchObject({ hours: 10.5, saved: 893, points: 10 + 51 + 204 })
+    expect(value(edited)).toMatchObject({ hours: 10.5, saved: 315, points: 10 + 18 + 72 })
   })
 
   it('counts contents, lessons and the weeks to study them', () => {

@@ -21,8 +21,8 @@ module Management
         ["Margem", "calculate", 90, [9, 16]],
         ["Pedidos", "receipt_long", 86, [12, 16]]
       ]},
-      # Logística has no goal yet
-      {name: "Logística", kind: "sector", level: nil, competencies: [
+      # Logística has no goal yet and pays a bit less, so it has its own training cost (see PointsRule)
+      {name: "Logística", kind: "sector", level: nil, training_cost: {teacher_salary: 3960, learner_salary: 1980}, competencies: [
         ["Conferência", "inventory_2"],
         ["Matemática", "calculate"],
         ["Raciocínio", "psychology"]

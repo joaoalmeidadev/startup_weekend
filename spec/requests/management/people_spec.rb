@@ -73,7 +73,7 @@ RSpec.describe "Management people", :inertia do
       get management_person_path("maria-souza")
 
       rewards = inertia.props[:person][:rewards]
-      expect(rewards).to include(points: 272, balance: 242)
+      expect(rewards).to include(points: 96, balance: 66)
       expect(rewards[:redeemed]).to eq([{"name" => "Vale-lanche", "date" => "02/10", "points" => 30}])
     end
 
@@ -85,7 +85,7 @@ RSpec.describe "Management people", :inertia do
       expect(person[:milestones]).to include("Concluiu a jornada Atendimento na prática", "Ganhou o selo Nivelado em Atendimento")
       expect(person[:rewards][:redeemed].size).to eq(3)
       expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 130)
-      expect(person[:rewards]).to include(points: 782, balance: 652)
+      expect(person[:rewards]).to include(points: 276, balance: 146)
     end
 
     it "names the badge after the sector when no sector journey reaches the person" do

@@ -216,8 +216,8 @@ export const personDetail: PersonDetail = {
   badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
   milestones: ['Concluiu a jornada Base Nivela', '3 dias seguidos de estudo'],
   rewards: {
-    points: 272,
-    balance: 242,
+    points: 96,
+    balance: 66,
     redeemed: [{ name: 'Vale-lanche', date: '02/10', points: 30 }],
   },
 }
@@ -237,7 +237,7 @@ export const teamDashboard: TeamDashboard = {
   company_target: 80,
   knowledge_gain: { before: 48, now: 79 },
   time_to_level: { days: 46, before_days: 90 },
-  savings: { new_hires: 9, hours: 207, amount: 17595 },
+  savings: { new_hires: 9, hours: 207, amount: 6210 },
   retention: { review_accuracy: 86, active_weekly: '9 de 14', minutes_per_day: 5 },
   competencies: [{ name: 'Reclamações', before: 42, now: 71, goal: 75 }],
   on_the_job: {
@@ -472,7 +472,7 @@ const reward = (id: string, name: string, icon: string, category: string, cost: 
 })
 
 export const rewardsProps: RewardsProps = {
-  points_rule: { manager_hourly: 60, person_hourly: 25, reward_share: 0.4 },
+  points_rule: { teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4 },
   rewards: [
     { ...reward('caneca-nivela', 'Caneca Nivela', 'coffee', 'Brinde', 25, 25), stock: 17, redeemed: 3 },
     {
@@ -492,9 +492,9 @@ export const rewardsProps: RewardsProps = {
       points: 30,
     },
   ],
-  month: { spent: 120, saved: 2890 },
+  month: { spent: 120, saved: 1020 },
 }
 
-export const pointsRule: PointsRule = { manager_hourly: 60, person_hourly: 25, reward_share: 0.4 }
+export const pointsRule: PointsRule = { teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4 }
 
 export const libraryCompetencies = ['Comunicação', 'Cultura', 'Rotinas', 'Sistema']

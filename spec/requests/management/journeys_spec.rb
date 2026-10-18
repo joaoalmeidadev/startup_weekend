@@ -81,11 +81,26 @@ RSpec.describe "Management journeys", :inertia do
       expect(inertia.props[:people]).to include("Maria Souza")
     end
 
-    it "brings the admin's points rule to price each content of the journey" do
+    it "prices each content with the training cost of the sector that receives the journey" do
       get management_journey_path("atendimento-na-pratica")
 
-      expect(inertia.props[:points_rule]).to include(manager_hourly: 60, person_hourly: 25, reward_share: 0.4)
+      expect(inertia.props[:points_rule]).to include(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
+      expect(inertia.props[:points_rule_source]).to eq("Atendimento · padrão da empresa")
       expect(inertia.props[:journey][:modules].pluck(:teaching_hours)).to eq([5, 4])
+    end
+
+    it "uses a sector's own training cost" do
+      get management_journey_path("logistica-na-pratica")
+
+      expect(inertia.props[:points_rule]).to include(teacher_salary: 3960, learner_salary: 1980)
+      expect(inertia.props[:points_rule_source]).to eq("Logística · valor próprio")
+    end
+
+    it "uses the cheapest sector when several receive the journey" do
+      get management_journey_path("base-nivela")
+
+      expect(inertia.props[:points_rule]).to include(teacher_salary: 3960)
+      expect(inertia.props[:points_rule_source]).to eq("menor valor entre Atendimento, Comercial e Logística")
     end
 
     it "offers the ready-made Base Nivela only on base journeys" do

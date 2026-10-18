@@ -38,13 +38,13 @@ describe('RewardsShow', () => {
 
     await openCalculator()
 
-    expect(calculator().getByLabelText('Valor/hora do gestor (R$)')).toHaveValue(60)
-    expect(calculator().getByLabelText('Valor/hora da pessoa (R$)')).toHaveValue(25)
+    expect(calculator().getByLabelText('Salário de quem ensina (R$)')).toHaveValue(4400)
+    expect(calculator().getByLabelText('Salário de quem aprende (R$)')).toHaveValue(2200)
     expect(calculator().getByLabelText('Quanto da economia vira prêmio (%)')).toHaveValue(40)
     expect(calculator().getByLabelText('Horas de treino substituídas')).toHaveValue(6)
-    expect(calculator().getByText('1 h de treino presencial custa R$ 85')).toBeInTheDocument()
-    expect(calculator().getByText('34 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
-    expect(calculator().getByText('6 h de treino → R$ 510 economizados → 204 pts')).toBeInTheDocument()
+    expect(calculator().getByText('1 h de treino presencial custa R$ 30')).toBeInTheDocument()
+    expect(calculator().getByText('12 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('6 h de treino → R$ 180 economizados → 72 pts')).toBeInTheDocument()
     expect(calculator().queryByRole('button', { name: /Salvar/ })).not.toBeInTheDocument()
   })
 
@@ -52,13 +52,13 @@ describe('RewardsShow', () => {
     render(<RewardsShow />)
     await openCalculator()
 
-    await retype('Valor/hora do gestor (R$)', '75')
+    await retype('Salário de quem ensina (R$)', '6600')
     await retype('Quanto da economia vira prêmio (%)', '20')
     await retype('Horas de treino substituídas', '3')
 
-    expect(calculator().getByText('1 h de treino presencial custa R$ 100')).toBeInTheDocument()
-    expect(calculator().getByText('20 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
-    expect(calculator().getByText('3 h de treino → R$ 300 economizados → 60 pts')).toBeInTheDocument()
+    expect(calculator().getByText('1 h de treino presencial custa R$ 40')).toBeInTheDocument()
+    expect(calculator().getByText('8 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('3 h de treino → R$ 120 economizados → 24 pts')).toBeInTheDocument()
   })
 
   it('tells how much training a reward stands for', async () => {
@@ -68,7 +68,7 @@ describe('RewardsShow', () => {
     await retype('Custo do prêmio (R$)', '50')
 
     expect(
-      calculator().getByText('Um prêmio de R$ 50 vale 50 pts ≈ 1,5 h de treino substituído'),
+      calculator().getByText('Um prêmio de R$ 50 vale 50 pts ≈ 4,2 h de treino substituído'),
     ).toBeInTheDocument()
   })
 
@@ -81,7 +81,7 @@ describe('RewardsShow', () => {
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     const mug = within(catalog().getByRole('article', { name: 'Caneca Nivela' }))
-    expect(mug.getByText('Equivale a ~0,7 h de treino substituído')).toBeInTheDocument()
+    expect(mug.getByText('Equivale a ~2,1 h de treino substituído')).toBeInTheDocument()
   })
 
   it('shows each reward with points, cost and the training it stands for', () => {
@@ -90,7 +90,7 @@ describe('RewardsShow', () => {
     const mug = within(catalog().getByRole('article', { name: 'Caneca Nivela' }))
     expect(mug.getByText('25 pts')).toBeInTheDocument()
     expect(mug.getByText('Custa R$ 25')).toBeInTheDocument()
-    expect(mug.getByText('Equivale a ~0,7 h de treino substituído')).toBeInTheDocument()
+    expect(mug.getByText('Equivale a ~2,1 h de treino substituído')).toBeInTheDocument()
     expect(mug.getByText('17 em estoque · 3 resgatados')).toBeInTheDocument()
     const shift = within(catalog().getByRole('article', { name: 'Escolher a escala da semana' }))
     expect(shift.getByText('40 pts')).toBeInTheDocument()
@@ -106,7 +106,7 @@ describe('RewardsShow', () => {
 
     const dialog = within(screen.getByRole('dialog'))
     expect(field('Pontos')).toHaveValue(68)
-    expect(dialog.getByText('Equivale a ~2 h de treino substituído')).toBeInTheDocument()
+    expect(dialog.getByText('Equivale a ~5,7 h de treino substituído')).toBeInTheDocument()
     expect(dialog.queryByText(/40%/)).not.toBeInTheDocument()
   })
 
@@ -151,7 +151,7 @@ describe('RewardsShow', () => {
     expect(field('Custo (R$)')).toHaveValue(60)
     expect(field('Pontos')).toHaveValue(60)
     expect(
-      within(screen.getByRole('dialog')).getByText('Equivale a ~1,8 h de treino substituído'),
+      within(screen.getByRole('dialog')).getByText('Equivale a ~5 h de treino substituído'),
     ).toBeInTheDocument()
   })
 
@@ -163,7 +163,7 @@ describe('RewardsShow', () => {
     expect(maria).toHaveTextContent('Vale-lanche')
     expect(maria).toHaveTextContent('02/10')
     expect(maria).toHaveTextContent('30 pts')
-    expect(recent.getByText('No mês: R$ 120 em prêmios · R$ 2.890 de treino economizado')).toBeInTheDocument()
+    expect(recent.getByText('No mês: R$ 120 em prêmios · R$ 1.020 de treino economizado')).toBeInTheDocument()
   })
 
   it('marks a reward as sold out when its stock is over', () => {

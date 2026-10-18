@@ -86,8 +86,8 @@ describe('PeopleShow', () => {
     render(<PeopleShow />)
 
     const rewards = within(screen.getByRole('region', { name: 'Recompensas' }))
-    expect(rewards.getByText('272 pts ganhos')).toBeInTheDocument()
-    expect(rewards.getByText('242 pts de saldo')).toBeInTheDocument()
+    expect(rewards.getByText('96 pts ganhos')).toBeInTheDocument()
+    expect(rewards.getByText('66 pts de saldo')).toBeInTheDocument()
     const item = rewards.getByText('Vale-lanche').closest('li') as HTMLElement
     expect(item).toHaveTextContent('02/10')
     expect(item).toHaveTextContent('30 pts')

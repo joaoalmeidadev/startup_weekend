@@ -1,8 +1,22 @@
 module Management
-  # How study turns into points, set by the admin: one hour of in-person training costs the hour of the manager
-  # who teaches plus the hour of the person taught; a share of that saving becomes points (1 point = R$ 1 in rewards).
+  # How study turns into points. One hour of in-person training costs the hour of who teaches plus the hour of
+  # who learns (monthly salary ÷ 220 h, no extra charges, so it stays conservative); the company's share of that
+  # saving becomes points (1 point = R$ 1 in rewards). A sector may have its own salaries (SectorCatalog).
   class PointsRule
-    DEFAULTS = {manager_hourly: 60, person_hourly: 25, reward_share: 0.4}.freeze
+    HOURS_PER_MONTH = 220
+    DEFAULTS = {teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4}.freeze
+
+    def self.for_sector(name)
+      own = SectorCatalog.find(name)&.dig(:training_cost)
+      own ? new(**own) : new
+    end
+
+    # Several sectors receive the journey: their cheapest hour, so its points never go beyond the real saving
+    def self.cheapest(names)
+      names.map { |name| for_sector(name) }.min_by(&:hour_cost) || new
+    end
+
+    def self.own_cost?(name) = SectorCatalog.find(name)&.dig(:training_cost).present?
 
     def initialize(**overrides)
       @rule = DEFAULTS.merge(overrides)
@@ -10,12 +24,20 @@ module Management
 
     def props = @rule
 
-    def hour_cost = @rule[:manager_hourly] + @rule[:person_hourly]
+    def teacher_hourly = hourly(@rule[:teacher_salary])
+
+    def learner_hourly = hourly(@rule[:learner_salary])
+
+    def hour_cost = (teacher_hourly + learner_hourly).round(2)
 
     def points_per_hour = (hour_cost * @rule[:reward_share]).round
 
     def points_for(hours) = (hours * points_per_hour).round
 
     def saved_for(hours) = (hours * hour_cost).round
+
+    private
+
+    def hourly(salary) = (salary.to_f / HOURS_PER_MONTH).round(2)
   end
 end

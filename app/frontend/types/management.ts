@@ -231,5 +231,6 @@ export type RewardsProps = {
   month: { spent: number; saved: number }
 }
 
-// Set by the admin: what one hour of in-person training costs and how much of the saving becomes points
-export type PointsRule = { manager_hourly: number; person_hourly: number; reward_share: number }
+// What one hour of in-person training costs (monthly salaries of who teaches and who learns) and how much of
+// the saving becomes points
+export type PointsRule = { teacher_salary: number; learner_salary: number; reward_share: number }

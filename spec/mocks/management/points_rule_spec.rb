@@ -1,23 +1,42 @@
 require "rails_helper"
 
 RSpec.describe Management::PointsRule do
-  it "costs the manager hour plus the person hour for each hour of in-person training" do
-    expect(described_class.new.hour_cost).to eq(85)
+  subject(:rule) { described_class.new }
+
+  it "turns the monthly salaries into hours (salary ÷ 220 h), with no extra charges" do
+    expect(rule.teacher_hourly).to eq(20)
+    expect(rule.learner_hourly).to eq(10)
+    expect(rule.hour_cost).to eq(30)
   end
 
-  it "turns the admin's share of that saving into points, 1 point = R$ 1 in rewards" do
-    expect(described_class.new.points_per_hour).to eq(34)
-    expect(described_class.new(reward_share: 0.5).points_per_hour).to eq(43)
+  it "turns the company's share of that saving into points, 1 point = R$ 1 in rewards" do
+    expect(rule.points_per_hour).to eq(12)
+    expect(described_class.new(reward_share: 0.6).points_per_hour).to eq(18)
   end
 
   it "prices a step by the hours of training it replaces" do
-    rule = described_class.new
-
-    expect(rule.points_for(6)).to eq(204)
-    expect(rule.saved_for(6)).to eq(510)
+    expect(rule.points_for(5)).to eq(60)
+    expect(rule.saved_for(9)).to eq(270)
   end
 
-  it "shares the rule with the pages" do
-    expect(described_class.new.props).to eq(manager_hourly: 60, person_hourly: 25, reward_share: 0.4)
+  it "shares the company default with the pages" do
+    expect(rule.props).to eq(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
+  end
+
+  it "uses a sector's own salaries when it has them, and the company default otherwise" do
+    expect(described_class.for_sector("Logística").hour_cost).to eq(27)
+    expect(described_class.for_sector("Logística").points_per_hour).to eq(11)
+    expect(described_class.for_sector("Atendimento").hour_cost).to eq(30)
+    expect(described_class.for_sector("Staff").hour_cost).to eq(30)
+  end
+
+  it "picks the cheapest hour among several sectors, so rewards never go beyond the saving" do
+    expect(described_class.cheapest(%w[Atendimento Logística]).hour_cost).to eq(27)
+    expect(described_class.cheapest([]).hour_cost).to eq(30)
+  end
+
+  it "tells whether a sector has its own training cost" do
+    expect(described_class.own_cost?("Logística")).to be(true)
+    expect(described_class.own_cost?("Atendimento")).to be(false)
   end
 end

@@ -7,11 +7,11 @@ import { brl, hoursReplaced } from './rewardValue'
 const FIELD =
   'h-11 w-full rounded-xl border-0 bg-surface-container-low px-space-md text-body-md text-on-surface focus:ring-2 focus:ring-primary-container'
 
-type Inputs = { manager: string; person: string; percent: string; hours: string; cost: string }
+type Inputs = { teacher: string; learner: string; percent: string; hours: string; cost: string }
 
 const FIELDS: { key: keyof Inputs; label: string }[] = [
-  { key: 'manager', label: 'Valor/hora do gestor (R$)' },
-  { key: 'person', label: 'Valor/hora da pessoa (R$)' },
+  { key: 'teacher', label: 'Salário de quem ensina (R$)' },
+  { key: 'learner', label: 'Salário de quem aprende (R$)' },
   { key: 'percent', label: 'Quanto da economia vira prêmio (%)' },
   { key: 'hours', label: 'Horas de treino substituídas' },
   { key: 'cost', label: 'Custo do prêmio (R$)' },
@@ -20,16 +20,16 @@ const FIELDS: { key: keyof Inputs; label: string }[] = [
 const DEFAULT_HOURS = 6
 
 const inputsFrom = (rule: PointsRule): Inputs => ({
-  manager: String(rule.manager_hourly),
-  person: String(rule.person_hourly),
+  teacher: String(rule.teacher_salary),
+  learner: String(rule.learner_salary),
   percent: String(Math.round(rule.reward_share * 100)),
   hours: String(DEFAULT_HOURS),
   cost: '',
 })
 
 const ruleFrom = (inputs: Inputs): PointsRule => ({
-  manager_hourly: Number(inputs.manager || 0),
-  person_hourly: Number(inputs.person || 0),
+  teacher_salary: Number(inputs.teacher || 0),
+  learner_salary: Number(inputs.learner || 0),
   reward_share: Number(inputs.percent || 0) / 100,
 })
 

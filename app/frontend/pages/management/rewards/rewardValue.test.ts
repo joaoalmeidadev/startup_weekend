@@ -6,13 +6,13 @@ const rule = rewardsProps.points_rule
 
 describe('rewardValue', () => {
   it('tells how many hours of in-person training the points stand for, with one decimal', () => {
-    expect(hoursReplaced(25, rule)).toBe('0,7')
-    expect(hoursReplaced(150, rule)).toBe('4,4')
-    expect(hoursReplaced(34, rule)).toBe('1')
+    expect(hoursReplaced(25, rule)).toBe('2,1')
+    expect(hoursReplaced(150, rule)).toBe('12,5')
+    expect(hoursReplaced(36, rule)).toBe('3')
   })
 
   it('follows the share the admin sets', () => {
-    expect(hoursReplaced(25, { ...rule, reward_share: 0.2 })).toBe('1,5')
+    expect(hoursReplaced(25, { ...rule, reward_share: 0.2 })).toBe('4,2')
   })
 
   it('has no equivalence when the rule gives no points', () => {

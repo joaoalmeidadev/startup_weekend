@@ -8,7 +8,7 @@ RSpec.describe "Management rewards", :inertia do
       get management_rewards_path
 
       expect_inertia.to render_component("management/rewards/show")
-      expect(inertia.props[:points_rule]).to include(manager_hourly: 60, person_hourly: 25, reward_share: 0.4)
+      expect(inertia.props[:points_rule]).to include(teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4)
       expect(inertia.props).not_to include(:rule)
       expect(inertia.props[:rewards].first).to include(name: "Caneca Nivela", icon: "coffee", category: "Brinde", cost: 25, points: 25)
       expect(inertia.props[:ideas]).not_to be_empty
@@ -36,7 +36,7 @@ RSpec.describe "Management rewards", :inertia do
       get management_rewards_path
 
       month = inertia.props[:month]
-      expect(month).to include(spent: 120, saved: 2890)
+      expect(month).to include(spent: 120, saved: 1020)
       expect(month[:spent]).to be < month[:saved]
     end
   end

@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
-import { hourCost, pointsPerHour } from '@/lib/pointsRule'
+import { hourCost, learnerHourly, pointsPerHour, teacherHourly } from '@/lib/pointsRule'
 import type { PointsRule } from '@/types/management'
 import { formatHours, formatReais, type JourneyValue } from './journeyValue'
 
@@ -23,8 +23,8 @@ function Figure({ icon, figure, label }: { icon: string; figure: string; label: 
 function RuleLine({ rule }: { rule: PointsRule }) {
   return (
     <p className="text-body-sm text-on-surface-variant">
-      1 h de treino = {formatReais(hourCost(rule))} (gestor {formatReais(rule.manager_hourly)} + pessoa{' '}
-      {formatReais(rule.person_hourly)}) · {pointsPerHour(rule)} pts/h — calcule outros valores em{' '}
+      1 h de treino = {formatReais(hourCost(rule))} (quem ensina {formatReais(teacherHourly(rule))} + quem
+      aprende {formatReais(learnerHourly(rule))}) · {pointsPerHour(rule)} pts/h — calcule outros valores em{' '}
       <Link href="/management/rewards" className="font-semibold text-primary hover:underline">
         Recompensas
       </Link>
