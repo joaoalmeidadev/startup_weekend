@@ -79,7 +79,7 @@ describe('JourneysShow (montador de jornada)', () => {
     render(<JourneysShow />)
 
     expect(calculator()).toHaveTextContent('9 h de treino substituídas')
-    expect(calculator()).toHaveTextContent('R$ 270 economizados')
+    expect(calculator()).toHaveTextContent('R$ 275 economizados')
     expect(calculator()).not.toHaveTextContent(/pts|prêmios/)
   })
 
@@ -88,8 +88,12 @@ describe('JourneysShow (montador de jornada)', () => {
     render(<JourneysShow />)
 
     const math = within(within(calculator()).getByRole('list', { name: 'Como chegamos nesses números' }))
-    expect(math.getByText('9 h × R$ 30/h = R$ 270 economizados')).toBeInTheDocument()
-    expect(math.getByText('1 h de treino = quem ensina R$ 20/h + quem aprende R$ 10/h')).toBeInTheDocument()
+    expect(math.getByText('R$ 175 + R$ 100 = R$ 275 economizados')).toBeInTheDocument()
+    expect(
+      math.getByText(
+        '1 h de treino = quem daria o treino (o valor de cada conteúdo; padrão R$ 20/h) + quem aprende R$ 10/h',
+      ),
+    ).toBeInTheDocument()
     expect(math.queryByText(/pts|pontos/)).not.toBeInTheDocument()
   })
 
@@ -108,8 +112,8 @@ describe('JourneysShow (montador de jornada)', () => {
     page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
     render(<JourneysShow />)
 
-    expect(within(preview()).getByText('5 h × R$ 30/h = R$ 150')).toBeInTheDocument()
-    expect(within(preview()).getByText('4 h × R$ 30/h = R$ 120')).toBeInTheDocument()
+    expect(within(preview()).getByText('5 h × (R$ 25 + R$ 10)/h = R$ 175')).toBeInTheDocument()
+    expect(within(preview()).getByText('4 h × (R$ 15 + R$ 10)/h = R$ 100')).toBeInTheDocument()
     expect(screen.queryByRole('spinbutton', { name: /Pontos manuais/ })).not.toBeInTheDocument()
     expect(preview()).not.toHaveTextContent(/pts|manual/)
   })
@@ -131,13 +135,13 @@ describe('JourneysShow (montador de jornada)', () => {
   it('edits the hours each content replaces and recalculates the journey', async () => {
     render(<JourneysShow />)
 
-    expect(within(preview()).getByText('6 h × R$ 30/h = R$ 180')).toBeInTheDocument()
+    expect(within(preview()).getByText('6 h × (R$ 20 + R$ 10)/h = R$ 180')).toBeInTheDocument()
     const hours = screen.getByRole('spinbutton', { name: 'Horas de treino de Rotinas' })
     expect(hours).toHaveValue(6)
     await userEvent.clear(hours)
     await userEvent.type(hours, '2')
 
-    expect(within(preview()).getByText('2 h × R$ 30/h = R$ 60')).toBeInTheDocument()
+    expect(within(preview()).getByText('2 h × (R$ 20 + R$ 10)/h = R$ 60')).toBeInTheDocument()
     expect(calculator()).toHaveTextContent('8 h de treino substituídas')
     expect(calculator()).toHaveTextContent('R$ 240 economizados')
   })

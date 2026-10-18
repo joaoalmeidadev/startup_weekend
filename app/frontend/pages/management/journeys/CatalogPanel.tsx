@@ -1,6 +1,8 @@
 import { Icon } from '@/components/Icon'
 import { SourceBadge } from '@/components/SourceBadge'
+import { hourlyFrom } from '@/lib/pointsRule'
 import type { CatalogGroup, ModuleSummary } from '@/types/management'
+import { formatReais } from './journeyValue'
 
 type AddModule = (module: ModuleSummary) => void
 
@@ -19,6 +21,7 @@ function CatalogItem({ module, added, onAdd }: CatalogItemProps) {
         <span className="truncate text-label-lg text-on-surface">{module.name}</span>
         <span className="text-body-sm text-on-surface-variant">
           {module.lessons} lições · substitui ~{module.teaching_hours}h
+          {module.teacher_salary ? ` · ${formatReais(hourlyFrom(module.teacher_salary))}/h` : ''}
         </span>
       </span>
       <button

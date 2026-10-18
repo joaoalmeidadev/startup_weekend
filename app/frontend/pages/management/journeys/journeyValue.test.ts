@@ -9,7 +9,7 @@ describe('journeyValue', () => {
   it('adds up the training hours of the whole journey and what they save', () => {
     const service = journeyValue(toSteps(serviceJourney.modules), journeyGoal, pointsRule)
 
-    expect(service).toMatchObject({ hours: 9, saved: 270 })
+    expect(service).toMatchObject({ hours: 9, saved: 275 })
   })
 
   it('follows edited hours', () => {

@@ -285,10 +285,12 @@ const companyModule = (id: string, name: string, overrides: ModuleOverrides = {}
 const tratamentoDeReclamacoes = companyModule('tratamento-de-reclamacoes', 'Tratamento de Reclamações', {
   lessons: 6,
   competency: 'Reclamações',
+  teacher_salary: 5500,
 })
 const usoDoSistema = companyModule('uso-do-sistema', 'Uso do Sistema', {
   teaching_hours: 4,
   competency: 'Sistema',
+  teacher_salary: 3300,
 })
 
 export const catalog: CatalogGroup[] = [

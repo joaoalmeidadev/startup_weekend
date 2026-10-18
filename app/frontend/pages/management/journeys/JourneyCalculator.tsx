@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import type { PointsRule } from '@/types/management'
+import type { JourneyStep } from './journeyEditing'
 import { hourCostFormula, ruleSource, savedFormula } from './journeyFormula'
 import { formatHours, formatReais, type JourneyValue } from './journeyValue'
 
@@ -21,7 +22,7 @@ function Figure({ icon, figure, label }: { icon: string; figure: string; label: 
 }
 
 // The arithmetic behind the big figures, so the admin sees how hours become reais
-function MathList({ value, rule }: { value: JourneyValue; rule: PointsRule }) {
+function MathList({ steps, rule }: { steps: JourneyStep[]; rule: PointsRule }) {
   return (
     <div className="flex flex-col gap-1">
       <h3 id="calculator-math" className="text-label-md text-on-surface">
@@ -31,7 +32,7 @@ function MathList({ value, rule }: { value: JourneyValue; rule: PointsRule }) {
         aria-labelledby="calculator-math"
         className="flex flex-col gap-0.5 text-body-sm text-on-surface-variant"
       >
-        <li>{savedFormula(value.hours, rule)}</li>
+        <li>{savedFormula(steps, rule)}</li>
         <li>{hourCostFormula(rule)}</li>
       </ul>
     </div>
@@ -63,11 +64,11 @@ function StudyLine({ value }: { value: JourneyValue }) {
   )
 }
 
-type JourneyCalculatorProps = { value: JourneyValue; rule: PointsRule; source: string }
+type JourneyCalculatorProps = { value: JourneyValue; rule: PointsRule; source: string; steps: JourneyStep[] }
 
 // What the journey is worth in hours of in-person training and the reais they save, by the hour cost of
 // who receives it, recalculated on every change to the path
-export function JourneyCalculator({ value, rule, source }: JourneyCalculatorProps) {
+export function JourneyCalculator({ value, steps, rule, source }: JourneyCalculatorProps) {
   return (
     <section
       aria-labelledby="calculator-title"
@@ -81,7 +82,7 @@ export function JourneyCalculator({ value, rule, source }: JourneyCalculatorProp
         <Figure icon="savings" figure={formatReais(value.saved)} label="economizados" />
       </div>
       <div className="flex flex-col gap-1 border-t border-surface-container-high pt-space-sm">
-        <MathList value={value} rule={rule} />
+        <MathList steps={steps} rule={rule} />
         <SourceLine source={source} />
         <StudyLine value={value} />
       </div>

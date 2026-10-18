@@ -38,7 +38,7 @@ function JourneyBuilder(props: JourneyBuilderProps) {
         options={props.audience_options}
         people={props.people}
       />
-      <JourneyCalculator value={value} rule={points_rule} source={points_rule_source} />
+      <JourneyCalculator value={value} steps={steps} rule={points_rule} source={points_rule_source} />
       <div className="grid grid-cols-1 items-start gap-space-md lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <div className="flex flex-col gap-space-md">
           {ready_journey && (

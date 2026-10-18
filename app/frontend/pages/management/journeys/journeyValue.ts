@@ -1,4 +1,4 @@
-import { savedFor } from '@/lib/pointsRule'
+import { stepHourCost } from '@/lib/pointsRule'
 import type { JourneyGoal, PointsRule } from '@/types/management'
 import type { JourneyStep } from './journeyEditing'
 
@@ -34,7 +34,7 @@ export function journeyValue(steps: JourneyStep[], goal: JourneyGoal, rule: Poin
 
   return {
     hours,
-    saved: savedFor(hours, rule),
+    saved: Math.round(sum(steps, (step) => step.hours * stepHourCost(rule, step.module.teacher_salary))),
     modules: steps.length,
     lessons,
     weeks: weeksToFinish(lessons),

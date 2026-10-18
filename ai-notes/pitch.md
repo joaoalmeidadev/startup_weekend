@@ -29,8 +29,8 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 4. **Jornadas** → **+ Nova jornada**: nome, tipo (**Base**, **Empresa** ou **Setor**) e quem recebe (setores e grupos ou
    pessoas específicas) → **Criar e escolher conteúdos**. "A Biblioteca alimenta; a jornada decide quem recebe."
 5. No montador (**Atendimento na prática**): à esquerda a Biblioteca, à direita "Como o participante vê". Adicione um
-   conteúdo e mostre a **Calculadora da jornada** mudar: "9 h de treino substituídas, R$ 270 economizados" — com a conta
-   à vista (9 h × R$ 30/h). O gestor vê horas e R$; pontos são do colaborador.
+   conteúdo e mostre a **Calculadora da jornada** mudar: "9 h de treino substituídas, R$ 275 economizados" — com a conta
+   à vista: cada etapa usa quem daria aquele treino (supervisora R$ 25/h, analista R$ 15/h) + quem aprende. O gestor vê horas e R$; pontos são do colaborador.
    Edite as horas de uma etapa ou digite pontos manuais para mostrar que o admin controla.
 6. **Setores** → **Staff** (grupo): "Cada setor tem as suas pessoas e a sua meta. Grupos juntam gente de setores
    diferentes." Meta começa num nível de mercado — Fácil, Médio, Difícil — e ajusto por competência. Se der tempo,

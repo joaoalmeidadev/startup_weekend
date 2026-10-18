@@ -7,26 +7,39 @@ const logistics = { teacher_salary: 3960, learner_salary: 1980, reward_share: 0.
 const service = () => toSteps(serviceJourney.modules)
 
 describe('stepFormula', () => {
-  it('shows the hours of a step times what one hour of training costs', () => {
-    const [tratamento] = service()
+  it('uses the hour of who would give that content training plus the hour of who learns', () => {
+    const [tratamento, uso] = service()
 
-    expect(stepFormula(tratamento, pointsRule)).toBe('5 h × R$ 30/h = R$ 150')
-    expect(stepFormula({ ...tratamento, hours: 1.5 }, pointsRule)).toBe('1,5 h × R$ 30/h = R$ 45')
-    expect(stepFormula(tratamento, logistics)).toBe('5 h × R$ 27/h = R$ 135')
+    expect(stepFormula(tratamento, pointsRule)).toBe('5 h × (R$ 25 + R$ 10)/h = R$ 175')
+    expect(stepFormula(uso, pointsRule)).toBe('4 h × (R$ 15 + R$ 10)/h = R$ 100')
+    expect(stepFormula({ ...tratamento, hours: 1.5 }, pointsRule)).toBe('1,5 h × (R$ 25 + R$ 10)/h = R$ 52,5')
+  })
+
+  it('falls back to the default teacher of the journey rule', () => {
+    const [tratamento] = service()
+    const plain = { ...tratamento, module: { ...tratamento.module, teacher_salary: null } }
+
+    expect(stepFormula(plain, logistics)).toBe('5 h × (R$ 18 + R$ 9)/h = R$ 135')
   })
 })
 
 describe('savedFormula', () => {
-  it('multiplies the hours by what one hour of training costs', () => {
-    expect(savedFormula(9, pointsRule)).toBe('9 h × R$ 30/h = R$ 270 economizados')
-    expect(savedFormula(9, logistics)).toBe('9 h × R$ 27/h = R$ 243 economizados')
+  it('adds up the steps when they have different teachers', () => {
+    expect(savedFormula(service(), pointsRule)).toBe('R$ 175 + R$ 100 = R$ 275 economizados')
+  })
+
+  it('multiplies the hours when every step uses the same hour', () => {
+    const plain = service().map((step) => ({ ...step, module: { ...step.module, teacher_salary: null } }))
+
+    expect(savedFormula(plain, pointsRule)).toBe('9 h × R$ 30/h = R$ 270 economizados')
   })
 })
 
 describe('hourCostFormula', () => {
-  it('splits one hour of training into who teaches and who learns', () => {
-    expect(hourCostFormula(pointsRule)).toBe('1 h de treino = quem ensina R$ 20/h + quem aprende R$ 10/h')
-    expect(hourCostFormula(logistics)).toBe('1 h de treino = quem ensina R$ 18/h + quem aprende R$ 9/h')
+  it('explains each content uses who would give it, and who learns', () => {
+    expect(hourCostFormula(pointsRule)).toBe(
+      '1 h de treino = quem daria o treino (o valor de cada conteúdo; padrão R$ 20/h) + quem aprende R$ 10/h',
+    )
   })
 })
 
