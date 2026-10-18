@@ -19,7 +19,7 @@ function ReachedToday({ competency }: { competency: Competency }) {
         <strong className="text-on-surface">
           {reached.count} de {reached.of} pessoas
         </strong>{' '}
-        do setor já atingem.
+        já atingem.
       </span>
     </div>
   )

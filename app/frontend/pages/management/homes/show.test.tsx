@@ -121,7 +121,7 @@ describe('HomesShow', () => {
       'groupPessoas',
       'library_booksBiblioteca',
       'routeJornadas',
-      'tuneMeta do setor',
+      'groupsSetores',
       'redeemRecompensas',
     ])
     expect(nav.getByRole('link', { name: /Dashboard/ })).toHaveAttribute('aria-current', 'page')

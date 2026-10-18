@@ -16,16 +16,19 @@ module Management
       end
     end
 
+    # The work sectors (not the groups) a person can be invited into
+    def sectors
+      counts = PEOPLE.pluck(:sector).tally
+      work_sectors.map { |name| {name: name, count: counts.fetch(name, 0), journey: journey_for(name)} }
+    end
+
     private
 
     def overviews = PEOPLE.map { |person| PersonOverview.new(person) }
 
     def summary = PEOPLE.pluck(:status).tally.transform_keys(&:to_sym)
 
-    def sectors
-      counts = PEOPLE.pluck(:sector).tally
-      SectorGoalMock::SECTORS.map { |name| {name: name, count: counts.fetch(name, 0), journey: journey_for(name)} }
-    end
+    def work_sectors = SectorCatalog.all.select { |sector| sector[:kind] == "sector" }.pluck(:name)
 
     # The journey a new person of the sector receives when invited
     def journey_for(sector)

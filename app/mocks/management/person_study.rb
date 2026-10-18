@@ -23,7 +23,7 @@ module Management
 
     # The modules already studied plus the current one: diagnostic score, today's score and the sector goal
     def competencies
-      goal = SectorGoalMock.new(@person[:sector]).target
+      goal = SectorCatalog.target(@person[:sector])
       studied.each_with_index.map do |module_id, index|
         before = 40 + (index * 7 % 20)
         now = (index < completed) ? [before + 30, 95].min : before + 12
