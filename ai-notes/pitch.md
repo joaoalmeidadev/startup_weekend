@@ -19,7 +19,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 ## 3. Demo ao vivo (~2 min) — as 3 fatias + dashboard
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
-1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos — cerca de R$ 17,6 mil."
+1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos — cerca de R$ 6,4 mil."
 2. **Biblioteca** (o que existe). Clique no filtro **Produtos Nivela**: "Sem material? A Nivela já vem com 12 módulos
    para qualquer setor — os mais citados na nossa pesquisa."
 3. **+ Novo conteúdo**: "Um formulário só: o conteúdo em cima, de onde vem embaixo." "Usar o arquivo de exemplo" →
@@ -29,13 +29,15 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 4. **Jornadas** → **+ Nova jornada**: nome, tipo (**Base**, **Empresa** ou **Setor**) e quem recebe (setores e grupos ou
    pessoas específicas) → **Criar e escolher conteúdos**. "A Biblioteca alimenta; a jornada decide quem recebe."
 5. No montador (**Atendimento na prática**): à esquerda a Biblioteca, à direita "Como o participante vê". Adicione um
-   conteúdo e mostre a **Calculadora da jornada** mudar: "9 h de treino substituídas, R$ 765 economizados, 306 pts".
+   conteúdo e mostre a **Calculadora da jornada** mudar: "9 h de treino substituídas, R$ 270 economizados" — com a conta
+   à vista (9 h × R$ 30/h). O gestor vê horas e R$; pontos são do colaborador.
    Edite as horas de uma etapa ou digite pontos manuais para mostrar que o admin controla.
 6. **Setores** → **Staff** (grupo): "Cada setor tem as suas pessoas e a sua meta. Grupos juntam gente de setores
    diferentes." Meta começa num nível de mercado — Fácil, Médio, Difícil — e ajusto por competência. Se der tempo,
    **+ Novo setor** mostra os 3 blocos: nome, pessoas, meta.
-7. **Recompensas** → **Calcular pontuação**: "1 h de treino custa o gestor + a pessoa (R$ 85); com 40% dessa
-   economia, cada hora vale 34 pts. 1 ponto = R$ 1." Digite o custo de um prêmio (ex.: R$ 50) e mostre quantas horas de treino ele representa.
+7. **Setores** → **Custo do treino da empresa**: "Eu informo o salário de quem ensina e de quem aprende; 1 h de treino
+   custa R$ 30." Em **Recompensas** → **Calcular pontuação**: "Quem estuda ganha a própria hora × 40%: com salário de
+   R$ 2.200, 4 pts por hora. 1 ponto = R$ 1." No detalhe da Maria: "8 h estudadas × R$ 9,50/h × 40% = 30 pts".
 
 ### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)
 5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.

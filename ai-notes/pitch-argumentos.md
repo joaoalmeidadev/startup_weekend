@@ -92,8 +92,11 @@ Segue o modelo Kirkpatrick de avaliação de treinamento (aprendizado → compor
 - Tudo no mock é exemplo; não citar como resultado real.
 
 ## 3d. Recompensas: pagas com o que a empresa deixou de gastar
-- **1 h de treino presencial custa o gestor + a pessoa** (os dois param). Padrão: R$ 60 + R$ 25 = **R$ 85/h**.
-- O admin define **quanto dessa economia vira prêmio** (padrão 40%) → **34 pts por hora** de treino substituída.
+- **1 h de treino presencial custa quem ensina + quem aprende** (os dois param), pelo salário ÷ 220 h, sem encargos
+  (conservador). Padrão: R$ 4.400 + R$ 2.200 → R$ 20/h + R$ 10/h = **R$ 30/h**. Cada setor pode ter o seu valor.
+- **Pontos do colaborador = horas estudadas × a hora dele (salário) × % da empresa** (padrão 40%): com R$ 2.200,
+  **4 pts por hora**. O salário é cadastrado no convite (opcional); sem ele, vale o do setor.
+- O gestor vê horas e R$ economizados na jornada; os pontos são do colaborador.
 - **1 ponto = R$ 1 em prêmios**: caneca de R$ 25 = 25 pts. Como os pontos nascem de uma fatia da economia, nenhum
   prêmio custa mais do que a empresa economizou.
 - Na jornada, cada etapa mostra quantas horas de treino substitui e quantos pontos vale (pontos manuais são opcionais).
