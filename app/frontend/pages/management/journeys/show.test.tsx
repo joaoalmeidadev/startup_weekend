@@ -172,6 +172,13 @@ describe('JourneysShow (montador de jornada)', () => {
     ).toBeDisabled()
   })
 
+  it('sums up the lesson formats of each content in the Biblioteca', () => {
+    render(<JourneysShow />)
+
+    const nivela = within(catalogGroup('Produtos Nivela'))
+    expect(nivela.getAllByText('1 vídeo · 1 áudio · 1 imagem · 1 texto').length).toBeGreaterThan(0)
+  })
+
   it('adds any content to the end of the path in one click', async () => {
     render(<JourneysShow />)
 

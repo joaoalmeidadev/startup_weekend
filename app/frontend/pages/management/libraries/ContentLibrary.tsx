@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react'
 import { useState } from 'react'
 import { Icon } from '@/components/Icon'
 import { SOURCES, SOURCE_ORDER, SourceBadge } from '@/components/SourceBadge'
+import { formatSummary } from '@/lib/lessonFormats'
 import type { ContentSource, ModuleSummary } from '@/types/management'
 import { SourceGuideModal } from './SourceGuideModal'
 
@@ -54,7 +55,12 @@ function LibraryItem({ module }: { module: ModuleSummary }) {
         href={`/management/modules/${module.id}`}
         className="flex items-center justify-between gap-space-md rounded-xl p-space-sm transition-colors hover:bg-surface-container-low"
       >
-        <span className="truncate text-label-lg text-on-surface">{module.name}</span>
+        <span className="flex min-w-0 flex-col">
+          <span className="truncate text-label-lg text-on-surface">{module.name}</span>
+          <span className="truncate text-body-sm text-on-surface-variant">
+            {formatSummary(module.formats)}
+          </span>
+        </span>
         <span className="flex shrink-0 items-center gap-space-xs">
           <SourceBadge source={module.source} />
           <Icon name="chevron_right" className="text-[1.25rem] text-outline" />

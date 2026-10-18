@@ -25,6 +25,24 @@ RSpec.describe "Management learning module", :inertia do
       expect(lessons.second[:question][:prompt]).to include("atraso")
     end
 
+    it "brings each lesson with its format and how long it takes" do
+      get management_learning_module_path("conversa-clara")
+
+      lessons = inertia.props[:learning_module][:lessons]
+      expect(lessons.pluck(:format)).to eq(%w[video text audio image])
+      expect(lessons.first).to include(duration: "3:20", credit: nil)
+    end
+
+    it "opens the customer service product with the Sebrae video" do
+      get management_learning_module_path("atendimento-ao-cliente")
+
+      first = inertia.props[:learning_module][:lessons].first
+      expect(first).to include(title: "O básico do bom atendimento", format: "video",
+        credit: "Sebrae · curso gratuito (ilustrativo)")
+      formats = inertia.props[:learning_module][:lessons].pluck(:format).tally.transform_keys(&:to_sym)
+      expect(formats).to eq(Management::ModuleCatalog.summary("atendimento-ao-cliente")[:formats])
+    end
+
     it "shows how much of the team gets each published lesson right" do
       get management_learning_module_path("rotinas-de-atendimento")
       lessons = inertia.props[:learning_module][:lessons]
