@@ -24,7 +24,7 @@ function RuleLine({ rule }: { rule: PointsRule }) {
   return (
     <p className="text-body-sm text-on-surface-variant">
       1 h de treino = {formatReais(hourCost(rule))} (gestor {formatReais(rule.manager_hourly)} + pessoa{' '}
-      {formatReais(rule.person_hourly)}) · {pointsPerHour(rule)} pts/h — definido em{' '}
+      {formatReais(rule.person_hourly)}) · {pointsPerHour(rule)} pts/h — calcule outros valores em{' '}
       <Link href="/management/rewards" className="font-semibold text-primary hover:underline">
         Recompensas
       </Link>

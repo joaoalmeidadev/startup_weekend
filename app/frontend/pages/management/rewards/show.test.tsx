@@ -8,14 +8,15 @@ import RewardsShow from './show'
 vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).inertiaMock)
 
 const catalog = () => within(screen.getByRole('region', { name: 'Catálogo' }))
-const calculator = () => within(screen.getByRole('region', { name: 'Calculadora de pontos' }))
+const calculator = () => within(screen.getByRole('dialog', { name: 'Calcular pontuação' }))
+const openCalculator = () => userEvent.click(screen.getByRole('button', { name: /Calcular pontuação/ }))
 const openForm = () => userEvent.click(screen.getByRole('button', { name: /Cadastrar recompensa/ }))
 const field = (label: string) => within(screen.getByRole('dialog')).getByLabelText(label)
 
-const changeShare = async (percent: string) => {
-  const share = calculator().getByLabelText('Quanto da economia vira prêmio (%)')
-  await userEvent.clear(share)
-  await userEvent.type(share, percent)
+const retype = async (label: string, value: string) => {
+  const input = calculator().getByLabelText(label)
+  await userEvent.clear(input)
+  await userEvent.type(input, value)
 }
 
 describe('RewardsShow', () => {
@@ -31,38 +32,56 @@ describe('RewardsShow', () => {
     expect(nav.getByRole('link', { name: /Recompensas/ })).toHaveAttribute('aria-current', 'page')
   })
 
-  it('starts the calculator from the admin rule', () => {
+  it('opens a calculator from a button, with nothing to save', async () => {
     render(<RewardsShow />)
+    expect(screen.queryByRole('region', { name: 'Calculadora de pontos' })).not.toBeInTheDocument()
+
+    await openCalculator()
 
     expect(calculator().getByLabelText('Valor/hora do gestor (R$)')).toHaveValue(60)
     expect(calculator().getByLabelText('Valor/hora da pessoa (R$)')).toHaveValue(25)
     expect(calculator().getByLabelText('Quanto da economia vira prêmio (%)')).toHaveValue(40)
+    expect(calculator().getByLabelText('Horas de treino substituídas')).toHaveValue(6)
     expect(calculator().getByText('1 h de treino presencial custa R$ 85')).toBeInTheDocument()
-    expect(calculator().getByText('vira 34 pts para quem estuda')).toBeInTheDocument()
-    expect(calculator().getByText('1 pt = R$ 1 em prêmios')).toBeInTheDocument()
-    expect(calculator().getByText('Uma etapa de 6 h → R$ 510 economizados → 204 pts')).toBeInTheDocument()
-    expect(calculator().getByText(/a pessoa só vê os pontos/)).toBeInTheDocument()
+    expect(calculator().getByText('34 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('6 h de treino → R$ 510 economizados → 204 pts')).toBeInTheDocument()
+    expect(calculator().queryByRole('button', { name: /Salvar/ })).not.toBeInTheDocument()
   })
 
-  it('recalculates live as the admin edits the rule', async () => {
+  it('recalculates live as the numbers change', async () => {
     render(<RewardsShow />)
+    await openCalculator()
 
-    const managerHourly = calculator().getByLabelText('Valor/hora do gestor (R$)')
-    await userEvent.clear(managerHourly)
-    await userEvent.type(managerHourly, '75')
-    await changeShare('20')
+    await retype('Valor/hora do gestor (R$)', '75')
+    await retype('Quanto da economia vira prêmio (%)', '20')
+    await retype('Horas de treino substituídas', '3')
 
     expect(calculator().getByText('1 h de treino presencial custa R$ 100')).toBeInTheDocument()
-    expect(calculator().getByText('vira 20 pts para quem estuda')).toBeInTheDocument()
-    expect(calculator().getByText('Uma etapa de 6 h → R$ 600 economizados → 120 pts')).toBeInTheDocument()
+    expect(calculator().getByText('20 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('3 h de treino → R$ 300 economizados → 60 pts')).toBeInTheDocument()
   })
 
-  it('saves the rule as a simulation', async () => {
+  it('tells how much training a reward stands for', async () => {
     render(<RewardsShow />)
+    await openCalculator()
 
-    await userEvent.click(calculator().getByRole('button', { name: 'Salvar regra' }))
+    await retype('Custo do prêmio (R$)', '50')
 
-    expect(screen.getByRole('status')).toHaveTextContent('Regra salva (simulação).')
+    expect(
+      calculator().getByText('Um prêmio de R$ 50 vale 50 pts ≈ 1,5 h de treino substituído'),
+    ).toBeInTheDocument()
+  })
+
+  it('leaves the catalog untouched and closes', async () => {
+    render(<RewardsShow />)
+    await openCalculator()
+    await retype('Quanto da economia vira prêmio (%)', '20')
+
+    await userEvent.click(calculator().getByRole('button', { name: 'Fechar' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    const mug = within(catalog().getByRole('article', { name: 'Caneca Nivela' }))
+    expect(mug.getByText('Equivale a ~0,7 h de treino substituído')).toBeInTheDocument()
   })
 
   it('shows each reward with points, cost and the training it stands for', () => {
@@ -76,14 +95,6 @@ describe('RewardsShow', () => {
     const shift = within(catalog().getByRole('article', { name: 'Escolher a escala da semana' }))
     expect(shift.getByText('40 pts')).toBeInTheDocument()
     expect(shift.getByText('Custa R$ 0')).toBeInTheDocument()
-  })
-
-  it('updates the cards when the share changes', async () => {
-    render(<RewardsShow />)
-    await changeShare('20')
-
-    const mug = within(catalog().getByRole('article', { name: 'Caneca Nivela' }))
-    expect(mug.getByText('Equivale a ~1,5 h de treino substituído')).toBeInTheDocument()
   })
 
   it('suggests one point per real while registering a reward', async () => {

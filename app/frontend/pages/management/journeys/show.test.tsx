@@ -86,7 +86,7 @@ describe('JourneysShow (montador de jornada)', () => {
     render(<JourneysShow />)
 
     expect(calculator()).toHaveTextContent(
-      '1 h de treino = R$ 85 (gestor R$ 60 + pessoa R$ 25) · 34 pts/h — definido em Recompensas',
+      '1 h de treino = R$ 85 (gestor R$ 60 + pessoa R$ 25) · 34 pts/h — calcule outros valores em Recompensas',
     )
     expect(within(calculator()).getByRole('link', { name: 'Recompensas' })).toHaveAttribute(
       'href',

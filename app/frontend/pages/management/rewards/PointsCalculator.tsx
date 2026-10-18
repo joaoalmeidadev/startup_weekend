@@ -1,125 +1,85 @@
 import { useState } from 'react'
-import { Icon } from '@/components/Icon'
+import { Modal } from '@/components/Modal'
 import { hourCost, pointsFor, pointsPerHour, savedFor } from '@/lib/pointsRule'
 import type { PointsRule } from '@/types/management'
-import { brl } from './rewardValue'
+import { brl, hoursReplaced } from './rewardValue'
 
-const EXAMPLE_HOURS = 6
 const FIELD =
   'h-11 w-full rounded-xl border-0 bg-surface-container-low px-space-md text-body-md text-on-surface focus:ring-2 focus:ring-primary-container'
 
-type Draft = { manager: string; person: string; percent: string }
+type Inputs = { manager: string; person: string; percent: string; hours: string; cost: string }
 
-const draftFrom = (rule: PointsRule): Draft => ({
+const FIELDS: { key: keyof Inputs; label: string }[] = [
+  { key: 'manager', label: 'Valor/hora do gestor (R$)' },
+  { key: 'person', label: 'Valor/hora da pessoa (R$)' },
+  { key: 'percent', label: 'Quanto da economia vira prêmio (%)' },
+  { key: 'hours', label: 'Horas de treino substituídas' },
+  { key: 'cost', label: 'Custo do prêmio (R$)' },
+]
+
+const DEFAULT_HOURS = 6
+
+const inputsFrom = (rule: PointsRule): Inputs => ({
   manager: String(rule.manager_hourly),
   person: String(rule.person_hourly),
   percent: String(Math.round(rule.reward_share * 100)),
+  hours: String(DEFAULT_HOURS),
+  cost: '',
 })
 
-const ruleFrom = (draft: Draft): PointsRule => ({
-  manager_hourly: Number(draft.manager || 0),
-  person_hourly: Number(draft.person || 0),
-  reward_share: Number(draft.percent || 0) / 100,
+const ruleFrom = (inputs: Inputs): PointsRule => ({
+  manager_hourly: Number(inputs.manager || 0),
+  person_hourly: Number(inputs.person || 0),
+  reward_share: Number(inputs.percent || 0) / 100,
 })
 
-function NumberField({
-  id,
-  label,
-  value,
-  onChange,
-}: {
-  id: string
-  label: string
-  value: string
-  onChange: (value: string) => void
-}) {
+function Results({ inputs }: { inputs: Inputs }) {
+  const rule = ruleFrom(inputs)
+  const hours = Number(inputs.hours || 0)
+  const cost = Number(inputs.cost || 0)
+  const rewardHours = hoursReplaced(cost, rule)
   return (
-    <div className="flex flex-col gap-space-xs">
-      <label htmlFor={id} className="text-label-md text-on-surface">
-        {label}
-      </label>
-      <input
-        id={id}
-        type="number"
-        min={0}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={FIELD}
-      />
-    </div>
-  )
-}
-
-function Results({ rule }: { rule: PointsRule }) {
-  return (
-    <ul className="flex flex-col gap-1 text-body-md text-on-surface">
+    <ul className="flex flex-col gap-1 rounded-xl bg-surface-container-low p-space-md text-body-md text-on-surface">
       <li>{`1 h de treino presencial custa ${brl(hourCost(rule))}`}</li>
-      <li className="text-label-lg text-primary">{`vira ${pointsPerHour(rule)} pts para quem estuda`}</li>
-      <li>1 pt = R$ 1 em prêmios</li>
-      <li className="text-body-sm text-on-surface-variant">
-        {`Uma etapa de ${EXAMPLE_HOURS} h → ${brl(savedFor(EXAMPLE_HOURS, rule))} economizados → ${pointsFor(EXAMPLE_HOURS, rule)} pts`}
-      </li>
+      <li className="text-label-lg text-primary">{`${pointsPerHour(rule)} pts por hora para quem estuda (1 pt = R$ 1)`}</li>
+      <li>{`${inputs.hours || 0} h de treino → ${brl(savedFor(hours, rule))} economizados → ${pointsFor(hours, rule)} pts`}</li>
+      {inputs.cost !== '' && rewardHours && (
+        <li>{`Um prêmio de ${brl(cost)} vale ${cost} pts ≈ ${rewardHours} h de treino substituído`}</li>
+      )}
     </ul>
   )
 }
 
-type PointsCalculatorProps = { rule: PointsRule; onChange: (rule: PointsRule) => void; onSave: () => void }
-
-// Only the manager sees this math: the collaborator only sees points
-export function PointsCalculator({ rule, onChange, onSave }: PointsCalculatorProps) {
-  const [draft, setDraft] = useState(() => draftFrom(rule))
-  const change = (key: keyof Draft) => (value: string) => {
-    const next = { ...draft, [key]: value }
-    setDraft(next)
-    onChange(ruleFrom(next))
-  }
-
+// A quick what-if for the manager; nothing is saved and the catalog keeps the company's rule
+export function PointsCalculator({ rule, onClose }: { rule: PointsRule; onClose: () => void }) {
+  const [inputs, setInputs] = useState(() => inputsFrom(rule))
   return (
-    <section
-      aria-labelledby="calculator-title"
-      className="flex flex-col gap-space-md rounded-xl bg-secondary-fixed/40 p-space-md"
-    >
-      <div className="flex items-start gap-space-md">
-        <Icon name="calculate" className="text-[1.75rem] text-primary" />
-        <div className="flex flex-col">
-          <h2 id="calculator-title" className="text-headline-sm text-on-surface">
-            Calculadora de pontos
-          </h2>
-          <p className="text-body-sm text-on-surface-variant">
-            Só a gestão vê esta conta: a pessoa só vê os pontos e os prêmios.
-          </p>
-        </div>
+    <Modal icon="calculate" title="Calcular pontuação" onClose={onClose}>
+      <div className="grid grid-cols-2 gap-space-sm">
+        {FIELDS.map(({ key, label }) => (
+          <div key={key} className={`flex flex-col gap-space-xs ${key === 'percent' ? 'col-span-2' : ''}`}>
+            <label htmlFor={`calc-${key}`} className="text-label-md text-on-surface">
+              {label}
+            </label>
+            <input
+              id={`calc-${key}`}
+              type="number"
+              min={0}
+              value={inputs[key]}
+              onChange={(e) => setInputs({ ...inputs, [key]: e.target.value })}
+              className={FIELD}
+            />
+          </div>
+        ))}
       </div>
-      <div className="grid grid-cols-1 gap-space-sm sm:grid-cols-3">
-        <NumberField
-          id="rule-manager"
-          label="Valor/hora do gestor (R$)"
-          value={draft.manager}
-          onChange={change('manager')}
-        />
-        <NumberField
-          id="rule-person"
-          label="Valor/hora da pessoa (R$)"
-          value={draft.person}
-          onChange={change('person')}
-        />
-        <NumberField
-          id="rule-share"
-          label="Quanto da economia vira prêmio (%)"
-          value={draft.percent}
-          onChange={change('percent')}
-        />
-      </div>
-      <div className="flex flex-col justify-between gap-space-md md:flex-row md:items-end">
-        <Results rule={rule} />
-        <button
-          type="button"
-          onClick={onSave}
-          className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-space-lg text-label-lg text-on-primary hover:bg-primary-container"
-        >
-          Salvar regra
-        </button>
-      </div>
-    </section>
+      <Results inputs={inputs} />
+      <button
+        type="button"
+        onClick={onClose}
+        className="flex min-h-[3rem] w-full items-center justify-center rounded-xl bg-primary text-label-lg text-on-primary hover:bg-primary-container"
+      >
+        Fechar
+      </button>
+    </Modal>
   )
 }
