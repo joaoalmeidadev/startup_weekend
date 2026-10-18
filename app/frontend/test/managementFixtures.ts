@@ -7,6 +7,7 @@ import type {
   Manager,
   ModuleSummary,
   PeopleProps,
+  Person,
   PersonDetail,
   Publication,
   SectorGoal,
@@ -19,48 +20,79 @@ export const manager: Manager = {
   company: 'Distribuidora Sul',
 }
 
+const person = (overrides: Partial<Person> & Pick<Person, 'id' | 'name' | 'sector' | 'status'>): Person => ({
+  avatar_url: null,
+  score: 68,
+  goal: 75,
+  progress: { percent: 50, current_module: 'Rotinas de atendimento' },
+  activity: 'há 2 dias · 35 min nesta semana',
+  forecast: 'Nivela em ~12 dias',
+  ...overrides,
+})
+
 export const peopleProps: PeopleProps = {
-  summary: {
-    leveled: { count: 21, percent: 50 },
-    learning: { count: 14, percent: 33 },
-    attention: { count: 7, percent: 17 },
-  },
+  summary: { leveled: 1, on_track: 1, late: 1 },
   sectors: [
-    { name: 'Atendimento', count: 14 },
-    { name: 'Logística', count: 12 },
+    { name: 'Atendimento', count: 2 },
+    { name: 'Logística', count: 1 },
   ],
-  total: 42,
   people: [
-    {
+    person({
       id: 'marcos-oliveira',
       name: 'Marcos Oliveira',
       sector: 'Logística',
-      status: 'attention',
+      status: 'late',
       avatar_url: '/m.jpg',
-      alert: { icon: 'error', text: 'Parado há 32 dias' },
-    },
-    {
+      score: 41,
+      goal: null,
+      progress: { percent: 0, current_module: 'Matemática do Dia a Dia' },
+      activity: 'há 32 dias · sem estudo nesta semana',
+      forecast: 'Atrasado 21 dias',
+    }),
+    person({
       id: 'maria-souza',
       name: 'Maria Souza',
       sector: 'Atendimento',
-      status: 'learning',
+      status: 'on_track',
       avatar_url: '/ms.jpg',
-      progress: { step: 'Passo 4 de 6', percent: 80, label: '80% na Base' },
-    },
+    }),
+    person({
+      id: 'diego-fernandes',
+      name: 'Diego Fernandes',
+      sector: 'Atendimento',
+      status: 'leveled',
+      score: 81,
+      progress: { percent: 100, current_module: null },
+      activity: 'há 3 dias · 15 min nesta semana',
+      forecast: 'Nivelado ✓',
+    }),
   ],
 }
 
 export const sectorGoal: SectorGoal = {
   sector: 'Atendimento',
   sectors: ['Atendimento', 'Comercial'],
+  levels: [
+    { key: 'easy', label: 'Fácil', target: 60, hint: 'Funções de entrada.' },
+    { key: 'medium', label: 'Médio', target: 75, hint: 'O padrão do mercado.' },
+    { key: 'hard', label: 'Difícil', target: 90, hint: 'Clientes exigentes.' },
+  ],
+  level: 'medium',
   experts_count: 5,
   competencies: [
     {
       name: 'Comunicação',
       icon: 'record_voice_over',
       experts_average: 88,
-      goal: 80,
-      reached: { count: 8, of: 10, text: 'atingiram esta meta.' },
+      goal: 75,
+      reached: { count: 12, of: 14 },
+    },
+    {
+      name: 'Sistema de Pedidos',
+      icon: 'terminal',
+      experts_average: 85,
+      goal: 75,
+      reached: { count: 8, of: 14 },
     },
   ],
 }
@@ -157,13 +189,9 @@ export const learningModule: LearningModule = {
 }
 
 export const personDetail: PersonDetail = {
-  id: 'maria-souza',
-  name: 'Maria Souza',
-  sector: 'Atendimento',
+  ...peopleProps.people[1],
   role: 'Atendente',
   tenure: '1 mês de casa',
-  status: 'learning',
-  avatar_url: '/ms.jpg',
   journey: {
     id: 'onboarding-atendimento',
     name: 'Onboarding Atendimento',
@@ -223,4 +251,14 @@ export const publication: Publication = {
     { title: '2. Trecho Empresa: Rotinas de atendimento', status: 'new' },
   ],
   done_path: '/management/journeys',
+}
+
+export const sectorWithoutGoal: SectorGoal = {
+  ...sectorGoal,
+  sector: 'Logística',
+  level: null,
+  experts_count: 0,
+  competencies: [
+    { name: 'Conferência', icon: 'inventory_2', experts_average: null, goal: null, reached: null },
+  ],
 }

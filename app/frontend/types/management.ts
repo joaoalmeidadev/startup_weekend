@@ -4,39 +4,40 @@ export type Manager = {
   company: string
 }
 
-export type PersonStatus = 'attention' | 'learning' | 'leveled'
+export type PersonStatus = 'leveled' | 'on_track' | 'late'
 
 export type Person = {
   id: string
   name: string
   sector: string
   status: PersonStatus
-  avatar_url: string
-  alert?: { icon: string; text: string }
-  progress?: { step: string; percent: number; label: string }
-  achievement?: string
+  avatar_url: string | null
+  score: number
+  goal: number | null
+  progress: { percent: number; current_module: string | null }
+  activity: string
+  forecast: string
 }
 
-export type SummaryEntry = { count: number; percent: number }
-
 export type PeopleProps = {
-  summary: Record<PersonStatus, SummaryEntry>
+  summary: Record<PersonStatus, number>
   sectors: { name: string; count: number }[]
   people: Person[]
-  total: number
 }
 
 export type Competency = {
   name: string
   icon: string
-  experts_average: number
-  goal: number
-  reached: { count: number; of: number; text: string }
+  experts_average: number | null
+  goal: number | null
+  reached: { count: number; of: number } | null
 }
 
 export type SectorGoal = {
   sector: string
   sectors: string[]
+  levels: GoalLevel[]
+  level: GoalLevelKey | null
   experts_count: number
   competencies: Competency[]
 }
@@ -99,16 +100,9 @@ export type LearningModule = {
   review_from: number | null
 }
 
-export type PersonDetail = {
-  id: string
-  name: string
-  sector: string
+export type PersonDetail = Person & {
   role: string
   tenure: string
-  status: PersonStatus
-  avatar_url: string
-  alert?: { icon: string; text: string }
-  achievement?: string
   journey: {
     id: string
     name: string
@@ -152,3 +146,7 @@ export type Publication = {
   journey_outline: JourneyOutlineItem[]
   done_path: string
 }
+
+export type GoalLevelKey = 'easy' | 'medium' | 'hard'
+
+export type GoalLevel = { key: GoalLevelKey; label: string; target: number; hint: string }

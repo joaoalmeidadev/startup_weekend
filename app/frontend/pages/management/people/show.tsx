@@ -4,7 +4,9 @@ import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { PersonDetail } from '@/types/management'
 import { MiniJourney } from './MiniJourney'
-import { PERSON_STATUS } from './PersonCard'
+import { PersonAvatar } from './PersonAvatar'
+import { PersonHighlights } from './PersonHighlights'
+import { PERSON_STATUS } from './personStatus'
 
 function Card({ title, icon, children }: { title: string; icon: string; children: ReactNode }) {
   return (
@@ -34,7 +36,6 @@ function BulletList({ items, empty }: { items: string[]; empty: string }) {
 export default function PeopleShow() {
   const { person } = usePage<{ person: PersonDetail }>().props
   const status = PERSON_STATUS[person.status]
-  const note = person.alert?.text ?? person.achievement
 
   return (
     <ManagementLayout>
@@ -49,24 +50,23 @@ export default function PeopleShow() {
         </Link>
         <section className="flex flex-col justify-between gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm lg:flex-row lg:items-center">
           <div className="flex items-center gap-space-md">
-            <img src={person.avatar_url} alt="" className="size-20 rounded-full object-cover" />
+            <PersonAvatar person={person} size="lg" />
             <div className="flex flex-col gap-1">
               <h1 className="text-headline-lg text-on-surface">{person.name}</h1>
               <span className="text-body-md text-on-surface-variant">
                 {person.role} · {person.sector} · {person.tenure}
               </span>
-              <div className="flex flex-wrap items-center gap-space-sm">
-                <span
-                  className={`inline-flex items-center gap-space-xs rounded-full px-space-md py-1 ${status.badge}`}
-                >
-                  <Icon name={status.icon} className="text-[1rem]" />
-                  <span className="text-label-md font-bold">{status.label}</span>
-                </span>
-                {note && <span className="text-body-sm font-semibold text-on-surface-variant">{note}</span>}
-              </div>
+              <span
+                className={`inline-flex w-fit items-center gap-space-xs rounded-full px-space-md py-1 ${status.soft}`}
+              >
+                <Icon name={status.icon} className="text-[1rem]" />
+                <span className="text-label-md font-bold">{status.label}</span>
+              </span>
             </div>
           </div>
         </section>
+
+        <PersonHighlights person={person} />
 
         <Card title={`Jornada: ${person.journey.name}`} icon="route">
           <MiniJourney journey={person.journey} />

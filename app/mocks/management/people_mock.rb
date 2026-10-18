@@ -1,55 +1,69 @@
 require "csv"
 
 module Management
-  # Example people from the Stitch "Pessoas" screen
+  # Example people of the Distribuidora Sul, one row each, late ones first
   class PeopleMock
-    STATUS_LABELS = {"attention" => "Precisa de atenção", "learning" => "Aprendendo", "leveled" => "Nivelado"}.freeze
+    CSV_HEADERS = %w[Nome Setor Status Progresso Nota Meta Previsão].freeze
 
     def props
-      {summary: summary, sectors: sectors, people: people, total: 42}
+      {summary: summary, sectors: sectors, people: overviews.map(&:props)}
     end
 
     def to_csv
       CSV.generate do |csv|
-        csv << %w[Nome Setor Status]
-        PEOPLE.each { |person| csv << [person[:name], person[:sector], STATUS_LABELS.fetch(person[:status])] }
+        csv << CSV_HEADERS
+        overviews.each { |overview| csv << csv_row(overview) }
       end
     end
 
     private
 
-    def summary
-      {
-        leveled: {count: 21, percent: 50},
-        learning: {count: 14, percent: 33},
-        attention: {count: 7, percent: 17}
-      }
-    end
+    def overviews = PEOPLE.map { |person| PersonOverview.new(person) }
+
+    def summary = PEOPLE.pluck(:status).tally.transform_keys(&:to_sym)
 
     def sectors
-      [{name: "Atendimento", count: 14}, {name: "Comercial", count: 16}, {name: "Logística", count: 12}]
+      counts = PEOPLE.pluck(:sector).tally
+      SectorGoalMock::SECTORS.map { |name| {name: name, count: counts.fetch(name, 0)} }
     end
 
-    def people
-      PEOPLE.map { |person| person.slice(:name, :sector, :status, :alert, :progress, :achievement).compact.merge(card_extras(person)) }
+    def csv_row(overview)
+      person = overview.props
+      [person[:name], person[:sector], overview.status_label, "#{person[:progress][:percent]}%",
+        person[:score], person[:goal] || "sem meta", person[:forecast]]
     end
 
-    def card_extras(person)
-      {id: person[:name].parameterize, avatar_url: "/mocks/people/#{person[:name].parameterize}.jpg"}
-    end
-
-    # Shared with PersonMock: journey and progress drive the detail page
+    # Shared with PersonMock. completed = modules done in the journey; days = to level (or late by).
+    # The first five have photos in public/mocks/people.
     PEOPLE = [
-      {name: "Marcos Oliveira", sector: "Logística", status: "attention", role: "Conferente", tenure: "2 meses de casa",
-       journey_id: "onboarding-logistica", completed: 0, alert: {icon: "error", text: "Parado em Matemática Básica há 32 dias"}},
-      {name: "Maria Souza", sector: "Atendimento", status: "learning", role: "Atendente", tenure: "1 mês de casa",
-       journey_id: "onboarding-atendimento", completed: 3, progress: {step: "Passo 4 de 6 da trilha", percent: 80, label: "80% na Base"}},
+      {name: "Marcos Oliveira", sector: "Logística", status: "late", role: "Conferente", tenure: "2 meses de casa",
+       journey_id: "onboarding-logistica", completed: 0, score: 41, last_active: "há 32 dias", weekly_minutes: 0,
+       days: 21, photo: true},
+      {name: "Paula Santos", sector: "Comercial", status: "late", role: "Vendedora interna", tenure: "4 meses de casa",
+       journey_id: "onboarding-atendimento", completed: 1, score: 54, last_active: "há 20 dias", weekly_minutes: 0,
+       days: 15, photo: true},
+      {name: "Bruna Costa", sector: "Atendimento", status: "late", role: "Atendente", tenure: "2 meses de casa",
+       journey_id: "onboarding-atendimento", completed: 2, score: 58, last_active: "há 9 dias", weekly_minutes: 10,
+       days: 8},
+      {name: "Maria Souza", sector: "Atendimento", status: "on_track", role: "Atendente", tenure: "1 mês de casa",
+       journey_id: "onboarding-atendimento", completed: 3, score: 68, last_active: "há 2 dias", weekly_minutes: 35,
+       days: 12, photo: true},
+      {name: "Rafael Lima", sector: "Atendimento", status: "on_track", role: "Atendente", tenure: "1 mês de casa",
+       journey_id: "onboarding-atendimento", completed: 4, score: 72, last_active: "hoje", weekly_minutes: 50,
+       days: 6},
+      {name: "João Batista", sector: "Comercial", status: "on_track", role: "Vendedor interno", tenure: "3 meses de casa",
+       journey_id: "onboarding-logistica", completed: 2, score: 70, last_active: "hoje", weekly_minutes: 45,
+       days: 18, photo: true},
+      {name: "Fernanda Rocha", sector: "Logística", status: "on_track", role: "Auxiliar de expedição",
+       tenure: "3 semanas de casa", journey_id: "onboarding-logistica", completed: 2, score: 63,
+       last_active: "há 3 dias", weekly_minutes: 25, days: 20},
       {name: "Carla Silveira", sector: "Atendimento", status: "leveled", role: "Atendente", tenure: "8 meses de casa",
-       journey_id: "onboarding-atendimento", completed: 6, achievement: "Selo Nivelado em Atendimento conquistado"},
-      {name: "João Batista", sector: "Comercial", status: "learning", role: "Vendedor interno", tenure: "3 meses de casa",
-       journey_id: "onboarding-logistica", completed: 2, progress: {step: "Passo 2 de 5 da trilha", percent: 40, label: "40% concluído"}},
-      {name: "Paula Santos", sector: "Comercial", status: "attention", role: "Vendedora interna", tenure: "4 meses de casa",
-       journey_id: "onboarding-atendimento", completed: 1, alert: {icon: "schedule", text: "Sem acesso há 20 dias"}}
+       journey_id: "onboarding-atendimento", completed: 6, score: 86, last_active: "ontem", weekly_minutes: 20,
+       photo: true},
+      {name: "Diego Fernandes", sector: "Atendimento", status: "leveled", role: "Atendente", tenure: "1 ano de casa",
+       journey_id: "onboarding-atendimento", completed: 6, score: 81, last_active: "há 3 dias", weekly_minutes: 15},
+      {name: "Lucas Pereira", sector: "Comercial", status: "leveled", role: "Vendedor interno", tenure: "6 meses de casa",
+       journey_id: "onboarding-atendimento", completed: 6, score: 79, last_active: "ontem", weekly_minutes: 25}
     ].freeze
   end
 end
