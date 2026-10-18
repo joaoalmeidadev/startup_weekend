@@ -47,9 +47,19 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.
    "Em 2 minutos sabemos o que ele já sabe e montamos uma jornada só com o que falta."
 
-### Fatia 2: a jornada (`colab@nivela.com` / `12345678`)
-6. **Minha jornada** → **Continuar aula** → vídeo → explicação → erre de propósito (dica) → acerte → **Parabéns + selo**.
-   "5 minutos por dia, sem depender de ninguém para explicar."
+### Fatia 2: o colaborador (`colab@nivela.com` / `12345678`, celular ou janela estreita)
+6. **Início**: "38 pts, 3 dias seguidos e a próxima etapa valendo +23 pts." **Continuar** → vídeo → explicação → erre
+   de propósito (dica) → acerte → **Parabéns, +23 pontos**. "5 minutos por dia, sem depender de ninguém para explicar."
+7. **Jornadas**: "Ela está em três, mas faz uma por vez e escolhe a ordem" → **Começar esta** em Atendimento na prática.
+8. **Prêmios**: verde é o que dá para trocar, cinza mostra quanto falta → **Resgatar** a Barra de chocolate →
+   "Pedido enviado ao RH" e o saldo baixa.
+9. **Compartilhar** → **Propor uma jornada**: "Quem sabe ensina. A Maria propõe uma jornada com o que sabe; se o RH
+   aprovar, ela ganha pontos pelas horas de treino que poupou."
+
+### Volta ao admin: Aprovações
+10. **Aprovações** (com o contador): abra **Como conferir uma devolução** (Carla): lições com gabarito e
+    "3 h × R$ 12/h × 40% = 14 pts" — o gestor ajusta e **Aprovar e criar a jornada**. "O conhecimento que estava só na
+    cabeça da veterana vira documentação da empresa."
 
 ### Volta ao admin: Setores e Dashboard
 8. **Setores** → **Atendimento**: "Cada pessoa do setor numa linha: progresso, nota contra a meta, quando estudou e a
@@ -65,7 +75,7 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 ## Preparação (10 min antes)
 - `cd ~/projects/startup_weekend/app && make dev` (http://localhost:3000) e `bin/rails db:seed`.
 - `bin/demo_check` — tem que terminar com "Tudo pronto para a demo."
-- Janela 1 (admin) logada no Dashboard; janela 2 estreita (novo@) na tela de login; janela 3 (colab@) na Minha jornada.
+- Janela 1 (admin) logada no Dashboard; janela 2 estreita (novo@) na tela de login; janela 3 (colab@) no Início.
 - Zoom do navegador em 110–125% se o projetor for pequeno.
 - Vídeo aberto no QuickTime, em tela cheia, pausado no início.
 
