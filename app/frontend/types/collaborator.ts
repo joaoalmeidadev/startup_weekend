@@ -96,3 +96,42 @@ export type Learner = {
   streak_days: number
   badges: Badge[]
 }
+
+// A reward as the collaborator sees it: only points, never the R$ cost (stock null = unlimited)
+export type CollaboratorReward = {
+  id: string
+  name: string
+  icon: string
+  category: string
+  points: number
+  stock: number | null
+}
+
+export type RedeemedReward = { name: string; date: string; points: number }
+
+export type RewardsPage = { balance: number; rewards: CollaboratorReward[]; redeemed: RedeemedReward[] }
+
+export type ContributionStatus = 'pending' | 'approved' | 'changes_requested'
+
+export type ContributionLesson = {
+  title: string
+  question: { prompt: string; options: { text: string; correct: boolean }[] }
+}
+
+// A journey the collaborator proposed to share what she knows; the admin approves it and decides the points
+export type Contribution = {
+  id: string
+  author: string
+  title: string
+  sector: string
+  hours: number
+  sent_on: string
+  status: ContributionStatus
+  awarded_points: number | null
+  suggested_points: number
+  lessons: ContributionLesson[]
+}
+
+export type ContributionsPage = { contributions: Contribution[]; earned: number }
+
+export type ContributionForm = { sectors: string[]; points_per_hour: number }
