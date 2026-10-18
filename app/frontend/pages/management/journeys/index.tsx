@@ -1,5 +1,4 @@
 import { Head, Link, usePage } from '@inertiajs/react'
-import { ContentPipeline } from '@/components/ContentPipeline'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { AudienceOption, JourneySummary } from '@/types/management'
@@ -24,7 +23,6 @@ function KindLegend() {
 function JourneysHeader() {
   return (
     <section className="flex flex-col gap-space-xs">
-      <ContentPipeline current="journeys" />
       <div className="flex flex-wrap items-center justify-between gap-space-md">
         <h1 className="text-headline-xl tracking-tight text-on-surface">Jornadas</h1>
         <Link

@@ -13,15 +13,13 @@ describe('LibrariesShow', () => {
     page.props = { library: contentLibrary, manager }
   })
 
-  it('is the Biblioteca, active in the navigation and first step of the content path', () => {
+  it('is the Biblioteca, active in the navigation, with no content path strip on top', () => {
     render(<LibrariesShow />)
 
     expect(screen.getByRole('heading', { level: 1, name: 'Biblioteca' })).toBeInTheDocument()
     const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
     expect(nav.getByRole('link', { name: /Biblioteca/ })).toHaveAttribute('aria-current', 'page')
-    const pipeline = within(screen.getByRole('navigation', { name: 'Caminho do conteúdo' }))
-    expect(pipeline.getByRole('link', { name: 'Biblioteca' })).toHaveAttribute('aria-current', 'step')
-    expect(pipeline.getByRole('link', { name: 'Jornadas' })).toHaveAttribute('href', '/management/journeys')
+    expect(screen.queryByRole('navigation', { name: 'Caminho do conteúdo' })).not.toBeInTheDocument()
   })
 
   it('starts a new content from the main button', () => {

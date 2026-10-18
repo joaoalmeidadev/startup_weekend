@@ -57,13 +57,10 @@ describe('JourneysIndex', () => {
     )
   })
 
-  it('is the second step of the content path', () => {
+  it('has no content path strip above the title', () => {
     render(<JourneysIndex />)
 
-    const pipeline = within(screen.getByRole('navigation', { name: 'Caminho do conteúdo' }))
-    expect(pipeline.getByRole('link', { name: 'Jornadas' })).toHaveAttribute('aria-current', 'step')
-    expect(pipeline.getByRole('link', { name: 'Biblioteca' })).toHaveAttribute('href', '/management/library')
-    expect(pipeline.getByText('Colaborador')).toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Caminho do conteúdo' })).not.toBeInTheDocument()
   })
 
   it('explains the three kinds of journey as a plain legend, not as buttons', () => {

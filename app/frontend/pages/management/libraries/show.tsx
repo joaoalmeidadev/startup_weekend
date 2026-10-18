@@ -1,5 +1,4 @@
 import { Head, Link, usePage } from '@inertiajs/react'
-import { ContentPipeline } from '@/components/ContentPipeline'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { ModuleSummary } from '@/types/management'
@@ -9,7 +8,6 @@ function LibraryHeader() {
   return (
     <section className="flex flex-col justify-between gap-space-md md:flex-row md:items-end">
       <div className="flex flex-col gap-space-xs">
-        <ContentPipeline current="library" />
         <h1 className="text-headline-xl tracking-tight text-on-surface">Biblioteca</h1>
         <p className="text-body-md text-on-surface-variant">O que alimenta as jornadas.</p>
       </div>
