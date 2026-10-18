@@ -10,7 +10,8 @@ module Management
       {
         journey: @journey&.slice(:id, :name),
         generated: {lessons: 8, review_path: Rails.application.routes.url_helpers.management_lesson_review_path(1)},
-        competency_groups: competency_groups
+        competency_groups: competency_groups,
+        company_rule: PointsRule.new.props
       }
     end
 

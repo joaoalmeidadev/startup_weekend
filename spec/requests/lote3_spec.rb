@@ -18,6 +18,12 @@ RSpec.describe "Remaining mocked screens", :inertia do
       expect_inertia.to render_component("management/learning_modules/new")
     end
 
+    it "brings the company training cost to prefill who would give the training" do
+      get new_management_learning_module_path
+
+      expect(inertia.props[:company_rule]).to include(teacher_salary: 4400, learner_salary: 2200)
+    end
+
     it "works without a journey" do
       get new_management_learning_module_path
 

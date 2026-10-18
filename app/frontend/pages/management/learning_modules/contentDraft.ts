@@ -12,6 +12,9 @@ export type ContentDraft = {
   origin: Origin
   competency: string
   newCompetency: string
+  // In-person training this content replaces: how long it takes and the salary of who would give it
+  hours: string
+  teacherSalary: number
 }
 
 // The option that lets the manager type a competency that is not in any goal yet
@@ -21,7 +24,7 @@ const ORIGIN_FOR: Record<Material, Origin> = { file: 'ai', lessons: 'company' }
 
 export const emptyLesson = (): DraftLesson => ({ title: '', text: '' })
 
-export function emptyDraft(): ContentDraft {
+export function emptyDraft(teacherSalary = 0): ContentDraft {
   return {
     name: '',
     material: 'file',
@@ -30,6 +33,8 @@ export function emptyDraft(): ContentDraft {
     origin: 'ai',
     competency: '',
     newCompetency: '',
+    hours: '',
+    teacherSalary,
   }
 }
 
@@ -52,5 +57,10 @@ export function chosenCompetency(draft: ContentDraft) {
 }
 
 export function canSubmit(draft: ContentDraft) {
-  return draft.name.trim() !== '' && hasMaterial(draft) && isSingleWord(chosenCompetency(draft))
+  return (
+    draft.name.trim() !== '' &&
+    hasMaterial(draft) &&
+    isSingleWord(chosenCompetency(draft)) &&
+    Number(draft.hours) > 0
+  )
 }

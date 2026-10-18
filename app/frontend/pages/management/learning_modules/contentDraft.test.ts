@@ -12,6 +12,7 @@ const draft = (overrides: Partial<ContentDraft>): ContentDraft => ({
   ...emptyDraft(),
   name: 'Trocas',
   competency: 'Comunicação',
+  hours: '4',
   ...overrides,
 })
 
@@ -55,5 +56,15 @@ describe('contentDraft', () => {
     expect(canSubmit(fresh('Pontualidade'))).toBe(true)
     expect(canSubmit(fresh('Boa vontade'))).toBe(false)
     expect(canSubmit(fresh(''))).toBe(false)
+  })
+
+  it('needs the hours of in-person training the content replaces', () => {
+    expect(canSubmit(draft({ fileName: 'a.pdf', hours: '' }))).toBe(false)
+    expect(canSubmit(draft({ fileName: 'a.pdf', hours: '0' }))).toBe(false)
+    expect(canSubmit(draft({ fileName: 'a.pdf', hours: '1.5' }))).toBe(true)
+  })
+
+  it('starts who would give the training at the company default', () => {
+    expect(emptyDraft(4400)).toMatchObject({ hours: '', teacherSalary: 4400 })
   })
 })

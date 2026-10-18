@@ -5,6 +5,9 @@ import { withMaterial, type ContentDraft, type Material } from './contentDraft'
 
 const SAMPLE_NAME = 'Rotinas de atendimento'
 const SAMPLE_COMPETENCY = 'Rotinas'
+// The sample SAC manual: 6 h of training the supervisor would give
+const SAMPLE_HOURS = '6'
+const SAMPLE_TEACHER_SALARY = 5500
 const MATERIALS: { value: Material; label: string }[] = [
   { value: 'file', label: 'Enviar arquivo' },
   { value: 'lessons', label: 'Escrever as lições' },
@@ -42,6 +45,8 @@ export function ContentBlock({ draft, onChange }: BlockProps) {
       fileName: SAMPLE_FILE,
       name: draft.name.trim() ? draft.name : SAMPLE_NAME,
       competency: draft.competency || SAMPLE_COMPETENCY,
+      hours: draft.hours || SAMPLE_HOURS,
+      teacherSalary: SAMPLE_TEACHER_SALARY,
     })
 
   return (

@@ -13,6 +13,7 @@ function renderForm(props: { journey?: typeof journey | null } = {}) {
   page.props = {
     journey: props.journey ?? null,
     generated: { lessons: 8, review_path: '/management/lesson_reviews/1' },
+    company_rule: { teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4 },
     competency_groups: [
       { label: 'Atendimento', competencies: ['Comunicação', 'Reclamações'] },
       { label: 'Staff (grupo)', competencies: ['Colaboração'] },
@@ -26,6 +27,8 @@ function renderForm(props: { journey?: typeof journey | null } = {}) {
 const writeLessons = () => userEvent.click(screen.getByRole('radio', { name: /Escrever as lições/ }))
 const typeName = (name: string) => userEvent.type(screen.getByLabelText('Nome do conteúdo'), name)
 const pickCompetency = (name: string) => userEvent.selectOptions(screen.getByLabelText('Competência'), name)
+const typeHours = (hours: string) =>
+  userEvent.type(screen.getByLabelText('Quanto tempo levaria para treinar isso pessoalmente? (h)'), hours)
 
 describe('LearningModulesNew', () => {
   beforeEach(() => {
@@ -87,6 +90,7 @@ describe('LearningModulesNew', () => {
     await writeLessons()
     await typeName('Trocas')
     await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+    await typeHours('4')
 
     const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
     expect(save).toBeDisabled()
@@ -162,6 +166,7 @@ describe('LearningModulesNew', () => {
     const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
     await typeName('Trocas')
     await pickCompetency('Comunicação')
+    await typeHours('4')
     expect(save).toBeDisabled()
     await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
     await userEvent.click(save)
@@ -178,6 +183,7 @@ describe('LearningModulesNew', () => {
 
     await typeName('Trocas')
     await pickCompetency('Comunicação')
+    await typeHours('4')
     await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
     await userEvent.click(screen.getByRole('button', { name: /Salvar na Biblioteca/ }))
 
@@ -191,6 +197,7 @@ describe('LearningModulesNew', () => {
     await userEvent.click(screen.getByRole('radio', { name: /Produto da empresa/ }))
     await typeName('Trocas')
     await pickCompetency('Comunicação')
+    await typeHours('4')
     expect(screen.getByRole('button', { name: /Salvar na Biblioteca/ })).toBeDisabled()
 
     await userEvent.upload(
@@ -210,5 +217,36 @@ describe('LearningModulesNew', () => {
 
     expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeDisabled()
     expect(screen.getByText('A IA precisa de um arquivo para criar as lições.')).toBeInTheDocument()
+  })
+
+  it('asks how long the in-person training would take and who would give it', async () => {
+    renderForm()
+
+    const training = within(
+      screen.getByRole('region', { name: 'Treino presencial que este conteúdo substitui' }),
+    )
+    expect(training.getByLabelText('Salário de quem daria esse treino (R$)')).toHaveValue(4400)
+    expect(training.getByText('= R$ 20/h')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
+
+    expect(training.getByLabelText('Quanto tempo levaria para treinar isso pessoalmente? (h)')).toHaveValue(6)
+    expect(training.getByLabelText('Salário de quem daria esse treino (R$)')).toHaveValue(5500)
+    expect(
+      training.getByText('Cada pessoa que estudar isto economiza 6 h × (R$ 25 + R$ 10)/h = R$ 210 de treino'),
+    ).toBeInTheDocument()
+  })
+
+  it('needs the hours before saving', async () => {
+    renderForm()
+    await writeLessons()
+    await typeName('Trocas')
+    await pickCompetency('Comunicação')
+    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+
+    const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
+    expect(save).toBeDisabled()
+    await typeHours('4')
+    expect(save).toBeEnabled()
   })
 })

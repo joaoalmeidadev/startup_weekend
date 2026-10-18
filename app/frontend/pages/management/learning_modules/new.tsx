@@ -8,6 +8,7 @@ import { GeneratingLessons, LessonsCreated } from './AiGeneration'
 import { ContentBlock } from './ContentBlock'
 import { OriginBlock } from './OriginBlock'
 import { SubmitArea } from './SubmitArea'
+import { TrainingBlock } from './TrainingBlock'
 import { emptyDraft } from './contentDraft'
 
 const LIBRARY_PATH = '/management/library'
@@ -30,9 +31,14 @@ function BackLink({ journey }: Pick<NewModuleProps, 'journey'>) {
 }
 
 // The library keeps what exists; who receives it is decided in the journeys
-function NewContentForm({ journey, generated, competency_groups: competencyGroups }: NewModuleProps) {
+function NewContentForm({
+  journey,
+  generated,
+  competency_groups: competencyGroups,
+  company_rule: companyRule,
+}: NewModuleProps) {
   const notify = useMockNotice()
-  const [draft, setDraft] = useState(emptyDraft)
+  const [draft, setDraft] = useState(() => emptyDraft(companyRule.teacher_salary))
   const [phase, setPhase] = useState<Phase>('form')
   const finishGeneration = useCallback(() => setPhase('generated'), [])
 
@@ -59,6 +65,7 @@ function NewContentForm({ journey, generated, competency_groups: competencyGroup
     <>
       <ContentBlock draft={draft} onChange={setDraft} />
       <OriginBlock draft={draft} competencyGroups={competencyGroups} onChange={setDraft} />
+      <TrainingBlock draft={draft} companyRule={companyRule} onChange={setDraft} />
       <SubmitArea draft={draft} onSubmit={submit} />
     </>
   )

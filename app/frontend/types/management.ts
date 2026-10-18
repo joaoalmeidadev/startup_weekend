@@ -134,6 +134,8 @@ export type NewModuleProps = {
   journey: { id: string; name: string } | null
   generated: { lessons: number; review_path: string }
   competency_groups: CompetencyGroup[]
+  // Prefills who would give the in-person training
+  company_rule: PointsRule
 }
 
 export type CompetencyGroup = { label: string; competencies: string[] }
