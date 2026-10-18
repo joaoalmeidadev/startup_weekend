@@ -24,6 +24,15 @@ RSpec.describe "Management people", :inertia do
       expect(inertia.props[:sectors].sum { |sector| sector[:count] }).to eq(people.size)
     end
 
+    it "tells which journey each sector receives, for the invite" do
+      sign_in create(:user, :hr)
+
+      get management_people_path
+
+      journeys = inertia.props[:sectors].to_h { |sector| [sector[:name], sector[:journey]] }
+      expect(journeys).to eq("Atendimento" => "Onboarding Atendimento", "Comercial" => nil, "Logística" => "Onboarding Logística")
+    end
+
     it "shows each person's progress, score against the sector goal, activity and forecast" do
       sign_in create(:user, :hr)
 

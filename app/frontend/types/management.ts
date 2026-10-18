@@ -21,7 +21,7 @@ export type Person = {
 
 export type PeopleProps = {
   summary: Record<PersonStatus, number>
-  sectors: { name: string; count: number }[]
+  sectors: { name: string; count: number; journey: string | null }[]
   people: Person[]
 }
 

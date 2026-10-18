@@ -157,7 +157,7 @@ export default function PeopleIndex() {
               <Icon name="download" className="text-[1.125rem]" />
               Exportar CSV
             </a>
-            <InviteMenu />
+            <InviteMenu sectors={props.sectors} />
           </div>
         </section>
 

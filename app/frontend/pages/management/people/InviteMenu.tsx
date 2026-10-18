@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Icon } from '@/components/Icon'
 import { Modal } from '@/components/Modal'
 import { useMockNotice } from '@/components/MockNotice'
+import type { PeopleProps } from '@/types/management'
+import { NEW_SECTOR, SectorField } from './SectorField'
 
 type Kind = 'email' | 'sheet'
 
@@ -10,16 +12,41 @@ const OPTIONS: { kind: Kind; icon: string; title: string; hint: string }[] = [
   { kind: 'sheet', icon: 'upload_file', title: 'Por planilha (CSV/XLS)', hint: 'Importação em lote' },
 ]
 
-function InviteModal({ kind, onClose }: { kind: Kind; onClose: () => void }) {
+type InviteModalProps = { kind: Kind; sectors: PeopleProps['sectors']; onClose: () => void }
+
+const plural = (count: number) => (count === 1 ? '1 convite enviado' : `${count} convites enviados`)
+
+function sentMessage(emails: number, sector: string, created: boolean) {
+  if (created) return `Setor ${sector} criado e ${plural(emails)} (simulação).`
+  return `${plural(emails)} para ${sector} (simulação).`
+}
+
+function InviteModal({ kind, sectors, onClose }: InviteModalProps) {
   const notify = useMockNotice()
   const [value, setValue] = useState('')
+  const [sector, setSector] = useState('')
+  const [newSector, setNewSector] = useState('')
+  const creating = sector === NEW_SECTOR
+  const sectorName = creating ? newSector.trim() : sector
+  const emails = value.split('\n').filter((line) => line.trim()).length
+  const ready = kind === 'sheet' ? Boolean(value) : emails > 0 && Boolean(sectorName)
+
   const send = () => {
-    notify('Convites enviados (simulação).')
+    notify(kind === 'sheet' ? 'Convites enviados (simulação).' : sentMessage(emails, sectorName, creating))
     onClose()
   }
 
   return (
     <Modal icon={kind === 'email' ? 'mail' : 'upload_file'} title="Convidar pessoas" onClose={onClose}>
+      {kind === 'email' && (
+        <SectorField
+          sectors={sectors}
+          selected={sector}
+          newName={newSector}
+          onSelect={setSector}
+          onNewName={setNewSector}
+        />
+      )}
       {kind === 'email' ? (
         <label className="flex flex-col gap-space-xs">
           <span className="text-label-md text-on-surface">E-mails (um por linha)</span>
@@ -48,7 +75,7 @@ function InviteModal({ kind, onClose }: { kind: Kind; onClose: () => void }) {
       )}
       <button
         type="button"
-        disabled={!value.trim()}
+        disabled={!ready}
         onClick={send}
         className="flex min-h-[3rem] w-full items-center justify-center rounded-xl bg-primary text-label-lg text-on-primary hover:bg-primary-container disabled:opacity-50"
       >
@@ -58,7 +85,7 @@ function InviteModal({ kind, onClose }: { kind: Kind; onClose: () => void }) {
   )
 }
 
-export function InviteMenu() {
+export function InviteMenu({ sectors }: { sectors: PeopleProps['sectors'] }) {
   const [open, setOpen] = useState(false)
   const [kind, setKind] = useState<Kind | null>(null)
 
@@ -94,7 +121,7 @@ export function InviteMenu() {
           ))}
         </div>
       )}
-      {kind && <InviteModal kind={kind} onClose={() => setKind(null)} />}
+      {kind && <InviteModal kind={kind} sectors={sectors} onClose={() => setKind(null)} />}
     </div>
   )
 }

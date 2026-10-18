@@ -24,7 +24,12 @@ module Management
 
     def sectors
       counts = PEOPLE.pluck(:sector).tally
-      SectorGoalMock::SECTORS.map { |name| {name: name, count: counts.fetch(name, 0)} }
+      SectorGoalMock::SECTORS.map { |name| {name: name, count: counts.fetch(name, 0), journey: journey_for(name)} }
+    end
+
+    # The journey a new person of the sector receives when invited
+    def journey_for(sector)
+      JourneyCatalog.all.find { |journey| journey[:sector] == sector }&.dig(:name)
     end
 
     def csv_row(overview)

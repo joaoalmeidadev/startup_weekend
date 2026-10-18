@@ -34,8 +34,9 @@ const person = (overrides: Partial<Person> & Pick<Person, 'id' | 'name' | 'secto
 export const peopleProps: PeopleProps = {
   summary: { leveled: 1, on_track: 1, late: 1 },
   sectors: [
-    { name: 'Atendimento', count: 2 },
-    { name: 'Logística', count: 1 },
+    { name: 'Atendimento', count: 2, journey: 'Onboarding Atendimento' },
+    { name: 'Comercial', count: 0, journey: null },
+    { name: 'Logística', count: 1, journey: 'Onboarding Logística' },
   ],
   people: [
     person({

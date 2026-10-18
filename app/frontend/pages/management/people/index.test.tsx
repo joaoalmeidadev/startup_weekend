@@ -90,15 +90,51 @@ describe('PeopleIndex', () => {
     )
   })
 
-  it('invites people by e-mail (simulated)', async () => {
-    render(<PeopleIndex />)
-
+  const openEmailInvite = async () => {
     await userEvent.click(screen.getByRole('button', { name: /Convidar pessoas/ }))
     await userEvent.click(screen.getByRole('button', { name: /Por e-mail/ }))
-    await userEvent.type(screen.getByLabelText('E-mails (um por linha)'), 'joana@sul.com')
-    await userEvent.click(screen.getByRole('button', { name: 'Enviar convites' }))
+  }
 
-    expect(screen.getByRole('status')).toHaveTextContent('Convites enviados (simulação).')
+  it('invites people by e-mail into a sector, showing the journey they get', async () => {
+    render(<PeopleIndex />)
+    await openEmailInvite()
+
+    const send = screen.getByRole('button', { name: 'Enviar convites' })
+    await userEvent.type(screen.getByLabelText('E-mails (um por linha)'), 'joana@sul.com\ncarlos@sul.com')
+    expect(send).toBeDisabled()
+
+    await userEvent.selectOptions(within(screen.getByRole('dialog')).getByLabelText('Setor'), 'Atendimento')
+    expect(screen.getByText('Recebe a jornada Onboarding Atendimento')).toBeInTheDocument()
+    await userEvent.click(send)
+
+    expect(screen.getByRole('status')).toHaveTextContent('2 convites enviados para Atendimento (simulação).')
+  })
+
+  it('warns when the sector has no journey yet', async () => {
+    render(<PeopleIndex />)
+    await openEmailInvite()
+
+    await userEvent.selectOptions(within(screen.getByRole('dialog')).getByLabelText('Setor'), 'Comercial')
+
+    expect(screen.getByText(/Comercial ainda não tem jornada/)).toBeInTheDocument()
+  })
+
+  it('creates a new sector right in the invite', async () => {
+    render(<PeopleIndex />)
+    await openEmailInvite()
+
+    await userEvent.selectOptions(within(screen.getByRole('dialog')).getByLabelText('Setor'), '+ Criar setor')
+    await userEvent.type(screen.getByLabelText('E-mails (um por linha)'), 'ana@sul.com')
+    const send = screen.getByRole('button', { name: 'Enviar convites' })
+    expect(send).toBeDisabled()
+
+    await userEvent.type(screen.getByLabelText('Nome do novo setor'), 'Financeiro')
+    expect(screen.getByText(/Financeiro ainda não tem jornada/)).toBeInTheDocument()
+    await userEvent.click(send)
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Setor Financeiro criado e 1 convite enviado (simulação).',
+    )
   })
 
   it('highlights Pessoas in the navigation', () => {
