@@ -19,6 +19,7 @@ import type {
   SectorSummary,
   TeamDashboard,
 } from '@/types/management'
+import type { SectorTrainingCost, SectorTrainingCostProps, SectorsIndexProps } from '@/types/management'
 
 export const manager: Manager = {
   name: 'Ana Lima',
@@ -498,3 +499,25 @@ export const rewardsProps: RewardsProps = {
 export const pointsRule: PointsRule = { teacher_salary: 4400, learner_salary: 2200, reward_share: 0.4 }
 
 export const libraryCompetencies = ['Comunicação', 'Cultura', 'Rotinas', 'Sistema']
+
+// Training cost on the Setores tab: the company rule, Logística with its own salaries and Staff (a group) with none
+const companyCost: SectorTrainingCost = { own: false, teacher_salary: 4400, learner_salary: 2200 }
+
+export const logisticsTrainingCost: SectorTrainingCost = {
+  own: true,
+  teacher_salary: 3960,
+  learner_salary: 1980,
+}
+
+export const sectorsIndexProps: SectorsIndexProps = {
+  company_rule: pointsRule,
+  sectors: sectorSummaries.map((sector) => ({
+    ...sector,
+    training_cost: { Atendimento: companyCost, Logística: logisticsTrainingCost }[sector.name] ?? null,
+  })),
+}
+
+export const sectorTrainingCostProps: SectorTrainingCostProps = {
+  company_rule: pointsRule,
+  training_cost: companyCost,
+}

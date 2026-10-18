@@ -4,9 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   groupDetail,
   libraryCompetencies,
+  logisticsTrainingCost,
   manager,
   peopleProps,
   sectorDetail,
+  sectorTrainingCostProps,
   sectorWithoutGoal,
 } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
@@ -15,6 +17,8 @@ import SectorsShow from './show'
 vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).inertiaMock)
 
 const ruler = (name: string) => screen.getByLabelText(`Meta de ${name}`) as HTMLInputElement
+const goalBlock = () => within(screen.getByRole('region', { name: 'Meta' }))
+const costBlock = () => within(screen.getByRole('region', { name: 'Custo do treino' }))
 const peopleBlock = () => within(screen.getByRole('region', { name: 'Pessoas' }))
 
 describe('SectorsShow', () => {
@@ -24,6 +28,7 @@ describe('SectorsShow', () => {
       sector: sectorDetail,
       invite_sectors: peopleProps.sectors,
       library_competencies: libraryCompetencies,
+      ...sectorTrainingCostProps,
       manager,
     }
   })
@@ -133,12 +138,51 @@ describe('SectorsShow', () => {
     )
   })
 
+  describe('training cost', () => {
+    it('sits between the people and the goal', () => {
+      render(<SectorsShow />)
+
+      const titles = screen.getAllByRole('region').map((region) => region.getAttribute('aria-labelledby'))
+      const titleOf = (id: string | null) => document.getElementById(id ?? '')?.textContent
+      expect(titles.map(titleOf)).toEqual(['Pessoas', 'Custo do treino', 'Meta'])
+    })
+
+    it('uses the company cost by default', () => {
+      render(<SectorsShow />)
+
+      expect(costBlock().getByRole('radio', { name: 'Usar o padrão da empresa (R$ 30/h)' })).toBeChecked()
+      expect(costBlock().queryByLabelText('Salário mensal de quem ensina (R$)')).not.toBeInTheDocument()
+      expect(costBlock().getByText('Neste setor, 1 h de treino vira 12 pts')).toBeInTheDocument()
+    })
+
+    it('gives the sector its own cost, starting from the company one', async () => {
+      render(<SectorsShow />)
+
+      await userEvent.click(costBlock().getByRole('radio', { name: 'Valor próprio deste setor' }))
+      const teacher = costBlock().getByLabelText('Salário mensal de quem ensina (R$)')
+      expect(teacher).toHaveValue(4400)
+
+      fireEvent.change(teacher, { target: { value: '3960' } })
+      fireEvent.change(costBlock().getByLabelText('Salário mensal de quem aprende (R$)'), {
+        target: { value: '1980' },
+      })
+      expect(costBlock().getByText('Neste setor, 1 h de treino vira 11 pts')).toBeInTheDocument()
+
+      await userEvent.click(costBlock().getByRole('button', { name: 'Salvar' }))
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'Custo do treino de Atendimento salvo (simulação).',
+      )
+    })
+  })
+
   describe('when it has no goal yet', () => {
     beforeEach(() => {
       page.props = {
         sector: sectorWithoutGoal,
         invite_sectors: peopleProps.sectors,
         library_competencies: libraryCompetencies,
+        company_rule: sectorTrainingCostProps.company_rule,
+        training_cost: logisticsTrainingCost,
         manager,
       }
     })
@@ -148,10 +192,23 @@ describe('SectorsShow', () => {
 
       expect(screen.getByRole('heading', { name: 'Logística ainda não tem meta' })).toBeInTheDocument()
       expect(
-        screen.getAllByRole('radio').every((radio) => radio.getAttribute('aria-checked') === 'false'),
+        goalBlock()
+          .getAllByRole('radio')
+          .every((radio) => radio.getAttribute('aria-checked') === 'false'),
       ).toBe(true)
       expect(screen.queryByLabelText('Meta de Conferência')).not.toBeInTheDocument()
       expect(screen.getByRole('button', { name: /Convidar veteranos/ })).toBeInTheDocument()
+    })
+
+    it('shows its own training cost', async () => {
+      render(<SectorsShow />)
+
+      expect(costBlock().getByRole('radio', { name: 'Valor próprio deste setor' })).toBeChecked()
+      expect(costBlock().getByLabelText('Salário mensal de quem ensina (R$)')).toHaveValue(3960)
+      expect(costBlock().getByText('Neste setor, 1 h de treino vira 11 pts')).toBeInTheDocument()
+
+      await userEvent.click(costBlock().getByRole('radio', { name: /Usar o padrão da empresa/ }))
+      expect(costBlock().getByText('Neste setor, 1 h de treino vira 12 pts')).toBeInTheDocument()
     })
 
     it('shows the rulers once a level is picked', async () => {
@@ -171,8 +228,16 @@ describe('SectorsShow', () => {
         sector: groupDetail,
         invite_sectors: peopleProps.sectors,
         library_competencies: libraryCompetencies,
+        company_rule: sectorTrainingCostProps.company_rule,
+        training_cost: null,
         manager,
       }
+    })
+
+    it('has no training cost, since its people already belong to a work sector', () => {
+      render(<SectorsShow />)
+
+      expect(screen.queryByRole('region', { name: 'Custo do treino' })).not.toBeInTheDocument()
     })
 
     it('shows the Grupo tag and the work sector of each person', () => {

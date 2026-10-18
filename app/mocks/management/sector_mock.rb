@@ -8,7 +8,8 @@ module Management
     end
 
     def props
-      {sector: sector, invite_sectors: PeopleMock.new.sectors, library_competencies: ModuleCatalog.competencies}
+      {sector: sector, invite_sectors: PeopleMock.new.sectors, library_competencies: ModuleCatalog.competencies,
+       company_rule: PointsRule.new.props, training_cost: SectorTrainingCost.new(@sector).props}
     end
 
     private
