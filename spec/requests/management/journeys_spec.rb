@@ -4,12 +4,22 @@ RSpec.describe "Management journeys", :inertia do
   before { sign_in create(:user, :hr) }
 
   describe "GET /management/journeys" do
-    it "lists the journeys with their status and modules per stretch" do
+    it "lists the journeys with their kind, audience and module count" do
       get management_journeys_path
 
       expect_inertia.to render_component("management/journeys/index")
-      expect(inertia.props[:journeys].pluck(:name)).to eq(["Onboarding Atendimento", "Onboarding Logística", "Promoção para líder"])
-      expect(inertia.props[:journeys].first).to include(status: "active", modules_per_stretch: {base: 2, company: 2, sector: 2})
+      journeys = inertia.props[:journeys]
+      expect(journeys.pluck(:name)).to eq(["Base Nivela", "Jeito Distribuidora Sul", "Atendimento na prática",
+        "Logística na prática", "Promoção para líder"])
+      expect(journeys.pluck(:kind)).to eq(%w[base company sector sector company])
+      expect(journeys.third).to include(status: "active", modules_count: 2,
+        audience: {type: "sectors", names: ["Atendimento"]})
+    end
+
+    it "brings the sectors and groups to label the audience" do
+      get management_journeys_path
+
+      expect(inertia.props[:audience_options]).to include({name: "Staff", kind: "group", people_count: 4})
     end
 
     it "leaves the content library to its own page" do
@@ -19,19 +29,29 @@ RSpec.describe "Management journeys", :inertia do
     end
   end
 
+  describe "GET /management/journeys/new" do
+    it "offers the sectors, groups and people who can receive the journey" do
+      get new_management_journey_path
+
+      expect_inertia.to render_component("management/journeys/new")
+      expect(inertia.props[:audience_options].pluck(:name)).to eq(%w[Atendimento Comercial Logística Staff])
+      expect(inertia.props[:people]).to include("Maria Souza", "Marcos Oliveira")
+    end
+  end
+
   describe "GET /management/journeys/:id" do
-    it "renders the three fixed stretches with their modules in order" do
-      get management_journey_path("onboarding-atendimento")
+    it "renders the journey with its kind, audience and one ordered list of modules" do
+      get management_journey_path("jeito-distribuidora-sul")
 
       expect_inertia.to render_component("management/journeys/show")
-      stretches = inertia.props[:journey][:stretches]
-      expect(stretches.pluck(:key)).to eq(%w[base company sector])
-      expect(stretches.second[:modules].pluck(:id)).to eq(%w[nossa-historia-e-valores rotinas-de-atendimento])
-      expect(stretches.second[:modules].second).to include(source: "ai", teaching_hours: 6, lessons: 8)
+      journey = inertia.props[:journey]
+      expect(journey).to include(kind: "company", audience: {type: "sectors", names: %w[Atendimento Comercial Logística]})
+      expect(journey[:modules].pluck(:id)).to eq(%w[nossa-historia-e-valores rotinas-de-atendimento])
+      expect(journey[:modules].second).to include(source: "ai", teaching_hours: 6, lessons: 8)
     end
 
-    it "offers the whole catalog grouped by origin" do
-      get management_journey_path("onboarding-atendimento")
+    it "offers the whole Biblioteca grouped by origin, Nivela first" do
+      get management_journey_path("atendimento-na-pratica")
 
       catalog = inertia.props[:catalog]
       expect(catalog.pluck(:source)).to eq(%w[nivela ai company])
@@ -39,28 +59,44 @@ RSpec.describe "Management journeys", :inertia do
       expect(catalog.second[:modules].pluck(:source).uniq).to eq(["ai"])
     end
 
-    it "brings the sector goal competencies the journey should cover" do
-      get management_journey_path("onboarding-atendimento")
+    it "brings the goal of the first sector that receives the journey" do
+      get management_journey_path("atendimento-na-pratica")
 
       expect(inertia.props[:goal]).to include(
-        sector: "Atendimento",
+        sector: "Atendimento", slug: "atendimento",
         competencies: ["Comunicação e Escuta Ativa", "Resolução de Reclamações de Entrega",
-          "Uso do Sistema Interno de Pedidos", "Postura e Empatia com Clientes Difíceis", "Rotinas da Distribuidora"]
+          "Uso do Sistema Interno de Pedidos", "Postura e Empatia com Clientes Difíceis"]
       )
     end
 
-    it "offers the ready-made Nivela journey with Base and general sector products only" do
-      get management_journey_path("onboarding-atendimento")
+    it "uses the goal of a group too" do
+      get management_journey_path("promocao-para-lider")
 
-      ready = inertia.props[:ready_journey]
-      expect(ready.pluck(:key)).to eq(%w[base company sector])
-      expect(ready.flat_map { |stretch| stretch[:modules] }.pluck(:source).uniq).to eq(["nivela"])
-      expect(ready.third[:modules].pluck(:id)).to include("atendimento-ao-cliente")
-      expect(inertia.props[:start_ready]).to be(false)
+      expect(inertia.props[:goal]).to include(sector: "Staff", slug: "staff")
     end
 
-    it "starts from the ready-made journey when asked" do
-      get management_journey_path("onboarding-atendimento", ready: 1)
+    it "brings who can receive the journey" do
+      get management_journey_path("atendimento-na-pratica")
+
+      expect(inertia.props[:audience_options].pluck(:name)).to include("Staff")
+      expect(inertia.props[:people]).to include("Maria Souza")
+    end
+
+    it "offers the ready-made Base Nivela only on base journeys" do
+      get management_journey_path("base-nivela")
+
+      ready = inertia.props[:ready_journey]
+      expect(ready.pluck(:source).uniq).to eq(["nivela"])
+      expect(ready.pluck(:stretch).uniq).to eq(["base"])
+      expect(inertia.props[:start_ready]).to be(false)
+
+      get management_journey_path("atendimento-na-pratica")
+
+      expect(inertia.props[:ready_journey]).to be_nil
+    end
+
+    it "starts from the ready-made Base when asked" do
+      get management_journey_path("base-nivela", ready: 1)
 
       expect(inertia.props[:start_ready]).to be(true)
     end

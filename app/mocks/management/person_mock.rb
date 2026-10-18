@@ -1,5 +1,5 @@
 module Management
-  # Example detail of one person: their journey, how they study, their badge and the rewards they redeemed
+  # Example detail of one person: their path (every journey they receive), how they study, their badge and the rewards they redeemed
   class PersonMock
     def initialize(id)
       @person = PeopleMock::PEOPLE.find { |person| person[:name].parameterize == id }
@@ -8,7 +8,7 @@ module Management
 
     def props
       PersonOverview.new(@person).props.merge(
-        role: @person[:role], tenure: @person[:tenure], journey: journey,
+        role: @person[:role], tenure: @person[:tenure], path: path,
         study: study.props, competencies: study.competencies,
         badge: rewards.badge, milestones: rewards.milestones, rewards: rewards.rewards
       )
@@ -16,28 +16,25 @@ module Management
 
     private
 
-    def journey_data = @journey_data ||= JourneyCatalog.find(@person[:journey_id])
+    def path_ids = @path_ids ||= JourneyCatalog.path_for(@person)
 
-    def module_ids = JourneyCatalog::STRETCHES.keys.flat_map { |key| journey_data[:modules][key] }
+    def module_ids = path_ids.values.flatten
 
     def study = @study ||= PersonStudy.new(@person, module_ids)
 
-    def rewards = @rewards ||= PersonRewards.new(@person, journey, study)
+    def rewards = @rewards ||= PersonRewards.new(@person, study)
 
-    def journey
-      @journey ||= build_journey
-    end
-
-    def build_journey
+    # Base, Empresa and Setor, each named after the journeys that fill it
+    def path
+      names = JourneyCatalog.names_for(@person)
       position = 0
-      stretches = JourneyCatalog::STRETCHES.map do |key, title|
-        modules = journey_data[:modules][key].map do |id|
+      JourneyCatalog::STRETCHES.map do |kind, title|
+        modules = path_ids[kind].map do |id|
           position += 1
           {name: ModuleCatalog.find(id)[:name], status: module_status(position)}
         end
-        {title: title, modules: modules}
+        {title: title, journeys: names[kind], modules: modules}
       end
-      {id: journey_data[:id], name: journey_data[:name], stretches: stretches}
     end
 
     def module_status(position)

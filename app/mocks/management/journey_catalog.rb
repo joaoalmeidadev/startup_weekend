@@ -1,40 +1,41 @@
 module Management
-  # Example journeys built by HR. Stretches are fixed: Base → Empresa → Setor.
-  # The goal is the sector goal (Meta do setor) plus the company-specific competencies of the journey.
+  # Example journeys built by HR. Each one has a kind (Base, Empresa or Setor), who receives it
+  # (sectors/groups or specific people) and an ordered list of modules. A person receives every active
+  # journey that reaches them and studies them in the kind order: Base → Empresa → Setor.
   module JourneyCatalog
     STRETCHES = {base: "Base", company: "Empresa", sector: "Setor"}.freeze
 
-    # "Jornada pronta Nivela": only ready-made products, for a company that has no material yet
-    READY_MODULES = {
-      base: %w[raciocinio-logico interpretacao-de-instrucoes conversa-clara escrita-no-trabalho matematica-do-dia-a-dia],
-      company: [],
-      sector: %w[atendimento-ao-cliente resolucao-de-problemas trabalho-em-equipe]
-    }.freeze
+    # "Base Nivela pronta": only ready-made Nivela products, for a company that has no material yet
+    READY_BASE = %w[raciocinio-logico interpretacao-de-instrucoes conversa-clara escrita-no-trabalho matematica-do-dia-a-dia].freeze
+
+    ALL_SECTORS = %w[Atendimento Comercial Logística].freeze
 
     JOURNEYS = {
-      "onboarding-atendimento" => {
-        name: "Onboarding Atendimento", status: "active", people_in_progress: 14, badge: "Nivelado em Atendimento",
-        audience: ["Setor Atendimento", "Novatos"], sector: "Atendimento", extra_goal: ["Rotinas da Distribuidora"],
-        modules: {base: %w[conversa-clara matematica-do-dia-a-dia], company: %w[nossa-historia-e-valores rotinas-de-atendimento],
-                  sector: %w[tratamento-de-reclamacoes uso-do-sistema]}
+      "base-nivela" => {
+        name: "Base Nivela", kind: "base", status: "active", badge: "Base Nivela concluída",
+        audience: {type: "sectors", names: ALL_SECTORS}, modules: %w[conversa-clara matematica-do-dia-a-dia]
       },
-      "onboarding-logistica" => {
-        name: "Onboarding Logística", status: "active", people_in_progress: 12, badge: "Nivelado em Logística",
-        audience: ["Setor Logística", "Novatos"], sector: "Logística",
-        extra_goal: ["Matemática básica", "Raciocínio lógico", "Cultura da empresa", "Conferência e expedição", "Segurança no armazém"],
-        modules: {base: %w[matematica-do-dia-a-dia raciocinio-logico], company: %w[nossa-historia-e-valores],
-                  sector: %w[conferencia-de-carga]}
+      "jeito-distribuidora-sul" => {
+        name: "Jeito Distribuidora Sul", kind: "company", status: "active", badge: "Jeito Distribuidora Sul",
+        audience: {type: "sectors", names: ALL_SECTORS}, modules: %w[nossa-historia-e-valores rotinas-de-atendimento]
+      },
+      "atendimento-na-pratica" => {
+        name: "Atendimento na prática", kind: "sector", status: "active", badge: "Nivelado em Atendimento",
+        audience: {type: "sectors", names: ["Atendimento"]}, modules: %w[tratamento-de-reclamacoes uso-do-sistema]
+      },
+      "logistica-na-pratica" => {
+        name: "Logística na prática", kind: "sector", status: "active", badge: "Nivelado em Logística",
+        audience: {type: "sectors", names: ["Logística"]}, modules: %w[conferencia-de-carga seguranca-no-armazem]
       },
       "promocao-para-lider" => {
-        name: "Promoção para líder", status: "draft", people_in_progress: 0, badge: "Nivelado em Liderança",
-        audience: ["3 pessoas selecionadas"], sector: nil,
-        extra_goal: ["Comunicação e Escuta Ativa", "Postura e Empatia com Clientes Difíceis", "Português e escrita", "Raciocínio lógico"],
-        modules: {base: %w[postura-e-empatia escrita-no-trabalho], company: [], sector: []}
+        name: "Promoção para líder", kind: "company", status: "draft", badge: "Pronto para liderar",
+        audience: {type: "sectors", names: ["Staff"]}, modules: %w[postura-e-empatia trabalho-em-equipe escrita-no-trabalho]
       }
     }.freeze
 
     def self.find(id)
-      JOURNEYS.fetch(id) { raise ActiveRecord::RecordNotFound, "Journey #{id} not found" }.merge(id: id)
+      journey = JOURNEYS.fetch(id) { raise ActiveRecord::RecordNotFound, "Journey #{id} not found" }
+      journey.merge(id: id, people_in_progress: people_in_progress(journey))
     end
 
     def self.all
@@ -42,7 +43,56 @@ module Management
     end
 
     def self.using_module(module_id)
-      all.select { |journey| journey[:modules].values.flatten.include?(module_id) }
+      all.select { |journey| journey[:modules].include?(module_id) }
     end
+
+    # Drafts reach nobody yet
+    def self.active = all.select { |journey| journey[:status] == "active" }
+
+    def self.for_person(person)
+      active.select { |journey| reaches?(journey[:audience], person) }
+    end
+
+    def self.for_sector(sector)
+      active.select { |journey| journey[:audience][:type] == "sectors" && journey[:audience][:names].include?(sector) }
+    end
+
+    # Module ids by kind, from every journey the person receives; a module shared by two journeys counts once
+    def self.path_for(person)
+      seen = []
+      by_kind(person) do |journeys|
+        (journeys.flat_map { |journey| journey[:modules] } - seen).uniq.tap { |ids| seen.concat(ids) }
+      end
+    end
+
+    def self.names_for(person)
+      by_kind(person) { |journeys| journeys.pluck(:name) }
+    end
+
+    def self.by_kind(person)
+      journeys = for_person(person)
+      STRETCHES.keys.to_h { |kind| [kind, yield(journeys.select { |journey| journey[:kind] == kind.to_s })] }
+    end
+
+    def self.reaches?(audience, person)
+      return audience[:names].include?(person[:name]) if audience[:type] == "people"
+
+      audience[:names].any? { |name| SectorCatalog.members(name).any? { |member| member[:name] == person[:name] } }
+    end
+
+    # Audience members still leveling
+    def self.people_in_progress(journey)
+      return 0 if journey[:status] == "draft"
+
+      audience_members(journey[:audience]).count { |person| person[:status] != "leveled" }
+    end
+
+    def self.audience_members(audience)
+      return PeopleMock::PEOPLE.select { |person| audience[:names].include?(person[:name]) } if audience[:type] == "people"
+
+      audience[:names].flat_map { |name| SectorCatalog.members(name) }.uniq
+    end
+
+    private_class_method :by_kind, :reaches?, :people_in_progress, :audience_members
   end
 end

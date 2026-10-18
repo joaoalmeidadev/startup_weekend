@@ -24,13 +24,27 @@ RSpec.describe "Management people", :inertia do
       expect(inertia.props[:sectors].sum { |sector| sector[:count] }).to eq(people.size)
     end
 
-    it "tells which journey each sector receives, for the invite" do
+    it "tells which journeys each sector receives, for the invite" do
       sign_in create(:user, :hr)
 
       get management_people_path
 
-      journeys = inertia.props[:sectors].to_h { |sector| [sector[:name], sector[:journey]] }
-      expect(journeys).to eq("Atendimento" => "Onboarding Atendimento", "Comercial" => nil, "Logística" => "Onboarding Logística")
+      journeys = inertia.props[:sectors].to_h { |sector| [sector[:name], sector[:journeys]] }
+      expect(journeys).to eq(
+        "Atendimento" => ["Base Nivela", "Jeito Distribuidora Sul", "Atendimento na prática"],
+        "Comercial" => ["Base Nivela", "Jeito Distribuidora Sul"],
+        "Logística" => ["Base Nivela", "Jeito Distribuidora Sul", "Logística na prática"]
+      )
+    end
+
+    it "keeps the leveled at the end of their path and the others before it" do
+      sign_in create(:user, :hr)
+
+      get management_people_path
+
+      leveled, others = inertia.props[:people].partition { |person| person[:status] == "leveled" }
+      expect(leveled.map { |person| person[:progress][:percent] }).to all(eq(100))
+      expect(others.map { |person| person[:progress][:percent] }).to all(be < 100)
     end
 
     it "shows each person's progress, score against the sector goal, activity and forecast" do
@@ -109,7 +123,7 @@ RSpec.describe "Management people", :inertia do
   describe "GET /management/people/:id" do
     before { sign_in create(:user, :hr) }
 
-    it "renders the person with their journey and leveling snapshot" do
+    it "renders the person with their path and leveling snapshot" do
       get management_person_path("maria-souza")
 
       expect_inertia.to render_component("management/people/show")
@@ -117,7 +131,11 @@ RSpec.describe "Management people", :inertia do
       expect(person).to include(name: "Maria Souza", status: "on_track", score: 68, goal: 75,
         forecast: "Nivela em ~12 dias", activity: "há 2 dias · 35 min nesta semana")
       expect(person[:progress]).to include(percent: 50)
-      expect(person[:journey][:stretches].pluck(:title)).to eq(%w[Base Empresa Setor])
+      expect(person[:path].pluck(:title)).to eq(%w[Base Empresa Setor])
+      expect(person[:path].pluck(:journeys)).to eq([["Base Nivela"], ["Jeito Distribuidora Sul"], ["Atendimento na prática"]])
+      expect(person[:path].first[:modules].pluck(:status)).to eq(%w[done done])
+      expect(person[:path].second[:modules].pluck(:status)).to eq(%w[done current])
+      expect(person).not_to include(:journey)
       expect(person).not_to include(:feedback, :knows, :learning)
     end
 
@@ -141,7 +159,7 @@ RSpec.describe "Management people", :inertia do
 
       person = inertia.props[:person]
       expect(person[:badge]).to include(label: "Nivelado em Atendimento", earned: false, date: nil, forecast: "Nivela em ~12 dias")
-      expect(person[:milestones]).to eq(["Concluiu o trecho Base", "3 dias seguidos de estudo"])
+      expect(person[:milestones]).to eq(["Concluiu a jornada Base Nivela", "3 dias seguidos de estudo"])
     end
 
     it "shows the points earned and the rewards redeemed" do
@@ -157,9 +175,28 @@ RSpec.describe "Management people", :inertia do
 
       person = inertia.props[:person]
       expect(person[:badge]).to include(earned: true, date: "14/08")
-      expect(person[:milestones]).to include("Concluiu o trecho Setor", "Ganhou o selo Nivelado em Atendimento")
+      expect(person[:milestones]).to include("Concluiu a jornada Atendimento na prática", "Ganhou o selo Nivelado em Atendimento")
       expect(person[:rewards][:redeemed].size).to eq(2)
       expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 450)
+    end
+
+    it "names the badge after the sector when no sector journey reaches the person" do
+      get management_person_path("lucas-pereira")
+
+      person = inertia.props[:person]
+      expect(person[:badge][:label]).to eq("Nivelado em Comercial")
+      expect(person[:path].third).to include(journeys: [], modules: [])
+      expect(person[:milestones]).to include("Concluiu a jornada Base Nivela", "Concluiu a jornada Jeito Distribuidora Sul")
+    end
+
+    it "does not count an empty journey as finished" do
+      stub_const("Management::JourneyCatalog::JOURNEYS", Management::JourneyCatalog::JOURNEYS.merge(
+        "logistica-na-pratica" => Management::JourneyCatalog::JOURNEYS["logistica-na-pratica"].merge(modules: [])
+      ))
+
+      get management_person_path("marcos-oliveira")
+
+      expect(inertia.props[:person][:milestones]).to eq([])
     end
 
     it "starts empty for someone who has not studied yet" do

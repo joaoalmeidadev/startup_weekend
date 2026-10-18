@@ -1,4 +1,4 @@
-import type { JourneyGoal, ModuleSummary, Stretch } from '@/types/management'
+import type { JourneyGoal, ModuleSummary } from '@/types/management'
 
 // Premissas do pitch: hora de repasse (veterano + gestor) e o ritmo de 5 min por dia útil
 export const HOURLY_RATE = 40
@@ -27,8 +27,7 @@ export function coveredCompetencies(modules: ModuleSummary[], goal: JourneyGoal)
   return goal.competencies.filter((competency) => modules.some((module) => module.covers === competency))
 }
 
-export function journeyValue(stretches: Stretch[], goal: JourneyGoal): JourneyValue {
-  const modules = stretches.flatMap((stretch) => stretch.modules)
+export function journeyValue(modules: ModuleSummary[], goal: JourneyGoal): JourneyValue {
   const hours = sum(modules, (module) => module.teaching_hours)
   const lessons = sum(modules, (module) => module.lessons)
 

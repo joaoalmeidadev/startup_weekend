@@ -17,8 +17,16 @@ describe('PeopleShow', () => {
 
     expect(screen.getByRole('heading', { name: 'Maria Souza' })).toBeInTheDocument()
     expect(screen.getByText('Atendente · Atendimento · 1 mês de casa')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /Jornada: Onboarding Atendimento/ })).toBeInTheDocument()
-    expect(screen.getByText('Sem módulos')).toBeInTheDocument()
+  })
+
+  it('shows the trail: Base, Empresa and Setor, each named after its journey', () => {
+    render(<PeopleShow />)
+
+    const trail = within(screen.getByRole('region', { name: 'Trilha' }))
+    expect(trail.getByText('1. Base · Base Nivela')).toBeInTheDocument()
+    expect(trail.getByText('2. Empresa · Jeito Distribuidora Sul')).toBeInTheDocument()
+    expect(trail.getByText('3. Setor')).toBeInTheDocument()
+    expect(trail.getByText('Nenhuma jornada de Setor')).toBeInTheDocument()
   })
 
   it('highlights score against goal, forecast, progress and activity at the top', () => {
@@ -59,7 +67,7 @@ describe('PeopleShow', () => {
     const badge = within(screen.getByRole('region', { name: 'Selo e conquistas' }))
     expect(badge.getByText('Nivelado em Atendimento')).toBeInTheDocument()
     expect(badge.getByText('Previsão: Nivela em ~12 dias')).toBeInTheDocument()
-    expect(badge.getByText('Concluiu o trecho Base')).toBeInTheDocument()
+    expect(badge.getByText('Concluiu a jornada Base Nivela')).toBeInTheDocument()
   })
 
   it('shows the date of an earned badge', () => {

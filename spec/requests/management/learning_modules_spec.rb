@@ -25,7 +25,7 @@ RSpec.describe "Management learning module", :inertia do
     it "lists the journeys that use the module" do
       get management_learning_module_path("nossa-historia-e-valores")
 
-      expect(inertia.props[:learning_module][:used_in].pluck(:name)).to eq(["Onboarding Atendimento", "Onboarding Logística"])
+      expect(inertia.props[:learning_module][:used_in].pluck(:name)).to eq(["Jeito Distribuidora Sul"])
     end
 
     it "answers 404 for an unknown module" do

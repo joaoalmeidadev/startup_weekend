@@ -21,7 +21,7 @@ export type Person = {
 
 export type PeopleProps = {
   summary: Record<PersonStatus, number>
-  sectors: { name: string; count: number; journey: string | null }[]
+  sectors: { name: string; count: number; journeys: string[] }[]
   people: Person[]
 }
 
@@ -63,14 +63,21 @@ export type JourneyStatus = 'active' | 'draft'
 export type StretchKey = 'base' | 'company' | 'sector'
 export type ModuleStatus = 'published' | 'in_review' | 'draft'
 
+// Base: general skills; company: culture and processes; sector: the day-to-day of one sector
+export type JourneyKind = 'base' | 'company' | 'sector'
+
+// Who receives a journey: sectors and groups by name, or specific people by name
+export type JourneyAudience = { type: 'sectors' | 'people'; names: string[] }
+
 export type JourneySummary = {
   id: string
   name: string
+  kind: JourneyKind
   status: JourneyStatus
-  audience: string[]
+  audience: JourneyAudience
   people_in_progress: number
   badge: string
-  modules_per_stretch: Record<StretchKey, number>
+  modules_count: number
 }
 
 export type ModuleSummary = {
@@ -86,9 +93,7 @@ export type ModuleSummary = {
   research_share: number | null
 }
 
-export type Stretch = { key: StretchKey; title: string; modules: ModuleSummary[] }
-
-export type Journey = Omit<JourneySummary, 'modules_per_stretch'> & { stretches: Stretch[] }
+export type Journey = Omit<JourneySummary, 'modules_count'> & { modules: ModuleSummary[] }
 
 export type LessonStatus = 'approved' | 'pending' | 'draft'
 
@@ -109,11 +114,12 @@ export type LearningModule = {
 export type PersonDetail = Person & {
   role: string
   tenure: string
-  journey: {
-    id: string
-    name: string
-    stretches: { title: string; modules: { name: string; status: 'done' | 'current' | 'locked' }[] }[]
-  }
+  // Base, Empresa and Setor, each named after the journeys the person receives of that kind
+  path: {
+    title: string
+    journeys: string[]
+    modules: { name: string; status: 'done' | 'current' | 'locked' }[]
+  }[]
   study: { weekly_minutes: number; streak_days: number; lessons_done: number; review_accuracy: number }
   competencies: { name: string; before: number; now: number; goal: number | null }[]
   badge: { label: string; earned: boolean; date: string | null; forecast: string }
@@ -163,15 +169,19 @@ export type ContentSource = 'ai' | 'nivela' | 'company'
 
 export type CatalogGroup = { source: ContentSource; title: string; modules: ModuleSummary[] }
 
-export type JourneyGoal = { sector: string | null; competencies: string[] }
+export type JourneyGoal = { sector: string | null; slug: string | null; competencies: string[] }
 
 export type JourneyBuilderProps = {
   journey: Journey
   catalog: CatalogGroup[]
   goal: JourneyGoal
-  ready_journey: Stretch[]
+  ready_journey: ModuleSummary[] | null
   start_ready: boolean
+  audience_options: AudienceOption[]
+  people: string[]
 }
+
+export type NewJourneyProps = { audience_options: AudienceOption[]; people: string[] }
 
 // A work sector or a custom group of people (e.g. Staff), as offered when choosing who receives a journey
 export type SectorKind = 'sector' | 'group'

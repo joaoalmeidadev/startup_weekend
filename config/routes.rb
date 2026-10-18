@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     resource :sector_goal, only: :show
     resource :rewards, only: :show
     resource :library, only: :show
-    resources :journeys, only: %i[index show]
+    resources :journeys, only: %i[index show new]
     resources :learning_modules, only: %i[show new], path: "modules" do
       member { get :publish }
     end

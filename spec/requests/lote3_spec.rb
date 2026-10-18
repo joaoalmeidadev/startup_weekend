@@ -5,18 +5,18 @@ RSpec.describe "Remaining mocked screens", :inertia do
     before { sign_in create(:user, :hr) }
 
     it "starts the AI module creation for a journey" do
-      get new_management_learning_module_path(journey: "onboarding-atendimento")
+      get new_management_learning_module_path(journey: "atendimento-na-pratica")
 
       expect_inertia.to render_component("management/learning_modules/new")
-      expect(inertia.props[:journey]).to include(id: "onboarding-atendimento", name: "Onboarding Atendimento")
+      expect(inertia.props[:journey]).to include(id: "atendimento-na-pratica", name: "Atendimento na prática")
       expect(inertia.props[:generated]).to include(lessons: 8, review_path: management_lesson_review_path(1))
     end
 
     it "opens the manual editor when asked" do
-      get new_management_learning_module_path(mode: "manual", journey: "onboarding-atendimento")
+      get new_management_learning_module_path(mode: "manual", journey: "atendimento-na-pratica")
 
       expect_inertia.to render_component("management/learning_modules/manual")
-      expect(inertia.props[:journey]).to include(id: "onboarding-atendimento")
+      expect(inertia.props[:journey]).to include(id: "atendimento-na-pratica")
     end
 
     it "works without a journey" do

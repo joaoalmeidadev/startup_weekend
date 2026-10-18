@@ -22,7 +22,7 @@ RSpec.describe "Management lesson review", :inertia do
       get management_lesson_review_path(2)
 
       expect(inertia.props[:lesson_review][:breadcrumb].pluck(:href))
-        .to eq([management_journeys_path, management_journey_path("onboarding-atendimento"), management_learning_module_path("rotinas-de-atendimento")])
+        .to eq([management_journeys_path, management_journey_path("jeito-distribuidora-sul"), management_learning_module_path("rotinas-de-atendimento")])
     end
 
     it "keeps the position inside the module" do

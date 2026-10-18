@@ -1,5 +1,6 @@
 module Management
-  # Example data for the journey builder: the journey path, the whole catalog by origin and the goal to cover
+  # Example data for the journey builder: the journey with its ordered modules, the whole Biblioteca by origin,
+  # who can receive it and the goal of the first sector or group that receives it
   class JourneyMock
     SOURCE_TITLES = {"ai" => "Gerado por IA", "nivela" => "Produtos Nivela", "company" => "Produtos da empresa"}.freeze
 
@@ -12,20 +13,22 @@ module Management
     end
 
     def props
-      {journey: journey_props, catalog: catalog, goal: goal, ready_journey: stretches(JourneyCatalog::READY_MODULES),
-       start_ready: @start_ready}
+      {journey: journey_props, catalog: catalog, goal: goal, ready_journey: ready_journey,
+       start_ready: @start_ready && ready_journey.present?}.merge(JourneyAudienceMock.new.props)
     end
 
     private
 
     def journey_props
-      @journey.slice(:id, :name, :status, :audience, :people_in_progress, :badge).merge(stretches: stretches(@journey[:modules]))
+      @journey.slice(:id, :name, :kind, :status, :audience, :people_in_progress, :badge)
+        .merge(modules: summaries(@journey[:modules]))
     end
 
-    def stretches(modules)
-      JourneyCatalog::STRETCHES.map do |key, title|
-        {key: key.to_s, title: title, modules: modules[key].map { |id| ModuleCatalog.summary(id) }}
-      end
+    def summaries(ids) = ids.map { |id| ModuleCatalog.summary(id) }
+
+    # Only a base journey can start from the ready-made Base Nivela
+    def ready_journey
+      summaries(JourneyCatalog::READY_BASE) if @journey[:kind] == "base"
     end
 
     def catalog
@@ -35,13 +38,15 @@ module Management
     end
 
     def goal
-      {sector: @journey[:sector], competencies: sector_goal_competencies + @journey[:extra_goal]}
+      sector = goal_sector
+      {sector: sector&.dig(:name), slug: sector && sector[:name].parameterize,
+       competencies: sector ? sector[:competencies].map(&:first) : []}
     end
 
-    def sector_goal_competencies
-      return [] unless @journey[:sector]
-
-      SectorGoalMock.new(@journey[:sector]).props[:competencies].pluck(:name)
+    # People picked one by one have no sector goal
+    def goal_sector
+      audience = @journey[:audience]
+      SectorCatalog.find(audience[:names].first) if audience[:type] == "sectors"
     end
   end
 end

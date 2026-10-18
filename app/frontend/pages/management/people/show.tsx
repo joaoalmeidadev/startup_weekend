@@ -43,8 +43,8 @@ export default function PeopleShow() {
 
         <PersonHighlights person={person} />
 
-        <Card title={`Jornada: ${person.journey.name}`} icon="route">
-          <MiniJourney journey={person.journey} />
+        <Card title="Trilha" icon="route">
+          <MiniJourney path={person.path} />
         </Card>
 
         <div className="grid grid-cols-1 gap-space-md xl:grid-cols-[3fr_2fr]">
