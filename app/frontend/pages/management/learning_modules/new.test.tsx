@@ -30,6 +30,22 @@ const pickCompetency = (name: string) => userEvent.selectOptions(screen.getByLab
 const typeHours = (hours: string) =>
   userEvent.type(screen.getByLabelText('Quanto tempo levaria para treinar isso pessoalmente? (h)'), hours)
 
+// A complete written lesson: title, question, three options and the right one
+async function writeLessonOne() {
+  await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+  await userEvent.type(
+    screen.getByLabelText('Pergunta da lição 1'),
+    'O cliente quer trocar após 10 dias. O que fazer?',
+  )
+  await userEvent.type(
+    screen.getByLabelText('Alternativa A da lição 1'),
+    'Aceitar se tiver nota e estiver lacrado',
+  )
+  await userEvent.type(screen.getByLabelText('Alternativa B da lição 1'), 'Recusar sempre')
+  await userEvent.type(screen.getByLabelText('Alternativa C da lição 1'), 'Trocar sem olhar nada')
+  await userEvent.click(screen.getByLabelText('Correta: alternativa A da lição 1'))
+}
+
 describe('LearningModulesNew', () => {
   beforeEach(() => {
     page.url = '/management/modules/new'
@@ -89,7 +105,7 @@ describe('LearningModulesNew', () => {
     renderForm()
     await writeLessons()
     await typeName('Trocas')
-    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+    await writeLessonOne()
     await typeHours('4')
 
     const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
@@ -168,7 +184,7 @@ describe('LearningModulesNew', () => {
     await pickCompetency('Comunicação')
     await typeHours('4')
     expect(save).toBeDisabled()
-    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+    await writeLessonOne()
     await userEvent.click(save)
 
     expect(screen.getByRole('status')).toHaveTextContent('Conteúdo salvo na Biblioteca (simulação).')
@@ -184,7 +200,7 @@ describe('LearningModulesNew', () => {
     await typeName('Trocas')
     await pickCompetency('Comunicação')
     await typeHours('4')
-    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+    await writeLessonOne()
     await userEvent.click(screen.getByRole('button', { name: /Salvar na Biblioteca/ }))
 
     act(() => vi.runAllTimers())
@@ -213,7 +229,7 @@ describe('LearningModulesNew', () => {
 
     await userEvent.click(screen.getByRole('radio', { name: /Gerado por IA/ }))
     await typeName('Trocas')
-    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+    await writeLessonOne()
 
     expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeDisabled()
     expect(screen.getByText('A IA precisa de um arquivo para criar as lições.')).toBeInTheDocument()
@@ -242,11 +258,34 @@ describe('LearningModulesNew', () => {
     await writeLessons()
     await typeName('Trocas')
     await pickCompetency('Comunicação')
-    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+    await writeLessonOne()
 
     const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
     expect(save).toBeDisabled()
     await typeHours('4')
     expect(save).toBeEnabled()
+  })
+
+  it('asks a question with three options and the right one in each written lesson', async () => {
+    renderForm()
+    await writeLessons()
+    await typeName('Trocas')
+    await pickCompetency('Comunicação')
+    await typeHours('4')
+    await userEvent.type(screen.getByLabelText('Título da lição 1'), 'Quando aceitar a troca')
+
+    const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
+    expect(save).toBeDisabled()
+    expect(screen.getByText('Escreva a pergunta da lição 1.')).toBeInTheDocument()
+
+    await userEvent.type(screen.getByLabelText('Pergunta da lição 1'), 'O que fazer?')
+    await userEvent.type(screen.getByLabelText('Alternativa A da lição 1'), 'Aceitar')
+    await userEvent.type(screen.getByLabelText('Alternativa B da lição 1'), 'Recusar')
+    await userEvent.type(screen.getByLabelText('Alternativa C da lição 1'), 'Ignorar')
+    expect(screen.getByText('Marque a resposta correta da lição 1.')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByLabelText('Correta: alternativa A da lição 1'))
+    expect(save).toBeEnabled()
+    expect(screen.getByLabelText('Explicação ao errar (opcional) da lição 1')).toBeInTheDocument()
   })
 })

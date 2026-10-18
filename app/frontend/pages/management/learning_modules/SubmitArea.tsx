@@ -1,5 +1,5 @@
 import { Icon } from '@/components/Icon'
-import { canSubmit, needsFileForAi, type ContentDraft } from './contentDraft'
+import { canSubmit, lessonGap, needsFileForAi, type ContentDraft } from './contentDraft'
 
 const ACTIONS = {
   ai: { label: 'Criar lições com IA', icon: 'auto_awesome' },
@@ -23,6 +23,9 @@ export function SubmitArea({ draft, onSubmit }: { draft: ContentDraft; onSubmit:
         <span className="text-body-sm text-on-surface-variant">
           A IA precisa de um arquivo para criar as lições.
         </span>
+      )}
+      {!needsFileForAi(draft) && lessonGap(draft) && (
+        <span className="text-body-sm text-on-surface-variant">{lessonGap(draft)}</span>
       )}
     </div>
   )
