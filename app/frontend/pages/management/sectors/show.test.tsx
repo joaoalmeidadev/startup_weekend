@@ -27,7 +27,7 @@ describe('SectorsShow', () => {
     )
     expect(screen.getByRole('heading', { name: 'Atendimento', level: 1 })).toBeInTheDocument()
     expect(screen.getByText('Setor de trabalho')).toBeInTheDocument()
-    expect(screen.getByText('2 pessoas')).toBeInTheDocument()
+    expect(screen.getByText('3 pessoas')).toBeInTheDocument()
   })
 
   it('invites people straight into this sector', async () => {
@@ -39,15 +39,43 @@ describe('SectorsShow', () => {
     expect(screen.getByRole('combobox')).toHaveValue('Atendimento')
   })
 
-  it('lists its people with role and status, each linking to the person', () => {
+  it('lists each person with progress, score against the goal, activity and forecast', () => {
     render(<SectorsShow />)
 
     const maria = peopleBlock().getByRole('link', { name: /Maria Souza/ })
     expect(maria).toHaveAttribute('href', '/management/people/maria-souza')
-    expect(within(maria).getByText('Atendente')).toBeInTheDocument()
-    expect(within(maria).getByText('No ritmo')).toBeInTheDocument()
-    expect(peopleBlock().getByText('Nivelado')).toBeInTheDocument()
+    expect(maria).toHaveTextContent('Atendente')
+    expect(maria).toHaveTextContent('50%')
+    expect(maria).toHaveTextContent('68 / meta 75')
+    expect(maria).toHaveTextContent('há 2 dias · 35 min nesta semana')
+    expect(maria).toHaveTextContent('Nivela em ~12 dias')
     expect(peopleBlock().queryByRole('button', { name: /Adicionar pessoas/ })).not.toBeInTheDocument()
+  })
+
+  it('filters the people by status, with how many are in each one', async () => {
+    render(<SectorsShow />)
+
+    const statuses = within(peopleBlock().getByRole('group', { name: 'Status' }))
+    await userEvent.click(statuses.getByRole('button', { name: 'Atrasados (1)' }))
+
+    expect(
+      peopleBlock()
+        .getAllByRole('link')
+        .map((link) => link.textContent),
+    ).toEqual([expect.stringContaining('Bruna Costa')])
+    await userEvent.click(statuses.getByRole('button', { name: 'Todos (3)' }))
+    expect(peopleBlock().getAllByRole('link')).toHaveLength(3)
+  })
+
+  it('finds people by name and says when nobody matches', async () => {
+    render(<SectorsShow />)
+
+    await userEvent.type(peopleBlock().getByLabelText('Buscar por nome'), 'diego')
+    expect(peopleBlock().getAllByRole('link')).toHaveLength(1)
+
+    await userEvent.clear(peopleBlock().getByLabelText('Buscar por nome'))
+    await userEvent.type(peopleBlock().getByLabelText('Buscar por nome'), 'zé')
+    expect(peopleBlock().getByText('Ninguém encontrado')).toBeInTheDocument()
   })
 
   it('moves every ruler to the target of the chosen level', async () => {

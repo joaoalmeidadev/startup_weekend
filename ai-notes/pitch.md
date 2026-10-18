@@ -42,9 +42,9 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 6. **Minha jornada** → **Continuar aula** → vídeo → explicação → erre de propósito (dica) → acerte → **Parabéns + selo**.
    "5 minutos por dia, sem depender de ninguém para explicar."
 
-### Volta ao admin: Pessoas e Dashboard
-8. **Pessoas**: "Uma linha por pessoa: progresso, nota contra a meta, quando estudou e a previsão de quando nivela —
-   quem está atrasado aparece na hora."
+### Volta ao admin: Setores e Dashboard
+8. **Setores** → **Atendimento**: "Cada pessoa do setor numa linha: progresso, nota contra a meta, quando estudou e a
+   previsão de quando nivela — filtre por **Atrasados** e quem precisa de ajuda aparece na hora."
 9. **Dashboard** → **Na prática**: "E o gestor viu no dia a dia: retrabalho dos novatos caiu 38%." Troque para **Últimos 30 dias** e mostre que os números acompanham o período.
 
 ## 4. Modelo e pedido (45s)

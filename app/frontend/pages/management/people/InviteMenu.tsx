@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Icon } from '@/components/Icon'
 import { Modal } from '@/components/Modal'
 import { useMockNotice } from '@/components/MockNotice'
-import type { PeopleProps } from '@/types/management'
+import type { InviteSector } from '@/types/management'
 import { NEW_SECTOR, SectorField } from './SectorField'
 
 type Kind = 'email' | 'sheet'
@@ -14,7 +14,7 @@ const OPTIONS: { kind: Kind; icon: string; title: string; hint: string }[] = [
 
 type InviteModalProps = {
   kind: Kind
-  sectors: PeopleProps['sectors']
+  sectors: InviteSector[]
   initialSector: string
   onClose: () => void
 }
@@ -90,7 +90,7 @@ function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps
   )
 }
 
-type InviteMenuProps = { sectors: PeopleProps['sectors']; sector?: string; label?: string }
+type InviteMenuProps = { sectors: InviteSector[]; sector?: string; label?: string }
 
 // sector: the one already picked in the e-mail invite (e.g. from a sector page)
 export function InviteMenu({ sectors, sector = '', label = '+ Convidar pessoas' }: InviteMenuProps) {

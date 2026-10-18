@@ -24,7 +24,7 @@ RSpec.describe "Authentication", :js do
 
     sign_in_with("ana@example.com", "password123")
 
-    expect(page).to have_content("Pessoas")
+    expect(page).to have_content("Setores")
   end
 
   it "shows an alert on wrong credentials" do

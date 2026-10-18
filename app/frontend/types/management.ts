@@ -19,11 +19,8 @@ export type Person = {
   forecast: string
 }
 
-export type PeopleProps = {
-  summary: Record<PersonStatus, number>
-  sectors: { name: string; count: number; journeys: string[] }[]
-  people: Person[]
-}
+// A work sector someone can be invited into, with the journeys they would receive
+export type InviteSector = { name: string; count: number; journeys: string[] }
 
 export type Competency = {
   name: string

@@ -1,35 +1,33 @@
-import { Link } from '@inertiajs/react'
+import { useState } from 'react'
 import { Icon } from '@/components/Icon'
 import { useMockNotice } from '@/components/MockNotice'
-import type { SectorDetail, SectorMember } from '@/types/management'
-import { PersonAvatar } from '../people/PersonAvatar'
-import { PERSON_STATUS } from '../people/personStatus'
+import type { SectorDetail } from '@/types/management'
+import { PersonRow, ROW_COLUMNS } from '../people/PersonRow'
 import { Block } from './Block'
+import { matches, NO_FILTER, PeopleFilter, PeopleFilters } from './PeopleFilters'
 
-// In a group people come from different sectors, so each row also tells their work sector
-function MemberRow({ person, showSector }: { person: SectorMember; showSector: boolean }) {
-  const status = PERSON_STATUS[person.status]
+function ColumnHeader() {
   return (
-    <Link
-      href={`/management/people/${person.id}`}
-      className="flex items-center justify-between gap-space-sm rounded-xl p-space-sm transition-colors hover:bg-surface-container"
+    <div
+      aria-hidden="true"
+      className={`hidden gap-x-space-md px-space-md text-label-sm text-outline uppercase lg:grid ${ROW_COLUMNS}`}
     >
-      <span className="flex min-w-0 items-center gap-space-sm">
-        <PersonAvatar person={person} />
-        <span className="flex min-w-0 flex-col">
-          <span className="truncate text-label-lg text-on-surface">{person.name}</span>
-          <span className="text-body-sm text-on-surface-variant">
-            {showSector ? `${person.role} · ${person.sector}` : person.role}
-          </span>
-        </span>
-      </span>
-      <span
-        className={`inline-flex shrink-0 items-center gap-space-xs rounded-full px-space-sm py-1 ${status.soft}`}
-      >
-        <Icon name={status.icon} className="text-[1rem]" />
-        <span className="text-label-sm font-bold">{status.label}</span>
-      </span>
-    </Link>
+      <span>Pessoa</span>
+      <span>Progresso</span>
+      <span>Nota × meta</span>
+      <span>Atividade</span>
+      <span>Previsão</span>
+    </div>
+  )
+}
+
+function NobodyFound() {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-xl p-space-lg text-center">
+      <Icon name="search_off" className="mb-space-sm text-[2.5rem] text-outline" />
+      <p className="text-label-lg text-on-surface">Ninguém encontrado</p>
+      <p className="text-body-sm text-on-surface-variant">Tente outro nome ou outro status.</p>
+    </div>
   )
 }
 
@@ -47,22 +45,34 @@ function AddPeopleButton({ group }: { group: string }) {
   )
 }
 
+// In a group people come from different sectors, so each row also tells their work sector
 export function SectorPeople({ sector }: { sector: SectorDetail }) {
   const group = sector.kind === 'group'
+  const [filter, setFilter] = useState<PeopleFilter>(NO_FILTER)
+  const visible = sector.people.filter((person) => matches(person, filter))
+
   return (
     <Block
       title="Pessoas"
       hint={group ? 'Gente de setores diferentes que estuda junta.' : 'Quem trabalha neste setor.'}
       action={group && <AddPeopleButton group={sector.name} />}
     >
-      <div className="flex flex-col gap-1">
-        {sector.people.map((person) => (
-          <MemberRow key={person.id} person={person} showSector={group} />
-        ))}
-        {sector.people.length === 0 && (
-          <p className="text-body-md text-on-surface-variant">Ninguém por aqui ainda.</p>
-        )}
-      </div>
+      {sector.people.length === 0 ? (
+        <p className="text-body-md text-on-surface-variant">Ninguém por aqui ainda.</p>
+      ) : (
+        <div className="flex flex-col gap-space-sm">
+          <PeopleFilters people={sector.people} filter={filter} onChange={setFilter} />
+          <ColumnHeader />
+          {visible.map((person) => (
+            <PersonRow
+              key={person.id}
+              person={person}
+              detail={group ? `${person.role} · ${person.sector}` : person.role}
+            />
+          ))}
+          {visible.length === 0 && <NobodyFound />}
+        </div>
+      )}
     </Block>
   )
 }

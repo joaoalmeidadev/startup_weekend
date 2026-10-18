@@ -118,7 +118,6 @@ describe('HomesShow', () => {
     const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
     expect(nav.getAllByRole('link').map((link) => link.textContent)).toEqual([
       'dashboardDashboard',
-      'groupPessoas',
       'library_booksBiblioteca',
       'routeJornadas',
       'groupsSetores',

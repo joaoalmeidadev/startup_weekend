@@ -1,9 +1,9 @@
 import { Icon } from '@/components/Icon'
-import type { PeopleProps } from '@/types/management'
+import type { InviteSector } from '@/types/management'
 
 export const NEW_SECTOR = '+ Criar setor'
 
-type Sector = PeopleProps['sectors'][number]
+type Sector = InviteSector
 type SectorFieldProps = {
   sectors: Sector[]
   selected: string

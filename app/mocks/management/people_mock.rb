@@ -1,13 +1,9 @@
 require "csv"
 
 module Management
-  # Example people of the Distribuidora Sul, one row each, late ones first
+  # Example people of the Distribuidora Sul (shown inside each sector), late ones first; also the CSV report
   class PeopleMock
     CSV_HEADERS = %w[Nome Setor Status Progresso Nota Meta Previsão].freeze
-
-    def props
-      {summary: summary, sectors: sectors, people: overviews.map(&:props)}
-    end
 
     def to_csv
       CSV.generate do |csv|
@@ -25,8 +21,6 @@ module Management
     private
 
     def overviews = PEOPLE.map { |person| PersonOverview.new(person) }
-
-    def summary = PEOPLE.pluck(:status).tally.transform_keys(&:to_sym)
 
     def work_sectors = SectorCatalog.all.select { |sector| sector[:kind] == "sector" }.pluck(:name)
 

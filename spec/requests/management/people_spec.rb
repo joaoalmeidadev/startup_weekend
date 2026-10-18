@@ -3,106 +3,13 @@ require "rails_helper"
 RSpec.describe "Management people", :inertia do
   describe "GET /management/people" do
     %i[hr manager platform_admin].each do |role|
-      it "renders the people list for #{role} users" do
+      it "sends #{role} users to the sectors, where people now live" do
         sign_in create(:user, role)
 
         get management_people_path
 
-        expect_inertia.to render_component("management/people/index")
+        expect(response).to redirect_to(management_sectors_path)
       end
-    end
-
-    it "lists people with their status and summary counts that match the list" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      people = inertia.props[:people]
-      expect(people.size).to be_between(8, 10)
-      expect(people.pluck(:status).uniq).to contain_exactly("leveled", "on_track", "late")
-      expect(inertia.props[:summary].to_h).to eq(people.pluck(:status).tally)
-      expect(inertia.props[:sectors].sum { |sector| sector[:count] }).to eq(people.size)
-    end
-
-    it "tells which journeys each sector receives, for the invite" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      journeys = inertia.props[:sectors].to_h { |sector| [sector[:name], sector[:journeys]] }
-      expect(journeys).to eq(
-        "Atendimento" => ["Base Nivela", "Jeito Distribuidora Sul", "Atendimento na prática"],
-        "Comercial" => ["Base Nivela", "Jeito Distribuidora Sul"],
-        "Logística" => ["Base Nivela", "Jeito Distribuidora Sul", "Logística na prática"]
-      )
-    end
-
-    it "keeps the leveled at the end of their path and the others before it" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      leveled, others = inertia.props[:people].partition { |person| person[:status] == "leveled" }
-      expect(leveled.map { |person| person[:progress][:percent] }).to all(eq(100))
-      expect(others.map { |person| person[:progress][:percent] }).to all(be < 100)
-    end
-
-    it "shows each person's progress, score against the sector goal, activity and forecast" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      maria = inertia.props[:people].find { |person| person[:id] == "maria-souza" }
-      expect(maria).to include(sector: "Atendimento", status: "on_track", goal: 75,
-        activity: "há 2 dias · 35 min nesta semana", forecast: "Nivela em ~12 dias")
-      expect(maria[:score]).to be < 75
-      expect(maria[:progress]).to include(percent: 50, current_module: "Rotinas de atendimento")
-    end
-
-    it "keeps the leveled above the goal and the others below it" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      with_goal = inertia.props[:people].select { |person| person[:goal] }
-      leveled, others = with_goal.partition { |person| person[:status] == "leveled" }
-      expect(leveled).to all(satisfy { |person| person[:score] >= person[:goal] })
-      expect(others).to all(satisfy { |person| person[:score] < person[:goal] })
-      expect(leveled.pluck(:forecast)).to all(eq("Nivelado ✓"))
-    end
-
-    it "uses the photos that exist and initials for the others" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      avatars = inertia.props[:people].pluck(:avatar_url).compact
-      expect(avatars.size).to eq(5)
-      expect(avatars).to all(satisfy { |url| Rails.public_path.join(url.delete_prefix("/")).exist? })
-    end
-
-    it "names every management user as the same administrator" do
-      sign_in create(:user, :manager)
-
-      get management_people_path
-
-      expect(inertia.props[:manager]).to include(name: "Ana Lima", role_label: "Administradora")
-    end
-
-    it "shares the signed-in manager for the layout" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      expect(inertia.props[:manager]).to include(name: "Ana Lima", company: "Distribuidora Sul")
-    end
-
-    it "gives each person an id for the detail page" do
-      sign_in create(:user, :hr)
-
-      get management_people_path
-
-      expect(inertia.props[:people].pluck(:id)).to include("marcos-oliveira", "maria-souza")
     end
 
     it "sends collaborators back to their journey" do

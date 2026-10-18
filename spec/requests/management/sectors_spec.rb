@@ -41,7 +41,7 @@ RSpec.describe "Management sectors", :inertia do
       sector = inertia.props[:sector]
       expect(sector).to include(name: "Atendimento", slug: "atendimento", kind: "sector", level: "medium")
       expect(sector[:people].pluck(:sector).uniq).to eq(["Atendimento"])
-      expect(sector[:people].first).to include(:id, :role, :status, :avatar_url)
+      expect(sector[:people].first).to include(:id, :role, :status, :avatar_url, :progress, :score, :goal, :activity, :forecast)
       expect(sector[:levels].pluck(:key)).to eq(%w[easy medium hard])
       expect(sector[:competencies].pluck(:goal)).to all(eq(75))
       expect(sector[:competencies].first).to include(experts_average: 88)
@@ -78,6 +78,7 @@ RSpec.describe "Management sectors", :inertia do
       get management_sector_path("comercial")
 
       expect(inertia.props[:invite_sectors].pluck(:name)).to eq(%w[Atendimento Comercial Logística])
+      expect(inertia.props[:invite_sectors].first[:journeys]).to eq(["Base Nivela", "Jeito Distribuidora Sul", "Atendimento na prática"])
     end
 
     it "answers 404 for an unknown sector" do

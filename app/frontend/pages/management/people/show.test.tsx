@@ -107,6 +107,18 @@ describe('PeopleShow', () => {
     expect(screen.queryByText('O que os colegas dizem')).not.toBeInTheDocument()
   })
 
+  it('goes back to the sector of the person, under the Setores tab', () => {
+    render(<PeopleShow />)
+
+    expect(screen.getByRole('link', { name: /Voltar para Atendimento/ })).toHaveAttribute(
+      'href',
+      '/management/sectors/atendimento',
+    )
+    const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
+    expect(nav.getByRole('link', { name: /Setores/ })).toHaveAttribute('aria-current', 'page')
+    expect(nav.queryByRole('link', { name: /Pessoas/ })).not.toBeInTheDocument()
+  })
+
   it('no longer offers the review or the role change', () => {
     render(<PeopleShow />)
 

@@ -9,7 +9,7 @@ import type {
   Manager,
   ModuleSummary,
   NewSectorProps,
-  PeopleProps,
+  InviteSector,
   Person,
   PersonDetail,
   SectorDetail,
@@ -34,8 +34,7 @@ const person = (overrides: Partial<Person> & Pick<Person, 'id' | 'name' | 'secto
   ...overrides,
 })
 
-export const peopleProps: PeopleProps = {
-  summary: { leveled: 1, on_track: 1, late: 1 },
+export const peopleProps: { sectors: InviteSector[]; people: Person[] } = {
   sectors: [
     {
       name: 'Atendimento',
@@ -343,7 +342,24 @@ export const sectorDetail: SectorDetail = {
   kind: 'sector',
   people: [
     member({ id: 'maria-souza', name: 'Maria Souza', sector: 'Atendimento', status: 'on_track' }),
-    member({ id: 'diego-fernandes', name: 'Diego Fernandes', sector: 'Atendimento', status: 'leveled' }),
+    member({
+      id: 'diego-fernandes',
+      name: 'Diego Fernandes',
+      sector: 'Atendimento',
+      status: 'leveled',
+      score: 81,
+      progress: { percent: 100, current_module: null },
+      forecast: 'Nivelado ✓',
+    }),
+    member({
+      id: 'bruna-costa',
+      name: 'Bruna Costa',
+      sector: 'Atendimento',
+      status: 'late',
+      score: 58,
+      activity: 'há 9 dias · 10 min nesta semana',
+      forecast: 'Atrasado 8 dias',
+    }),
   ],
   levels: goalLevels,
   level: 'medium',

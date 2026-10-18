@@ -1,6 +1,7 @@
 import { Head, Link, usePage } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
+import { slugify } from '@/lib/text'
 import type { PersonDetail } from '@/types/management'
 import { MiniJourney } from './MiniJourney'
 import { BadgeCard, Card, RewardsCard, StudyCard } from './PersonCards'
@@ -17,11 +18,12 @@ export default function PeopleShow() {
       <Head title={person.name} />
       <div className="flex w-full flex-col gap-space-lg pt-space-md">
         <Link
-          href="/management/people"
+          href={`/management/sectors/${slugify(person.sector)}`}
+          aria-label={`Voltar para ${person.sector}`}
           className="inline-flex w-fit items-center gap-1 text-label-md text-primary hover:underline"
         >
           <Icon name="chevron_left" className="text-[1.125rem]" />
-          Pessoas
+          {person.sector}
         </Link>
         <section className="flex flex-col justify-between gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm lg:flex-row lg:items-center">
           <div className="flex items-center gap-space-md">

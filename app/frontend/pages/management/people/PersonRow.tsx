@@ -18,7 +18,8 @@ function Cell({ caption, children }: { caption: string; children: ReactNode }) {
   )
 }
 
-export function PersonRow({ person }: { person: Person }) {
+// detail: what to show under the name (the work sector by default)
+export function PersonRow({ person, detail = person.sector }: { person: Person; detail?: string }) {
   return (
     <Link
       href={`/management/people/${person.id}`}
@@ -28,7 +29,7 @@ export function PersonRow({ person }: { person: Person }) {
         <PersonAvatar person={person} />
         <div className="flex min-w-0 flex-col">
           <span className="truncate text-label-lg text-on-surface">{person.name}</span>
-          <span className="text-body-sm text-on-surface-variant">{person.sector}</span>
+          <span className="text-body-sm text-on-surface-variant">{detail}</span>
         </div>
       </div>
       <Cell caption="Progresso">

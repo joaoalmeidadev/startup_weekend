@@ -1,7 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
-import type { PeopleProps, SectorDetail } from '@/types/management'
+import type { InviteSector, SectorDetail } from '@/types/management'
 import { InviteMenu } from '../people/InviteMenu'
 import { BackToSectors } from './Block'
 import { peopleCount } from './peopleCount'
@@ -9,10 +9,10 @@ import { SectorGoal } from './SectorGoal'
 import { SectorKindTag } from './SectorKindTag'
 import { SectorPeople } from './SectorPeople'
 
-type SectorsShowProps = { sector: SectorDetail; invite_sectors: PeopleProps['sectors'] }
+type SectorsShowProps = { sector: SectorDetail; invite_sectors: InviteSector[] }
 
 // Work sectors invite straight into themselves; a group still needs each person's work sector
-function SectorInvite({ sector, sectors }: { sector: SectorDetail; sectors: PeopleProps['sectors'] }) {
+function SectorInvite({ sector, sectors }: { sector: SectorDetail; sectors: InviteSector[] }) {
   if (sector.kind === 'group') return <InviteMenu sectors={sectors} />
   return <InviteMenu sectors={sectors} sector={sector.name} label="+ Convidar para este setor" />
 }

@@ -2,18 +2,13 @@ import { useState } from 'react'
 import { Icon } from '@/components/Icon'
 import type { SectorCandidate } from '@/types/management'
 import { PersonAvatar } from '../people/PersonAvatar'
+import { normalize } from '@/lib/text'
 
 type PeoplePickerProps = {
   people: SectorCandidate[]
   selected: string[]
   onToggle: (id: string) => void
 }
-
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
 
 function selectedText(count: number) {
   if (count === 0) return 'Nenhuma pessoa selecionada'

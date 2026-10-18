@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { AudienceOption, JourneyAudience } from '@/types/management'
 import { peopleCount } from './audience'
+import { normalize } from '@/lib/text'
 
 type AudiencePickerProps = {
   options: AudienceOption[]
@@ -16,12 +17,6 @@ const TYPES: { type: JourneyAudience['type']; label: string }[] = [
 
 const ROW = 'flex cursor-pointer items-center gap-space-sm rounded-xl bg-surface-container-low p-space-sm'
 const CHECKBOX = 'size-5 rounded border-outline text-primary-container focus:ring-primary-container'
-
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
 
 function toggle(names: string[], name: string) {
   return names.includes(name) ? names.filter((n) => n !== name) : [...names, name]
