@@ -1,4 +1,7 @@
 import type {
+  SectorTrainingCost,
+  SectorTrainingCostProps,
+  SectorsIndexProps,
   PointsRule,
   RewardsProps,
   AudienceOption,
@@ -19,7 +22,6 @@ import type {
   SectorSummary,
   TeamDashboard,
 } from '@/types/management'
-import type { SectorTrainingCost, SectorTrainingCostProps, SectorsIndexProps } from '@/types/management'
 
 export const manager: Manager = {
   name: 'Ana Lima',
