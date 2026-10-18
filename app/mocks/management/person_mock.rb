@@ -1,12 +1,6 @@
 module Management
-  # Example detail of one person: where they are in the journey and what colleagues say
+  # Example detail of one person: their journey, how they study, their badge and the rewards they redeemed
   class PersonMock
-    FEEDBACK = {
-      "leveled" => ["Resolve as reclamações sem precisar de ajuda.", "Ajuda os novatos do setor.", "Comunica-se com clareza com os clientes."],
-      "on_track" => ["Explica as coisas com clareza.", "Pede ajuda quando tem dúvida.", "Ainda confunde os prazos de devolução."],
-      "late" => ["É pontual e cuidadoso.", "Tem dificuldade com contas de porcentagem.", "Precisa de apoio para usar o sistema."]
-    }.freeze
-
     def initialize(id)
       @person = PeopleMock::PEOPLE.find { |person| person[:name].parameterize == id }
       raise ActiveRecord::RecordNotFound, "Person #{id} not found" unless @person
@@ -14,12 +8,9 @@ module Management
 
     def props
       PersonOverview.new(@person).props.merge(
-        role: @person[:role],
-        tenure: @person[:tenure],
-        journey: journey,
-        knows: competencies.first(@person[:completed]).last(3),
-        learning: competencies.drop(@person[:completed]).first(3),
-        feedback: FEEDBACK.fetch(@person[:status])
+        role: @person[:role], tenure: @person[:tenure], journey: journey,
+        study: study.props, competencies: study.competencies,
+        badge: rewards.badge, milestones: rewards.milestones, rewards: rewards.rewards
       )
     end
 
@@ -29,9 +20,15 @@ module Management
 
     def module_ids = JourneyCatalog::STRETCHES.keys.flat_map { |key| journey_data[:modules][key] }
 
-    def competencies = module_ids.map { |id| ModuleCatalog.find(id)[:competency] }
+    def study = @study ||= PersonStudy.new(@person, module_ids)
+
+    def rewards = @rewards ||= PersonRewards.new(@person, journey, study)
 
     def journey
+      @journey ||= build_journey
+    end
+
+    def build_journey
       position = 0
       stretches = JourneyCatalog::STRETCHES.map do |key, title|
         modules = journey_data[:modules][key].map do |id|

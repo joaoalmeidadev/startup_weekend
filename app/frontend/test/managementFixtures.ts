@@ -226,9 +226,18 @@ export const personDetail: PersonDetail = {
       { title: 'Setor', modules: [] },
     ],
   },
-  knows: ['Comunicação clara'],
-  learning: ['Rotinas da Distribuidora'],
-  feedback: ['Explica as coisas com clareza.'],
+  study: { weekly_minutes: 35, streak_days: 3, lessons_done: 12, review_accuracy: 82 },
+  competencies: [
+    { name: 'Comunicação clara', before: 40, now: 70, goal: 75 },
+    { name: 'Rotinas da Distribuidora', before: 41, now: 53, goal: 75 },
+  ],
+  badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
+  milestones: ['Concluiu o trecho Base', '3 dias seguidos de estudo'],
+  rewards: {
+    points: 240,
+    balance: 90,
+    redeemed: [{ name: 'Vale-lanche R$ 30', date: '02/10', points: 150 }],
+  },
 }
 
 export const teamDashboard: TeamDashboard = {

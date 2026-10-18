@@ -109,7 +109,7 @@ RSpec.describe "Management people", :inertia do
   describe "GET /management/people/:id" do
     before { sign_in create(:user, :hr) }
 
-    it "renders the person with their journey, strengths and colleague feedback" do
+    it "renders the person with their journey and leveling snapshot" do
       get management_person_path("maria-souza")
 
       expect_inertia.to render_component("management/people/show")
@@ -118,7 +118,57 @@ RSpec.describe "Management people", :inertia do
         forecast: "Nivela em ~12 dias", activity: "há 2 dias · 35 min nesta semana")
       expect(person[:progress]).to include(percent: 50)
       expect(person[:journey][:stretches].pluck(:title)).to eq(%w[Base Empresa Setor])
-      expect(person[:feedback].size).to eq(3)
+      expect(person).not_to include(:feedback, :knows, :learning)
+    end
+
+    it "shows how the person studies" do
+      get management_person_path("maria-souza")
+
+      expect(inertia.props[:person][:study]).to include(weekly_minutes: 35, streak_days: 3, lessons_done: 12, review_accuracy: 82)
+    end
+
+    it "compares the diagnostic with today in what the person has studied so far" do
+      get management_person_path("maria-souza")
+
+      competencies = inertia.props[:person][:competencies]
+      expect(competencies.pluck(:name)).to eq(["Comunicação clara", "Matemática básica", "Cultura da empresa", "Rotinas da Distribuidora"])
+      expect(competencies.first).to include(before: 40, now: 70, goal: 75)
+      expect(competencies.last).to include(before: 41, now: 53)
+    end
+
+    it "shows the badge forecast and the milestones reached" do
+      get management_person_path("maria-souza")
+
+      person = inertia.props[:person]
+      expect(person[:badge]).to include(label: "Nivelado em Atendimento", earned: false, date: nil, forecast: "Nivela em ~12 dias")
+      expect(person[:milestones]).to eq(["Concluiu o trecho Base", "3 dias seguidos de estudo"])
+    end
+
+    it "shows the points earned and the rewards redeemed" do
+      get management_person_path("maria-souza")
+
+      rewards = inertia.props[:person][:rewards]
+      expect(rewards).to include(points: 240, balance: 90)
+      expect(rewards[:redeemed]).to eq([{"name" => "Vale-lanche R$ 30", "date" => "02/10", "points" => 150}])
+    end
+
+    it "shows the earned badge of a leveled person" do
+      get management_person_path("carla-silveira")
+
+      person = inertia.props[:person]
+      expect(person[:badge]).to include(earned: true, date: "14/08")
+      expect(person[:milestones]).to include("Concluiu o trecho Setor", "Ganhou o selo Nivelado em Atendimento")
+      expect(person[:rewards][:redeemed].size).to eq(2)
+      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 450)
+    end
+
+    it "starts empty for someone who has not studied yet" do
+      get management_person_path("marcos-oliveira")
+
+      person = inertia.props[:person]
+      expect(person[:rewards]).to include(points: 0, balance: 0, redeemed: [])
+      expect(person[:milestones]).to eq([])
+      expect(person[:competencies].pluck(:goal)).to all(be_nil)
     end
 
     it "answers 404 for an unknown person" do

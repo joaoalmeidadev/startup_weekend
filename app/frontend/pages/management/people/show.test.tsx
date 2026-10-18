@@ -41,12 +41,62 @@ describe('PeopleShow', () => {
     expect(screen.getByText('MS')).toBeInTheDocument()
   })
 
-  it('lists strengths, what is being learned and colleague feedback', () => {
+  it('shows how the person studies and how much they grew since the diagnostic', () => {
     render(<PeopleShow />)
 
-    expect(screen.getByText('• Comunicação clara')).toBeInTheDocument()
-    expect(screen.getByText('• Rotinas da Distribuidora')).toBeInTheDocument()
-    expect(screen.getByText('• Explica as coisas com clareza.')).toBeInTheDocument()
+    const study = within(screen.getByRole('region', { name: 'Estudo' }))
+    expect(study.getByText('35 min')).toBeInTheDocument()
+    expect(study.getByText('3 dias')).toBeInTheDocument()
+    expect(study.getByText('12')).toBeInTheDocument()
+    expect(study.getByText('82%')).toBeInTheDocument()
+    const row = study.getByText('Comunicação clara').closest('li') as HTMLElement
+    expect(row).toHaveTextContent('40 → 70')
+  })
+
+  it('shows the badge forecast and the milestones', () => {
+    render(<PeopleShow />)
+
+    const badge = within(screen.getByRole('region', { name: 'Selo e conquistas' }))
+    expect(badge.getByText('Nivelado em Atendimento')).toBeInTheDocument()
+    expect(badge.getByText('Previsão: Nivela em ~12 dias')).toBeInTheDocument()
+    expect(badge.getByText('Concluiu o trecho Base')).toBeInTheDocument()
+  })
+
+  it('shows the date of an earned badge', () => {
+    page.props = {
+      person: { ...personDetail, badge: { ...personDetail.badge, earned: true, date: '14/08' } },
+      manager,
+    }
+    render(<PeopleShow />)
+
+    expect(screen.getByText('Conquistado em 14/08')).toBeInTheDocument()
+  })
+
+  it('shows points and the rewards redeemed', () => {
+    render(<PeopleShow />)
+
+    const rewards = within(screen.getByRole('region', { name: 'Recompensas' }))
+    expect(rewards.getByText('240 pts ganhos')).toBeInTheDocument()
+    expect(rewards.getByText('90 pts de saldo')).toBeInTheDocument()
+    const item = rewards.getByText('Vale-lanche R$ 30').closest('li') as HTMLElement
+    expect(item).toHaveTextContent('02/10')
+    expect(item).toHaveTextContent('150 pts')
+  })
+
+  it('says when no reward was redeemed yet', () => {
+    page.props = {
+      person: { ...personDetail, rewards: { points: 0, balance: 0, redeemed: [] } },
+      manager,
+    }
+    render(<PeopleShow />)
+
+    expect(screen.getByText('Ainda não resgatou nenhuma recompensa.')).toBeInTheDocument()
+  })
+
+  it('no longer shows colleague feedback', () => {
+    render(<PeopleShow />)
+
+    expect(screen.queryByText('O que os colegas dizem')).not.toBeInTheDocument()
   })
 
   it('no longer offers the review or the role change', () => {

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { CHART } from './colors'
 
-type Row = { name: string; before: number; now: number; goal: number }
+type Row = { name: string; before: number; now: number; goal?: number | null }
 
-// One track per row: hollow ring = diagnostic, filled dot = today, tick = goal; the growth is the story.
+// One track per row: hollow ring = diagnostic, filled dot = today, tick = goal (when there is one); the growth is the story.
 // "Before" is told apart by shape and the direct label, not by color alone.
 export function DumbbellBars({ rows, max = 100 }: { rows: Row[]; max?: number }) {
   const [active, setActive] = useState<string | null>(null)
@@ -38,10 +38,12 @@ export function DumbbellBars({ rows, max = 100 }: { rows: Row[]; max?: number })
                 opacity: 0.35,
               }}
             />
-            <div
-              className="absolute -top-0.5 h-7 w-1 -translate-x-1/2 rounded-full ring-2 ring-white"
-              style={{ left: at(row.goal), backgroundColor: CHART.goal }}
-            />
+            {row.goal != null && (
+              <div
+                className="absolute -top-0.5 h-7 w-1 -translate-x-1/2 rounded-full ring-2 ring-white"
+                style={{ left: at(row.goal), backgroundColor: CHART.goal }}
+              />
+            )}
             <div
               className="absolute top-1/2 size-3 -translate-1/2 rounded-full border-2 bg-white"
               style={{ left: at(row.before), borderColor: CHART.axis }}

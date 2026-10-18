@@ -114,9 +114,11 @@ export type PersonDetail = Person & {
     name: string
     stretches: { title: string; modules: { name: string; status: 'done' | 'current' | 'locked' }[] }[]
   }
-  knows: string[]
-  learning: string[]
-  feedback: string[]
+  study: { weekly_minutes: number; streak_days: number; lessons_done: number; review_accuracy: number }
+  competencies: { name: string; before: number; now: number; goal: number | null }[]
+  badge: { label: string; earned: boolean; date: string | null; forecast: string }
+  milestones: string[]
+  rewards: { points: number; balance: number; redeemed: { name: string; date: string; points: number }[] }
 }
 
 export type NewModuleProps = {

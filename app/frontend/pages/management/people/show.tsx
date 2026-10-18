@@ -1,37 +1,12 @@
 import { Head, Link, usePage } from '@inertiajs/react'
-import type { ReactNode } from 'react'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { PersonDetail } from '@/types/management'
 import { MiniJourney } from './MiniJourney'
+import { BadgeCard, Card, RewardsCard, StudyCard } from './PersonCards'
 import { PersonAvatar } from './PersonAvatar'
 import { PersonHighlights } from './PersonHighlights'
 import { PERSON_STATUS } from './personStatus'
-
-function Card({ title, icon, children }: { title: string; icon: string; children: ReactNode }) {
-  return (
-    <section className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
-      <h2 className="flex items-center gap-space-xs text-headline-sm text-on-surface">
-        <Icon name={icon} className="text-[1.375rem] text-primary" />
-        {title}
-      </h2>
-      {children}
-    </section>
-  )
-}
-
-function BulletList({ items, empty }: { items: string[]; empty: string }) {
-  if (items.length === 0) return <p className="text-body-sm text-outline">{empty}</p>
-  return (
-    <ul className="flex flex-col gap-space-xs">
-      {items.map((item) => (
-        <li key={item} className="text-body-md text-on-surface">
-          • {item}
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 export default function PeopleShow() {
   const { person } = usePage<{ person: PersonDetail }>().props
@@ -72,16 +47,12 @@ export default function PeopleShow() {
           <MiniJourney journey={person.journey} />
         </Card>
 
-        <div className="grid grid-cols-1 gap-space-md lg:grid-cols-3">
-          <Card title="Já sabe" icon="check_circle">
-            <BulletList items={person.knows} empty="Ainda não concluiu nenhum módulo." />
-          </Card>
-          <Card title="Está aprendendo" icon="school">
-            <BulletList items={person.learning} empty="Concluiu toda a jornada." />
-          </Card>
-          <Card title="O que os colegas dizem" icon="forum">
-            <BulletList items={person.feedback} empty="Sem avaliações ainda." />
-          </Card>
+        <div className="grid grid-cols-1 gap-space-md xl:grid-cols-[3fr_2fr]">
+          <StudyCard person={person} />
+          <div className="flex flex-col gap-space-md">
+            <BadgeCard person={person} />
+            <RewardsCard person={person} />
+          </div>
         </div>
       </div>
     </ManagementLayout>
