@@ -20,7 +20,6 @@ export type Person = {
 export type SummaryEntry = { count: number; percent: number }
 
 export type PeopleProps = {
-  team?: boolean
   summary: Record<PersonStatus, SummaryEntry>
   sectors: { name: string; count: number }[]
   people: Person[]
@@ -51,14 +50,12 @@ export type LessonReview = {
   final: boolean
   breadcrumb: { label: string; href: string }[]
   module_name: string
-  journey_path: string
+  publish_path: string
   team: string
-  audience_count: number
   manual: { before: string; highlight: string; after: string; note: string; source: string }
   lesson: { minutes: number; title: string; intro: string; steps: LessonStep[] }
   question: { prompt: string; options: { text: string; correct: boolean }[] }
   other_questions: number
-  journey_outline: { title: string; status: 'done' | 'new' | 'upcoming' }[]
 }
 
 export type JourneyStatus = 'active' | 'draft'
@@ -102,12 +99,6 @@ export type LearningModule = {
   review_from: number | null
 }
 
-export type HomeProps = {
-  numbers: { label: string; value: string; icon: string; tone: PersonStatus | 'leveled' }[]
-  attention: { icon: string; text: string; action: string; href: string }[]
-  setup: { done: number; total: number; href: string }
-}
-
 export type PersonDetail = {
   id: string
   name: string
@@ -133,42 +124,6 @@ export type NewModuleProps = {
   generated: { lessons: number; review_path: string }
 }
 
-export type Settings = {
-  alert_days: number
-  alert_options: number[]
-  ranking_enabled: boolean
-  badges: { name: string; enabled: boolean }[]
-}
-
-export type SetupStep = {
-  title: string
-  icon: string
-  done: boolean
-  fields: { label: string; value: string }[]
-}
-
-export type RoleChange = {
-  person: { id: string; name: string; role: string; sector: string }
-  roles: { title: string; missing: string[]; weeks: number }[]
-}
-
-export type ManagerReview = {
-  person: { id: string; name: string }
-  statements: string[]
-  scale: string[]
-}
-
-export type Company = {
-  name: string
-  plan: string
-  people: number
-  leveled: number
-  status: 'active' | 'trial'
-  next_charge: string
-}
-
-export type LibraryModule = ModuleSummary & { lesson_titles: string[] }
-
 export type TeamDashboard = {
   sector: string
   period: string
@@ -180,4 +135,20 @@ export type TeamDashboard = {
   competencies: { name: string; team_average: number; goal: number }[]
   engagement: { label: string; value: string }[]
   funnel: { stage: string; count: number }[]
+}
+
+export type AttentionItem = { icon: string; text: string; action: string; href: string }
+
+export type Dashboard = TeamDashboard & { attention: AttentionItem[] }
+
+export type JourneyOutlineItem = { title: string; status: 'done' | 'new' | 'upcoming' }
+
+export type Publication = {
+  module_name: string
+  lessons: number
+  sector: string
+  audience_count: number
+  default_audiences: string[]
+  journey_outline: JourneyOutlineItem[]
+  done_path: string
 }

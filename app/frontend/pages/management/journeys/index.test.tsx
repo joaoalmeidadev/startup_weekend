@@ -1,5 +1,4 @@
 import { render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { journeySummaries, manager } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
@@ -23,23 +22,35 @@ describe('JourneysIndex', () => {
     expect(screen.getByText('Ninguém começou ainda')).toBeInTheDocument()
   })
 
-  it('creates a journey from the modal (mocked)', async () => {
+  it('is the Conteúdos screen, starting a new content from the main button', () => {
     render(<JourneysIndex />)
 
-    await userEvent.click(screen.getByRole('button', { name: /Nova jornada/ }))
-    expect(screen.getByRole('button', { name: 'Criar jornada' })).toBeDisabled()
-
-    await userEvent.type(screen.getByLabelText('Nome da jornada'), 'Onboarding Comercial')
-    await userEvent.click(screen.getByRole('button', { name: 'Criar jornada' }))
-
-    expect(screen.getByRole('status')).toHaveTextContent('Jornada "Onboarding Comercial" criada (simulação).')
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Conteúdos' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Novo conteúdo/ })).toHaveAttribute(
+      'href',
+      '/management/modules/new',
+    )
+    expect(screen.queryByRole('button', { name: /Nova jornada/ })).not.toBeInTheDocument()
   })
 
-  it('keeps Jornadas active in the navigation', () => {
+  it('keeps the guide to the three stretches', () => {
+    render(<JourneysIndex />)
+
+    expect(screen.getByText('1. Base')).toBeInTheDocument()
+  })
+
+  it('points to the sector goal set by the most experienced people', () => {
+    render(<JourneysIndex />)
+
+    const card = screen.getByRole('link', { name: /Meta do setor/ })
+    expect(card).toHaveAttribute('href', '/management/sector_goal')
+    expect(card).toHaveTextContent('A régua vem dos seus colaboradores mais experientes')
+  })
+
+  it('keeps Conteúdos active in the navigation', () => {
     render(<JourneysIndex />)
 
     const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
-    expect(nav.getByRole('link', { name: /Jornadas/ })).toHaveAttribute('aria-current', 'page')
+    expect(nav.getByRole('link', { name: /Conteúdos/ })).toHaveAttribute('aria-current', 'page')
   })
 })

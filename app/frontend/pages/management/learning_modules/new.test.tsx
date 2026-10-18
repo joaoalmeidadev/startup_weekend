@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { manager } from '@/test/managementFixtures'
@@ -12,7 +12,7 @@ describe('LearningModulesNew', () => {
     page.url = '/management/modules/new'
     page.props = {
       journey: { id: 'onboarding-atendimento', name: 'Onboarding Atendimento' },
-      generated: { lessons: 8, review_path: '/management/modules/rotinas-de-atendimento' },
+      generated: { lessons: 8, review_path: '/management/lesson_reviews/1' },
       manager,
     }
   })
@@ -21,14 +21,39 @@ describe('LearningModulesNew', () => {
     vi.useRealTimers()
   })
 
-  it('needs a file before creating the lessons', async () => {
+  it('starts the four-step assistant at sending the material', () => {
+    render(<LearningModulesNew />)
+
+    expect(screen.getByRole('heading', { name: 'Novo conteúdo' })).toBeInTheDocument()
+    expect(
+      screen.getByText('O treinamento que hoje é repassado de pessoa para pessoa — envie uma vez.'),
+    ).toBeInTheDocument()
+    const steps = within(screen.getByRole('list', { name: 'Etapas' }))
+    expect(steps.getAllByRole('listitem')).toHaveLength(4)
+    expect(steps.getByText('Enviar o material').closest('li')).toHaveAttribute('aria-current', 'step')
+  })
+
+  it('offers the manual editor as a secondary path', () => {
+    render(<LearningModulesNew />)
+
+    expect(screen.getByRole('link', { name: 'Prefiro escrever manualmente' })).toHaveAttribute(
+      'href',
+      '/management/modules/new?mode=manual&journey=onboarding-atendimento',
+    )
+  })
+
+  it('needs a name and a file before creating the lessons', async () => {
     render(<LearningModulesNew />)
 
     expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeDisabled()
     await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
 
     expect(screen.getByText('Manual de SAC.pdf')).toBeInTheDocument()
+    expect(screen.getByLabelText('Nome do conteúdo')).toHaveValue('Rotinas de atendimento')
     expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeEnabled()
+
+    await userEvent.clear(screen.getByLabelText('Nome do conteúdo'))
+    expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeDisabled()
   })
 
   it('shows the AI working and then sends the reviewer to the lessons', async () => {
@@ -38,11 +63,12 @@ describe('LearningModulesNew', () => {
     await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
     await userEvent.click(screen.getByRole('button', { name: /Criar lições com IA/ }))
     expect(screen.getByRole('status')).toHaveTextContent('A IA está criando 8 lições…')
+    expect(screen.getByText('A IA cria as lições').closest('li')).toHaveAttribute('aria-current', 'step')
 
     act(() => vi.runAllTimers())
     expect(screen.getByRole('link', { name: /Revisar lições/ })).toHaveAttribute(
       'href',
-      '/management/modules/rotinas-de-atendimento',
+      '/management/lesson_reviews/1',
     )
   })
 })

@@ -21,41 +21,33 @@ function matches(person: Person, sector: string, query: string) {
 }
 
 export default function PeopleIndex() {
-  const { people, summary, sectors, total, manager, team } = usePage<PeopleProps & { manager: Manager }>()
-    .props
+  const { people, summary, sectors, total, manager } = usePage<PeopleProps & { manager: Manager }>().props
   const [sector, setSector] = useState(ALL)
   const [query, setQuery] = useState('')
-  // The manager's team list leads with whoever needs attention
-  const visible = people
-    .filter((person) => matches(person, sector, query))
-    .sort((a, b) => (team ? Number(b.status === 'attention') - Number(a.status === 'attention') : 0))
+  const visible = people.filter((person) => matches(person, sector, query))
   const pills = [
     { value: ALL, label: `Todos (${total})` },
     ...sectors.map((s) => ({ value: s.name, label: `${s.name} (${s.count})` })),
   ]
 
   return (
-    <ManagementLayout area={team ? 'team' : 'company'}>
-      <Head title={team ? 'Minha equipe' : 'Pessoas'} />
+    <ManagementLayout>
+      <Head title="Pessoas" />
       <div className="flex w-full flex-col gap-space-lg">
         <section className="flex flex-col justify-between gap-space-md md:flex-row md:items-center">
           <div className="flex flex-col">
             <span className="text-label-sm font-bold tracking-wider text-primary uppercase">
-              {team ? 'Gestor • Atendimento' : `Gestão • ${manager.company}`}
+              Gestão • {manager.company}
             </span>
-            <h1 className="text-headline-xl tracking-tight text-on-surface">
-              {team ? 'Minha equipe' : 'Pessoas'}
-            </h1>
+            <h1 className="text-headline-xl tracking-tight text-on-surface">Pessoas</h1>
             <p className="mt-space-xs text-body-md text-on-surface-variant">
-              {team
-                ? 'Quem precisa de atenção aparece primeiro.'
-                : `Acompanhe o momento de cada colaborador na ${manager.company}.`}
+              Acompanhe o momento de cada colaborador na {manager.company}.
             </p>
           </div>
-          {!team && <InviteMenu />}
+          <InviteMenu />
         </section>
 
-        {!team && <SummaryStrip summary={summary} />}
+        <SummaryStrip summary={summary} />
 
         <section className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
           <div className="flex flex-col items-stretch justify-between gap-space-md lg:flex-row lg:items-center">
@@ -73,7 +65,7 @@ export default function PeopleIndex() {
                 className="h-12 w-full rounded-xl border-0 bg-surface-container-low pr-4 pl-12 text-body-md text-on-surface transition-all outline-none placeholder:text-outline focus:bg-surface-container-lowest focus:shadow-md focus:ring-0"
               />
             </div>
-            <div className={`flex flex-wrap items-center gap-space-xs ${team ? 'hidden' : ''}`}>
+            <div className="flex flex-wrap items-center gap-space-xs">
               {pills.map((pill) => (
                 <button
                   key={pill.value}

@@ -9,5 +9,9 @@ module Management
     def show
       render inertia: {learning_module: LearningModuleMock.new(params[:id]).props}
     end
+
+    def publish
+      render inertia: {publication: PublicationMock.new(params[:id]).props}
+    end
   end
 end

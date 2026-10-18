@@ -39,7 +39,7 @@ export function ReviewFooter({ total, final, onDiscard, onEdit, onApprove }: Rev
         </button>
         <button type="button" onClick={onApprove} className={PRIMARY}>
           {final ? (
-            <span>Aprovar e publicar na jornada 🚀</span>
+            <span>Aprovar e escolher quem recebe 🚀</span>
           ) : (
             <>
               <span>Está certo, aprovar</span>

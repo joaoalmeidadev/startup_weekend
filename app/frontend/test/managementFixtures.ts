@@ -1,5 +1,5 @@
 import type {
-  HomeProps,
+  Dashboard,
   Journey,
   JourneySummary,
   LearningModule,
@@ -8,11 +8,16 @@ import type {
   ModuleSummary,
   PeopleProps,
   PersonDetail,
+  Publication,
   SectorGoal,
   TeamDashboard,
 } from '@/types/management'
 
-export const manager: Manager = { name: 'Ana Lima', role_label: 'RH', company: 'Distribuidora Sul' }
+export const manager: Manager = {
+  name: 'Ana Lima',
+  role_label: 'Administradora',
+  company: 'Distribuidora Sul',
+}
 
 export const peopleProps: PeopleProps = {
   summary: {
@@ -67,13 +72,12 @@ export function lessonReview(overrides: Partial<LessonReview> = {}): LessonRevie
     approved: 1,
     final: false,
     breadcrumb: [
-      { label: 'Jornadas', href: '/management/journeys' },
+      { label: 'Conteúdos', href: '/management/journeys' },
       { label: 'Módulo: Rotinas de atendimento', href: '/management/modules/rotinas-de-atendimento' },
     ],
     module_name: 'Rotinas de atendimento',
-    journey_path: '/management/journeys/onboarding-atendimento',
+    publish_path: '/management/modules/rotinas-de-atendimento/publish',
     team: 'atendimento',
-    audience_count: 32,
     manual: { before: 'Antes', highlight: 'destaque', after: '.', note: 'Nota', source: 'Manual · p. 14' },
     lesson: {
       minutes: 5,
@@ -83,7 +87,6 @@ export function lessonReview(overrides: Partial<LessonReview> = {}): LessonRevie
     },
     question: { prompt: 'O que fazer?', options: [{ text: 'B) Acolher', correct: true }] },
     other_questions: 1,
-    journey_outline: [{ title: '1. Base', status: 'done' }],
     ...overrides,
   }
 }
@@ -153,22 +156,6 @@ export const learningModule: LearningModule = {
   review_from: 2,
 }
 
-export const home: HomeProps = {
-  setup: { done: 2, total: 4, href: '/management/setup' },
-  numbers: [
-    { label: 'Nivelados', value: '62%', icon: 'verified', tone: 'leveled' },
-    { label: 'Precisam de atenção', value: '5', icon: 'priority_high', tone: 'attention' },
-  ],
-  attention: [
-    {
-      icon: 'rate_review',
-      text: '7 lições da IA esperando sua revisão',
-      action: 'Revisar',
-      href: '/management/modules/rotinas-de-atendimento',
-    },
-  ],
-}
-
 export const personDetail: PersonDetail = {
   id: 'maria-souza',
   name: 'Maria Souza',
@@ -211,4 +198,29 @@ export const teamDashboard: TeamDashboard = {
     { stage: 'Começaram a jornada', count: 14 },
     { stage: 'Nivelados (selo)', count: 8 },
   ],
+}
+
+export const dashboard: Dashboard = {
+  ...teamDashboard,
+  attention: [
+    {
+      icon: 'rate_review',
+      text: '7 lições da IA esperando sua revisão',
+      action: 'Revisar',
+      href: '/management/lesson_reviews',
+    },
+  ],
+}
+
+export const publication: Publication = {
+  module_name: 'Rotinas de atendimento',
+  lessons: 8,
+  sector: 'Atendimento',
+  audience_count: 32,
+  default_audiences: ['sector', 'newcomers'],
+  journey_outline: [
+    { title: '1. Base (Soft skills)', status: 'done' },
+    { title: '2. Trecho Empresa: Rotinas de atendimento', status: 'new' },
+  ],
+  done_path: '/management/journeys',
 }

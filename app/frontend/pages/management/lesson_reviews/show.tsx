@@ -1,19 +1,20 @@
 import { Head, router, usePage } from '@inertiajs/react'
 import { useState } from 'react'
 import { Icon } from '@/components/Icon'
+import { WizardSteps } from '@/components/WizardSteps'
 import { useMockNotice } from '@/components/MockNotice'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { LessonReview } from '@/types/management'
 import { EditingBanner, LessonEditor } from './LessonEditor'
 import { LessonPreview, PreviewTopBar } from './LessonPreview'
 import { ManualExcerpt } from './ManualExcerpt'
-import { PublishedModal } from './PublishedModal'
 import { QuestionPreview } from './QuestionPreview'
 import { DiscardConfirmBar, EditingFooter, ReviewFooter } from './ReviewFooter'
 import { ReviewHeader, TaskBanner } from './ReviewHeader'
 import { applyDraft, toDraft, type LessonDraft } from './lessonDraft'
 
 const NEXT_LESSON_DELAY_MS = 900
+const REVIEW_STEP = 2
 
 // Approving and editing are local until lessons are persisted; approving walks to the next mock lesson
 function LessonReviewScreen({ review }: { review: LessonReview }) {
@@ -21,10 +22,9 @@ function LessonReviewScreen({ review }: { review: LessonReview }) {
   const [lesson, setLesson] = useState(review.lesson)
   const [draft, setDraft] = useState<LessonDraft | null>(null)
   const [confirmingDiscard, setConfirmingDiscard] = useState(false)
-  const [published, setPublished] = useState(false)
 
   const approve = () => {
-    if (review.final) return setPublished(true)
+    if (review.final) return router.visit(review.publish_path)
     notify(`Lição ${review.position} aprovada! Carregando a lição ${review.position + 1}...`)
     setTimeout(() => router.visit(`/management/lesson_reviews/${review.position + 1}`), NEXT_LESSON_DELAY_MS)
   }
@@ -36,11 +36,11 @@ function LessonReviewScreen({ review }: { review: LessonReview }) {
     setConfirmingDiscard(false)
     notify('A IA está reprocessando a lição a partir do manual...')
   }
-  const backToJourney = () => router.visit(review.journey_path)
 
   return (
     <>
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pt-4 pb-32">
+        <WizardSteps current={REVIEW_STEP} />
         <ReviewHeader review={review} />
         <TaskBanner final={review.final} />
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
@@ -94,7 +94,6 @@ function LessonReviewScreen({ review }: { review: LessonReview }) {
           onApprove={approve}
         />
       )}
-      {published && <PublishedModal review={review} onClose={backToJourney} />}
     </>
   )
 }

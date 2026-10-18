@@ -18,27 +18,6 @@ function Card({ title, icon, children }: { title: string; icon: string; children
   )
 }
 
-function Actions({ personId }: { personId: string }) {
-  return (
-    <div className="flex gap-space-sm">
-      <Link
-        href={`/management/people/${personId}/review`}
-        className="inline-flex h-11 items-center gap-space-xs rounded-xl bg-primary px-space-md text-label-md text-on-primary hover:bg-primary-container"
-      >
-        <Icon name="rate_review" className="text-[1.125rem]" />
-        Avaliar
-      </Link>
-      <Link
-        href={`/management/people/${personId}/role_change`}
-        className="inline-flex h-11 items-center gap-space-xs rounded-xl bg-surface-container-high px-space-md text-label-md text-primary hover:bg-surface-container"
-      >
-        <Icon name="swap_horiz" className="text-[1.125rem]" />
-        Mudar de função
-      </Link>
-    </div>
-  )
-}
-
 function BulletList({ items, empty }: { items: string[]; empty: string }) {
   if (items.length === 0) return <p className="text-body-sm text-outline">{empty}</p>
   return (
@@ -87,7 +66,6 @@ export default function PeopleShow() {
               </div>
             </div>
           </div>
-          <Actions personId={person.id} />
         </section>
 
         <Card title={`Jornada: ${person.journey.name}`} icon="route">
