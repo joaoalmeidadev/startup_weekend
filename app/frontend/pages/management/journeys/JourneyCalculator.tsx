@@ -1,7 +1,8 @@
 import { Link } from '@inertiajs/react'
 import { Icon } from '@/components/Icon'
-import { hourCost, learnerHourly, pointsPerHour, teacherHourly } from '@/lib/pointsRule'
 import type { PointsRule } from '@/types/management'
+import type { JourneyStep } from './journeyEditing'
+import { hourCostFormula, manualNote, pointsFormula, ruleSource, savedFormula } from './journeyFormula'
 import { formatHours, formatReais, type JourneyValue } from './journeyValue'
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`
@@ -20,13 +21,34 @@ function Figure({ icon, figure, label }: { icon: string; figure: string; label: 
   )
 }
 
-function RuleLine({ rule }: { rule: PointsRule }) {
+// The arithmetic behind the big figures, so the admin sees how hours become reais and points
+function MathList({ value, steps, rule }: { value: JourneyValue; steps: JourneyStep[]; rule: PointsRule }) {
+  const note = manualNote(steps)
+
+  return (
+    <div className="flex flex-col gap-1">
+      <h3 id="calculator-math" className="text-label-md text-on-surface">
+        Como chegamos nesses números
+      </h3>
+      <ul
+        aria-labelledby="calculator-math"
+        className="flex flex-col gap-0.5 text-body-sm text-on-surface-variant"
+      >
+        <li>{savedFormula(value.hours, rule)}</li>
+        <li>{pointsFormula(steps, rule)}</li>
+        {note && <li>{note}</li>}
+        <li>{hourCostFormula(rule)}</li>
+      </ul>
+    </div>
+  )
+}
+
+function SourceLine({ source }: { source: string }) {
   return (
     <p className="text-body-sm text-on-surface-variant">
-      1 h de treino = {formatReais(hourCost(rule))} (quem ensina {formatReais(teacherHourly(rule))} + quem
-      aprende {formatReais(learnerHourly(rule))}) · {pointsPerHour(rule)} pts/h — calcule outros valores em{' '}
-      <Link href="/management/rewards" className="font-semibold text-primary hover:underline">
-        Recompensas
+      {ruleSource(source)} ·{' '}
+      <Link href="/management/sectors" className="font-semibold text-primary hover:underline">
+        Ajustar em Setores
       </Link>
     </p>
   )
@@ -46,8 +68,10 @@ function StudyLine({ value }: { value: JourneyValue }) {
   )
 }
 
-// What the journey is worth by the admin's points rule, recalculated on every change to the path
-export function JourneyCalculator({ value, rule }: { value: JourneyValue; rule: PointsRule }) {
+type JourneyCalculatorProps = { value: JourneyValue; steps: JourneyStep[]; rule: PointsRule; source: string }
+
+// What the journey is worth by the points rule of who receives it, recalculated on every change to the path
+export function JourneyCalculator({ value, steps, rule, source }: JourneyCalculatorProps) {
   return (
     <section
       aria-labelledby="calculator-title"
@@ -63,7 +87,8 @@ export function JourneyCalculator({ value, rule }: { value: JourneyValue; rule: 
         <Figure icon="redeem" figure={`até ${formatReais(value.points)}`} label="viram prêmios" />
       </div>
       <div className="flex flex-col gap-1 border-t border-surface-container-high pt-space-sm">
-        <RuleLine rule={rule} />
+        <MathList value={value} steps={steps} rule={rule} />
+        <SourceLine source={source} />
         <StudyLine value={value} />
       </div>
     </section>

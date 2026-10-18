@@ -21,7 +21,7 @@ import { journeyValue } from './journeyValue'
 
 // The Biblioteca on the left, the participant's path on the right; the calculator on top follows every change
 function JourneyBuilder(props: JourneyBuilderProps) {
-  const { journey, catalog, goal, ready_journey, start_ready, points_rule } = props
+  const { journey, catalog, goal, ready_journey, start_ready, points_rule, points_rule_source } = props
   const notify = useMockNotice()
   const [steps, setSteps] = useState(() =>
     toSteps(start_ready && ready_journey ? ready_journey : journey.modules),
@@ -46,7 +46,7 @@ function JourneyBuilder(props: JourneyBuilderProps) {
         options={props.audience_options}
         people={props.people}
       />
-      <JourneyCalculator value={value} rule={points_rule} />
+      <JourneyCalculator value={value} steps={steps} rule={points_rule} source={points_rule_source} />
       <div className="grid grid-cols-1 items-start gap-space-md lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <div className="flex flex-col gap-space-md">
           {ready_journey && (

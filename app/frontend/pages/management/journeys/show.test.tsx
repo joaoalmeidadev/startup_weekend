@@ -8,6 +8,7 @@ import {
   journeyGoal,
   manager,
   pointsRule,
+  pointsRuleSource,
   readyJourney,
   serviceJourney,
 } from '@/test/managementFixtures'
@@ -36,6 +37,7 @@ describe('JourneysShow (montador de jornada)', () => {
       audience_options: audienceOptions,
       people: ['Maria Souza', 'Marcos Oliveira'],
       points_rule: pointsRule,
+      points_rule_source: pointsRuleSource,
       manager,
     }
   })
@@ -82,16 +84,41 @@ describe('JourneysShow (montador de jornada)', () => {
     expect(calculator()).toHaveTextContent('até R$ 108 viram prêmios')
   })
 
-  it('shows the rule it used, set in Recompensas', () => {
+  it('shows how it got to the figures', () => {
+    page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
     render(<JourneysShow />)
 
-    expect(calculator()).toHaveTextContent(
-      '1 h de treino = R$ 30 (quem ensina R$ 20 + quem aprende R$ 10) · 12 pts/h — calcule outros valores em Recompensas',
-    )
-    expect(within(calculator()).getByRole('link', { name: 'Recompensas' })).toHaveAttribute(
+    const math = within(within(calculator()).getByRole('list', { name: 'Como chegamos nesses números' }))
+    expect(math.getByText('9 h × R$ 30/h = R$ 270 economizados')).toBeInTheDocument()
+    expect(math.getByText('9 h × 12 pts/h = 108 pts')).toBeInTheDocument()
+    expect(math.getByText('1 h de treino = quem ensina R$ 20/h + quem aprende R$ 10/h')).toBeInTheDocument()
+    expect(math.queryByText(/pontos manuais/)).not.toBeInTheDocument()
+  })
+
+  it('tells where the value of the hour comes from, to adjust in Setores', () => {
+    render(<JourneysShow />)
+
+    expect(calculator()).toHaveTextContent('Valor de Atendimento · padrão da empresa')
+    expect(within(calculator()).getByRole('link', { name: 'Ajustar em Setores' })).toHaveAttribute(
       'href',
-      '/management/rewards',
+      '/management/sectors',
     )
+    expect(calculator()).not.toHaveTextContent('Recompensas')
+  })
+
+  it('shows the formula of each stop next to its hours', async () => {
+    page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
+    render(<JourneysShow />)
+
+    expect(within(preview()).getByText('5 h × 12 pts/h = 60 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('4 h × 12 pts/h = 48 pts')).toBeInTheDocument()
+
+    await userEvent.type(screen.getByRole('spinbutton', { name: 'Pontos manuais de Uso do Sistema' }), '100')
+
+    expect(within(preview()).getByText('manual: 100 pts')).toBeInTheDocument()
+    const math = within(within(calculator()).getByRole('list', { name: 'Como chegamos nesses números' }))
+    expect(math.getByText('5 h × 12 pts/h + 100 pts manuais = 160 pts')).toBeInTheDocument()
+    expect(math.getByText('inclui pontos manuais em 1 etapa')).toBeInTheDocument()
   })
 
   it('keeps the study time and the goal coverage as a secondary line', () => {
@@ -104,13 +131,13 @@ describe('JourneysShow (montador de jornada)', () => {
   it('edits the hours each content replaces and recalculates the journey', async () => {
     render(<JourneysShow />)
 
-    expect(within(preview()).getByText('72 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('6 h × 12 pts/h = 72 pts')).toBeInTheDocument()
     const hours = screen.getByRole('spinbutton', { name: 'Horas de treino de Rotinas' })
     expect(hours).toHaveValue(6)
     await userEvent.clear(hours)
     await userEvent.type(hours, '2')
 
-    expect(within(preview()).getByText('24 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('2 h × 12 pts/h = 24 pts')).toBeInTheDocument()
     expect(calculator()).toHaveTextContent('8 h de treino substituídas')
     expect(calculator()).toHaveTextContent('96 pts na jornada')
   })
@@ -121,7 +148,7 @@ describe('JourneysShow (montador de jornada)', () => {
     const manual = screen.getByRole('spinbutton', { name: 'Pontos manuais de Rotinas' })
     await userEvent.type(manual, '100')
 
-    expect(within(preview()).getByText('100 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('manual: 100 pts')).toBeInTheDocument()
     expect(within(preview()).getByText('manual')).toBeInTheDocument()
     expect(calculator()).toHaveTextContent('172 pts na jornada')
 

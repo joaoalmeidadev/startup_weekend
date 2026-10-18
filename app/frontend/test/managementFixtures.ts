@@ -299,6 +299,9 @@ export const serviceJourney: Journey = {
   modules: [tratamentoDeReclamacoes, usoDoSistema],
 }
 
+// Where the points rule of a journey to Atendimento comes from, as JourneyMock sends it
+export const pointsRuleSource = 'Atendimento · padrão da empresa'
+
 export const journeyGoal: JourneyGoal = {
   sector: 'Atendimento',
   slug: 'atendimento',

@@ -38,9 +38,9 @@ describe('RewardsShow', () => {
 
     await openCalculator()
 
-    expect(calculator().getByLabelText('Salário de quem ensina (R$)')).toHaveValue(4400)
-    expect(calculator().getByLabelText('Salário de quem aprende (R$)')).toHaveValue(2200)
-    expect(calculator().getByLabelText('Quanto da economia vira prêmio (%)')).toHaveValue(40)
+    expect(calculator().getByLabelText('Salário mensal de quem ensina (R$)')).toHaveValue(4400)
+    expect(calculator().getByLabelText('Salário mensal de quem aprende (R$)')).toHaveValue(2200)
+    expect(calculator().getByRole('radio', { name: 'Equilibrado · 40%' })).toBeChecked()
     expect(calculator().getByLabelText('Horas de treino substituídas')).toHaveValue(6)
     expect(calculator().getByText('1 h de treino presencial custa R$ 30')).toBeInTheDocument()
     expect(calculator().getByText('12 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
@@ -52,13 +52,24 @@ describe('RewardsShow', () => {
     render(<RewardsShow />)
     await openCalculator()
 
-    await retype('Salário de quem ensina (R$)', '6600')
-    await retype('Quanto da economia vira prêmio (%)', '20')
+    await retype('Salário mensal de quem ensina (R$)', '6600')
+    await userEvent.click(calculator().getByRole('radio', { name: 'Econômico · 20%' }))
     await retype('Horas de treino substituídas', '3')
 
     expect(calculator().getByText('1 h de treino presencial custa R$ 40')).toBeInTheDocument()
     expect(calculator().getByText('8 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
     expect(calculator().getByText('3 h de treino → R$ 120 economizados → 24 pts')).toBeInTheDocument()
+  })
+
+  it('takes a custom share of the saving', async () => {
+    render(<RewardsShow />)
+    await openCalculator()
+
+    await userEvent.click(calculator().getByRole('radio', { name: 'Personalizar' }))
+    await retype('Porcentagem que vira prêmio (%)', '50')
+
+    expect(calculator().getByText('15 pts por hora para quem estuda (1 pt = R$ 1)')).toBeInTheDocument()
+    expect(calculator().getByText('6 h de treino → R$ 180 economizados → 90 pts')).toBeInTheDocument()
   })
 
   it('tells how much training a reward stands for', async () => {
@@ -75,7 +86,7 @@ describe('RewardsShow', () => {
   it('leaves the catalog untouched and closes', async () => {
     render(<RewardsShow />)
     await openCalculator()
-    await retype('Quanto da economia vira prêmio (%)', '20')
+    await userEvent.click(calculator().getByRole('radio', { name: 'Econômico · 20%' }))
 
     await userEvent.click(calculator().getByRole('button', { name: 'Fechar' }))
 
