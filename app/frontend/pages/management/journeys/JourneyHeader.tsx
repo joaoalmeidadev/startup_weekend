@@ -8,6 +8,7 @@ import type { AudienceOption, Journey, JourneyAudience, JourneyGoal } from '@/ty
 import { AudiencePicker } from './AudiencePicker'
 import { KindTag } from './KindTag'
 import { audienceChips } from './audience'
+import { formatHours } from './journeyValue'
 
 type AudienceChoices = { options: AudienceOption[]; people: string[] }
 
@@ -71,9 +72,9 @@ function AudienceLine({ journey, ...choices }: AudienceChoices & { journey: Jour
   )
 }
 
-type JourneyHeaderProps = AudienceChoices & { journey: Journey; goal: JourneyGoal; points: number }
+type JourneyHeaderProps = AudienceChoices & { journey: Journey; goal: JourneyGoal; hours: number }
 
-export function JourneyHeader({ journey, goal, points, ...choices }: JourneyHeaderProps) {
+export function JourneyHeader({ journey, goal, hours, ...choices }: JourneyHeaderProps) {
   const notify = useMockNotice()
 
   return (
@@ -97,7 +98,9 @@ export function JourneyHeader({ journey, goal, points, ...choices }: JourneyHead
         <div className="flex flex-col items-start gap-space-xs lg:items-end">
           <button
             type="button"
-            onClick={() => notify(`Alterações publicadas: ${points} pts na jornada (simulação).`)}
+            onClick={() =>
+              notify(`Alterações publicadas: ${formatHours(hours)} h de treino na jornada (simulação).`)
+            }
             className="inline-flex h-12 items-center gap-space-xs rounded-xl bg-primary px-space-lg text-label-lg text-on-primary shadow-md hover:bg-primary-container"
           >
             <Icon name="publish" className="text-[1.25rem]" />

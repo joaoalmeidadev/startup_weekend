@@ -3,7 +3,6 @@ import { catalog, journey } from '@/test/managementFixtures'
 import {
   addStep,
   changeHours,
-  changeManualPoints,
   moveStep,
   removeStep,
   stepModuleIds,
@@ -16,12 +15,8 @@ const postura = catalog[0].modules[2]
 const steps = toSteps(journey.modules)
 
 describe('journeyEditing', () => {
-  it('starts each step with the training hours of its content and no manual points', () => {
-    expect(steps.map(({ hours, manualPoints }) => [hours, manualPoints])).toEqual([
-      [3, null],
-      [3, null],
-      [6, null],
-    ])
+  it('starts each step with the training hours of its content', () => {
+    expect(steps.map(({ hours }) => hours)).toEqual([3, 3, 6])
   })
 
   it('swaps a step with its neighbour', () => {
@@ -42,7 +37,7 @@ describe('journeyEditing', () => {
       'rotinas-de-atendimento',
       'postura-e-empatia',
     ])
-    expect(added[3]).toEqual({ module: postura, hours: 3, manualPoints: null })
+    expect(added[3]).toEqual({ module: postura, hours: 3 })
   })
 
   it('removes a step', () => {
@@ -55,12 +50,5 @@ describe('journeyEditing', () => {
 
   it('changes the hours of one step only', () => {
     expect(changeHours(steps, 'matematica', 4.5).map((step) => step.hours)).toEqual([3, 4.5, 6])
-  })
-
-  it('sets and clears the manual points of one step', () => {
-    const manual = changeManualPoints(steps, 'rotinas-de-atendimento', 150)
-
-    expect(manual.map((step) => step.manualPoints)).toEqual([null, null, 150])
-    expect(changeManualPoints(manual, 'rotinas-de-atendimento', null)[2].manualPoints).toBeNull()
   })
 })

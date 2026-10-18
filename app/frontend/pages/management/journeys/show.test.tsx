@@ -74,14 +74,13 @@ describe('JourneysShow (montador de jornada)', () => {
     expect(calculator()).toHaveTextContent('Sem meta de setor para comparar')
   })
 
-  it('prices the journey by the points rule: hours of training replaced, reais saved and points', () => {
+  it('prices the journey in hours of training replaced and reais saved, with no points', () => {
     page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
     render(<JourneysShow />)
 
     expect(calculator()).toHaveTextContent('9 h de treino substituídas')
     expect(calculator()).toHaveTextContent('R$ 270 economizados')
-    expect(calculator()).toHaveTextContent('108 pts na jornada')
-    expect(calculator()).toHaveTextContent('até R$ 108 viram prêmios')
+    expect(calculator()).not.toHaveTextContent(/pts|prêmios/)
   })
 
   it('shows how it got to the figures', () => {
@@ -90,9 +89,8 @@ describe('JourneysShow (montador de jornada)', () => {
 
     const math = within(within(calculator()).getByRole('list', { name: 'Como chegamos nesses números' }))
     expect(math.getByText('9 h × R$ 30/h = R$ 270 economizados')).toBeInTheDocument()
-    expect(math.getByText('9 h × 12 pts/h = 108 pts')).toBeInTheDocument()
     expect(math.getByText('1 h de treino = quem ensina R$ 20/h + quem aprende R$ 10/h')).toBeInTheDocument()
-    expect(math.queryByText(/pontos manuais/)).not.toBeInTheDocument()
+    expect(math.queryByText(/pts|pontos/)).not.toBeInTheDocument()
   })
 
   it('tells where the value of the hour comes from, to adjust in Setores', () => {
@@ -106,19 +104,21 @@ describe('JourneysShow (montador de jornada)', () => {
     expect(calculator()).not.toHaveTextContent('Recompensas')
   })
 
-  it('shows the formula of each stop next to its hours', async () => {
+  it('shows the reais each stop saves next to its hours, with no points to type', () => {
     page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
     render(<JourneysShow />)
 
-    expect(within(preview()).getByText('5 h × 12 pts/h = 60 pts')).toBeInTheDocument()
-    expect(within(preview()).getByText('4 h × 12 pts/h = 48 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('5 h × R$ 30/h = R$ 150')).toBeInTheDocument()
+    expect(within(preview()).getByText('4 h × R$ 30/h = R$ 120')).toBeInTheDocument()
+    expect(screen.queryByRole('spinbutton', { name: /Pontos manuais/ })).not.toBeInTheDocument()
+    expect(preview()).not.toHaveTextContent(/pts|manual/)
+  })
 
-    await userEvent.type(screen.getByRole('spinbutton', { name: 'Pontos manuais de Uso do Sistema' }), '100')
+  it('shows no points anywhere in the builder', () => {
+    page.props = { ...page.props, journey: serviceJourney }
+    render(<JourneysShow />)
 
-    expect(within(preview()).getByText('manual: 100 pts')).toBeInTheDocument()
-    const math = within(within(calculator()).getByRole('list', { name: 'Como chegamos nesses números' }))
-    expect(math.getByText('5 h × 12 pts/h + 100 pts manuais = 160 pts')).toBeInTheDocument()
-    expect(math.getByText('inclui pontos manuais em 1 etapa')).toBeInTheDocument()
+    expect(document.body).not.toHaveTextContent(/pts/)
   })
 
   it('keeps the study time and the goal coverage as a secondary line', () => {
@@ -131,31 +131,15 @@ describe('JourneysShow (montador de jornada)', () => {
   it('edits the hours each content replaces and recalculates the journey', async () => {
     render(<JourneysShow />)
 
-    expect(within(preview()).getByText('6 h × 12 pts/h = 72 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('6 h × R$ 30/h = R$ 180')).toBeInTheDocument()
     const hours = screen.getByRole('spinbutton', { name: 'Horas de treino de Rotinas' })
     expect(hours).toHaveValue(6)
     await userEvent.clear(hours)
     await userEvent.type(hours, '2')
 
-    expect(within(preview()).getByText('2 h × 12 pts/h = 24 pts')).toBeInTheDocument()
+    expect(within(preview()).getByText('2 h × R$ 30/h = R$ 60')).toBeInTheDocument()
     expect(calculator()).toHaveTextContent('8 h de treino substituídas')
-    expect(calculator()).toHaveTextContent('96 pts na jornada')
-  })
-
-  it('lets the admin type the points of a content, and clear them back to the rule', async () => {
-    render(<JourneysShow />)
-
-    const manual = screen.getByRole('spinbutton', { name: 'Pontos manuais de Rotinas' })
-    await userEvent.type(manual, '100')
-
-    expect(within(preview()).getByText('manual: 100 pts')).toBeInTheDocument()
-    expect(within(preview()).getByText('manual')).toBeInTheDocument()
-    expect(calculator()).toHaveTextContent('172 pts na jornada')
-
-    await userEvent.clear(manual)
-
-    expect(within(preview()).queryByText('manual')).not.toBeInTheDocument()
-    expect(calculator()).toHaveTextContent('144 pts na jornada')
+    expect(calculator()).toHaveTextContent('R$ 240 economizados')
   })
 
   it('shows the single ordered path the participant follows, ending in the badge', () => {
@@ -205,7 +189,7 @@ describe('JourneysShow (montador de jornada)', () => {
 
     expect(stops()).toEqual(['Conversa Clara', 'Matemática'])
     expect(calculator()).toHaveTextContent('6 h de treino substituídas')
-    expect(calculator()).toHaveTextContent('72 pts na jornada')
+    expect(calculator()).toHaveTextContent('R$ 180 economizados')
     expect(screen.getByRole('button', { name: 'Adicionar Rotinas' })).toBeEnabled()
   })
 
@@ -215,7 +199,7 @@ describe('JourneysShow (montador de jornada)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Descer Matemática' }))
 
     expect(stops()).toEqual(['Conversa Clara', 'Rotinas', 'Matemática'])
-    expect(calculator()).toHaveTextContent('144 pts na jornada')
+    expect(calculator()).toHaveTextContent('12 h de treino substituídas')
   })
 
   it('starts over with the ready-made Base Nivela on a base journey', async () => {
@@ -244,13 +228,14 @@ describe('JourneysShow (montador de jornada)', () => {
     expect(screen.getByText('Jornada Setor')).toBeInTheDocument()
   })
 
-  it('publishes the changes as a simulation', async () => {
+  it('publishes the changes as a simulation, telling the hours of training in the journey', async () => {
+    page.props = { ...page.props, journey: serviceJourney, ready_journey: null }
     render(<JourneysShow />)
 
     await userEvent.click(screen.getByRole('button', { name: /Publicar alterações/ }))
 
     expect(screen.getByRole('status')).toHaveTextContent(
-      'Alterações publicadas: 144 pts na jornada (simulação).',
+      'Alterações publicadas: 9 h de treino na jornada (simulação).',
     )
   })
 

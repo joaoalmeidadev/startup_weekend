@@ -1,40 +1,21 @@
 import { describe, expect, it } from 'vitest'
 import { journey, journeyGoal, pointsRule, serviceJourney } from '@/test/managementFixtures'
-import { changeHours, changeManualPoints, toSteps } from './journeyEditing'
-import { formatHours, formatReais, journeyValue, stepPoints, weeksToFinish } from './journeyValue'
+import { changeHours, toSteps } from './journeyEditing'
+import { formatHours, formatReais, journeyValue, weeksToFinish } from './journeyValue'
 
 const value = (steps = toSteps(journey.modules)) => journeyValue(steps, journeyGoal, pointsRule)
 
-describe('stepPoints', () => {
-  it('turns the hours of training a step replaces into points by the admin rule', () => {
-    const [tratamento] = toSteps(serviceJourney.modules)
-
-    expect(stepPoints(tratamento, pointsRule)).toBe(60)
-  })
-
-  it('uses the manual points when the admin typed them', () => {
-    const [tratamento] = toSteps(serviceJourney.modules)
-
-    expect(stepPoints({ ...tratamento, manualPoints: 50 }, pointsRule)).toBe(50)
-    expect(stepPoints({ ...tratamento, manualPoints: 0 }, pointsRule)).toBe(0)
-  })
-})
-
 describe('journeyValue', () => {
-  it('adds up the training hours, what they save and the points of the whole journey', () => {
+  it('adds up the training hours of the whole journey and what they save', () => {
     const service = journeyValue(toSteps(serviceJourney.modules), journeyGoal, pointsRule)
 
-    expect(service).toMatchObject({ hours: 9, saved: 270, points: 108 })
+    expect(service).toMatchObject({ hours: 9, saved: 270 })
   })
 
-  it('follows edited hours and manual points', () => {
-    const edited = changeManualPoints(
-      changeHours(toSteps(journey.modules), 'matematica', 1.5),
-      'conversa-clara',
-      10,
-    )
+  it('follows edited hours', () => {
+    const edited = changeHours(toSteps(journey.modules), 'matematica', 1.5)
 
-    expect(value(edited)).toMatchObject({ hours: 10.5, saved: 315, points: 10 + 18 + 72 })
+    expect(value(edited)).toMatchObject({ hours: 10.5, saved: 315 })
   })
 
   it('counts contents, lessons and the weeks to study them', () => {
@@ -49,7 +30,6 @@ describe('journeyValue', () => {
     expect(value([])).toEqual({
       hours: 0,
       saved: 0,
-      points: 0,
       modules: 0,
       lessons: 0,
       weeks: 0,

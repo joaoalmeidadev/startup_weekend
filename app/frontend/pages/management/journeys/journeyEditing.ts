@@ -1,14 +1,9 @@
 import type { ModuleSummary } from '@/types/management'
 
-// One stop of the participant's path: the content, the hours of in-person training it replaces
-// and the points the admin typed by hand, if any (they override the rule)
-export type JourneyStep = { module: ModuleSummary; hours: number; manualPoints: number | null }
+// One stop of the participant's path: the content and the hours of in-person training it replaces
+export type JourneyStep = { module: ModuleSummary; hours: number }
 
-const toStep = (module: ModuleSummary): JourneyStep => ({
-  module,
-  hours: module.teaching_hours,
-  manualPoints: null,
-})
+const toStep = (module: ModuleSummary): JourneyStep => ({ module, hours: module.teaching_hours })
 
 export const toSteps = (modules: ModuleSummary[]) => modules.map(toStep)
 
@@ -37,8 +32,4 @@ const updateStep = (steps: JourneyStep[], moduleId: string, changes: Partial<Jou
 
 export function changeHours(steps: JourneyStep[], moduleId: string, hours: number) {
   return updateStep(steps, moduleId, { hours })
-}
-
-export function changeManualPoints(steps: JourneyStep[], moduleId: string, manualPoints: number | null) {
-  return updateStep(steps, moduleId, { manualPoints })
 }

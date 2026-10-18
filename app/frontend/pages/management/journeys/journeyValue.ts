@@ -1,4 +1,4 @@
-import { pointsFor, savedFor } from '@/lib/pointsRule'
+import { savedFor } from '@/lib/pointsRule'
 import type { JourneyGoal, PointsRule } from '@/types/management'
 import type { JourneyStep } from './journeyEditing'
 
@@ -9,7 +9,6 @@ export const MINUTES_PER_WEEK = 25
 export type JourneyValue = {
   hours: number
   saved: number
-  points: number
   modules: number
   lessons: number
   weeks: number
@@ -19,10 +18,6 @@ export type JourneyValue = {
 
 const sum = (steps: JourneyStep[], pick: (step: JourneyStep) => number) =>
   steps.reduce((total, step) => total + pick(step), 0)
-
-export function stepPoints(step: JourneyStep, rule: PointsRule) {
-  return step.manualPoints ?? pointsFor(step.hours, rule)
-}
 
 export function weeksToFinish(lessons: number) {
   if (lessons === 0) return 0
@@ -40,7 +35,6 @@ export function journeyValue(steps: JourneyStep[], goal: JourneyGoal, rule: Poin
   return {
     hours,
     saved: savedFor(hours, rule),
-    points: sum(steps, (step) => stepPoints(step, rule)),
     modules: steps.length,
     lessons,
     weeks: weeksToFinish(lessons),
