@@ -441,6 +441,7 @@ export const groupDetail: SectorDetail = {
 }
 
 export const newSectorProps: NewSectorProps = {
+  library_competencies: ['Cultura', 'Rotinas'],
   people: [
     { id: 'maria-souza', name: 'Maria Souza', sector: 'Atendimento', avatar_url: '/ms.jpg' },
     { id: 'lucas-pereira', name: 'Lucas Pereira', sector: 'Comercial', avatar_url: null },
@@ -489,3 +490,5 @@ export const rewardsProps: RewardsProps = {
 }
 
 export const pointsRule: PointsRule = { manager_hourly: 60, person_hourly: 25, reward_share: 0.4 }
+
+export const libraryCompetencies = ['Comunicação', 'Cultura', 'Rotinas', 'Sistema']

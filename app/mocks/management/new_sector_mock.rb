@@ -8,7 +8,8 @@ module Management
     ].freeze
 
     def props
-      {people: people, levels: SectorCatalog::LEVELS, competencies: competencies}
+      {people: people, levels: SectorCatalog::LEVELS, competencies: competencies,
+       library_competencies: ModuleCatalog.competencies}
     end
 
     private

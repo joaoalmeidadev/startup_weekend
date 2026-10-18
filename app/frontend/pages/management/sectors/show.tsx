@@ -9,7 +9,11 @@ import { SectorGoal } from './SectorGoal'
 import { SectorKindTag } from './SectorKindTag'
 import { SectorPeople } from './SectorPeople'
 
-type SectorsShowProps = { sector: SectorDetail; invite_sectors: InviteSector[] }
+type SectorsShowProps = {
+  sector: SectorDetail
+  invite_sectors: InviteSector[]
+  library_competencies: string[]
+}
 
 // Work sectors invite straight into themselves; a group still needs each person's work sector
 function SectorInvite({ sector, sectors }: { sector: SectorDetail; sectors: InviteSector[] }) {
@@ -18,7 +22,11 @@ function SectorInvite({ sector, sectors }: { sector: SectorDetail; sectors: Invi
 }
 
 export default function SectorsShow() {
-  const { sector, invite_sectors: inviteSectors } = usePage<SectorsShowProps>().props
+  const {
+    sector,
+    invite_sectors: inviteSectors,
+    library_competencies: libraryCompetencies,
+  } = usePage<SectorsShowProps>().props
 
   return (
     <ManagementLayout>
@@ -41,7 +49,7 @@ export default function SectorsShow() {
           <SectorInvite sector={sector} sectors={inviteSectors} />
         </section>
         <SectorPeople sector={sector} />
-        <SectorGoal key={sector.slug} sector={sector} />
+        <SectorGoal key={sector.slug} sector={sector} libraryCompetencies={libraryCompetencies} />
       </div>
     </ManagementLayout>
   )

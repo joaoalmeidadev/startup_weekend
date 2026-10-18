@@ -1,7 +1,14 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { groupDetail, manager, peopleProps, sectorDetail, sectorWithoutGoal } from '@/test/managementFixtures'
+import {
+  groupDetail,
+  libraryCompetencies,
+  manager,
+  peopleProps,
+  sectorDetail,
+  sectorWithoutGoal,
+} from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
 import SectorsShow from './show'
 
@@ -13,7 +20,12 @@ const peopleBlock = () => within(screen.getByRole('region', { name: 'Pessoas' })
 describe('SectorsShow', () => {
   beforeEach(() => {
     page.url = '/management/sectors/atendimento'
-    page.props = { sector: sectorDetail, invite_sectors: peopleProps.sectors, manager }
+    page.props = {
+      sector: sectorDetail,
+      invite_sectors: peopleProps.sectors,
+      library_competencies: libraryCompetencies,
+      manager,
+    }
   })
 
   it('keeps the Setores tab current and links back to the list', () => {
@@ -36,7 +48,7 @@ describe('SectorsShow', () => {
     await userEvent.click(screen.getByRole('button', { name: /Convidar para este setor/ }))
     await userEvent.click(screen.getByRole('button', { name: /Por e-mail/ }))
 
-    expect(screen.getByRole('combobox')).toHaveValue('Atendimento')
+    expect(within(screen.getByRole('dialog')).getByLabelText('Setor')).toHaveValue('Atendimento')
   })
 
   it('lists each person with progress, score against the goal, activity and forecast', () => {
@@ -123,7 +135,12 @@ describe('SectorsShow', () => {
 
   describe('when it has no goal yet', () => {
     beforeEach(() => {
-      page.props = { sector: sectorWithoutGoal, invite_sectors: peopleProps.sectors, manager }
+      page.props = {
+        sector: sectorWithoutGoal,
+        invite_sectors: peopleProps.sectors,
+        library_competencies: libraryCompetencies,
+        manager,
+      }
     })
 
     it('asks to pick a level first', () => {
@@ -150,7 +167,12 @@ describe('SectorsShow', () => {
   describe('for a group', () => {
     beforeEach(() => {
       page.url = '/management/sectors/staff'
-      page.props = { sector: groupDetail, invite_sectors: peopleProps.sectors, manager }
+      page.props = {
+        sector: groupDetail,
+        invite_sectors: peopleProps.sectors,
+        library_competencies: libraryCompetencies,
+        manager,
+      }
     })
 
     it('shows the Grupo tag and the work sector of each person', () => {
@@ -167,6 +189,44 @@ describe('SectorsShow', () => {
       await userEvent.click(peopleBlock().getByRole('button', { name: /Adicionar pessoas/ }))
 
       expect(screen.getByRole('status')).toHaveTextContent('Pessoas adicionadas ao grupo Staff (simulação).')
+    })
+  })
+
+  describe('adding a competency to the goal', () => {
+    const addBlock = () => within(screen.getByRole('group', { name: 'Adicionar competência' }))
+
+    it('adds a library competency at the level target', async () => {
+      render(<SectorsShow />)
+
+      const select = addBlock().getByLabelText('Competência para adicionar')
+      expect(within(select).queryByRole('option', { name: 'Comunicação' })).not.toBeInTheDocument()
+      await userEvent.selectOptions(select, 'Rotinas')
+      await userEvent.click(addBlock().getByRole('button', { name: 'Adicionar' }))
+
+      expect(ruler('Rotinas').value).toBe('75')
+      expect(
+        within(addBlock().getByLabelText('Competência para adicionar')).queryByRole('option', {
+          name: 'Rotinas',
+        }),
+      ).not.toBeInTheDocument()
+    })
+
+    it('creates a new competency in a single word', async () => {
+      render(<SectorsShow />)
+
+      await userEvent.selectOptions(
+        addBlock().getByLabelText('Competência para adicionar'),
+        '+ Nova competência',
+      )
+      await userEvent.type(addBlock().getByLabelText('Nova competência'), 'Boa vontade')
+      expect(addBlock().getByText('Use uma palavra só, ex.: Pontualidade.')).toBeInTheDocument()
+      expect(addBlock().getByRole('button', { name: 'Adicionar' })).toBeDisabled()
+
+      await userEvent.clear(addBlock().getByLabelText('Nova competência'))
+      await userEvent.type(addBlock().getByLabelText('Nova competência'), 'Pontualidade')
+      await userEvent.click(addBlock().getByRole('button', { name: 'Adicionar' }))
+
+      expect(ruler('Pontualidade').value).toBe('75')
     })
   })
 })

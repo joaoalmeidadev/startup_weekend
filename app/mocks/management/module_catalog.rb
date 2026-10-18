@@ -44,6 +44,11 @@ module Management
       MODULES.keys.map { |id| summary(id) }
     end
 
+    # Every competency the library trains, once each
+    def self.competencies
+      all.pluck(:competency).uniq.sort
+    end
+
     def self.by_source(source)
       all.select { |mod| mod[:source] == source }
     end

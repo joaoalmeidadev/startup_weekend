@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react'
 import { Icon } from '@/components/Icon'
-import type { Competency, GoalLevel } from '@/types/management'
+import type { GoalLevel } from '@/types/management'
+import { AddCompetency } from './AddCompetency'
 import { CompetencyCard } from './CompetencyCard'
 import { GoalLevelPicker } from './GoalLevelPicker'
 import type { GoalLevels } from './useGoalLevels'
 
 type GoalFieldsProps = {
   levels: GoalLevel[]
-  competencies: Competency[]
+  libraryCompetencies: string[]
   goal: GoalLevels
   // Shown between the level picker and the rulers (e.g. the veterans note)
   children?: ReactNode
@@ -33,8 +34,9 @@ function LevelStatus({ level, adjusted }: { level: GoalLevel; adjusted: boolean 
 }
 
 // Level picker plus one ruler per competency, shown once a level is picked
-export function GoalFields({ levels, competencies, goal, children }: GoalFieldsProps) {
-  const { level, goals, adjusted, pickLevel, setGoal } = goal
+export function GoalFields({ levels, libraryCompetencies, goal, children }: GoalFieldsProps) {
+  const { level, goals, adjusted, pickLevel, setGoal, competencies, addCompetency } = goal
+  const inGoal = new Set(competencies.map((competency) => competency.name))
   return (
     <>
       <GoalLevelPicker levels={levels} selected={level?.key ?? null} adjusted={adjusted} onPick={pickLevel} />
@@ -50,6 +52,10 @@ export function GoalFields({ levels, competencies, goal, children }: GoalFieldsP
               onGoalChange={(value) => setGoal(index, value)}
             />
           ))}
+          <AddCompetency
+            available={libraryCompetencies.filter((name) => !inGoal.has(name))}
+            onAdd={addCompetency}
+          />
         </>
       )}
     </>

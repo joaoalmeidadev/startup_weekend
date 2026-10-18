@@ -24,7 +24,7 @@ module Management
         {label: label, competencies: sector[:competencies].map(&:first)}
       end
       in_goals = goals.flat_map { |group| group[:competencies] }
-      others = ModuleCatalog.all.pluck(:competency).uniq.sort - in_goals
+      others = ModuleCatalog.competencies - in_goals
       goals + [{label: "Outras da Biblioteca", competencies: others}]
     end
   end

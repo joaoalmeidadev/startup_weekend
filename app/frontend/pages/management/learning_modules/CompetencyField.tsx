@@ -1,6 +1,7 @@
 import type { CompetencyGroup } from '@/types/management'
 import { FIELD } from './FormBlock'
-import { isSingleWord, NEW_COMPETENCY, type ContentDraft } from './contentDraft'
+import { isSingleWord } from '@/lib/text'
+import { NEW_COMPETENCY, type ContentDraft } from './contentDraft'
 
 type CompetencyFieldProps = {
   draft: ContentDraft

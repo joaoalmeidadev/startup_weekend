@@ -34,6 +34,14 @@ RSpec.describe "Management sectors", :inertia do
   end
 
   describe "GET /management/sectors/:slug" do
+    it "offers the library competencies to add to the goal" do
+      get management_sector_path("atendimento")
+
+      competencies = inertia.props[:library_competencies]
+      expect(competencies).to include("Rotinas", "Cultura", "Comunicação")
+      expect(competencies).to eq(competencies.uniq.sort)
+    end
+
     it "shows a work sector with its people and its goal" do
       get management_sector_path("atendimento")
 
@@ -99,6 +107,7 @@ RSpec.describe "Management sectors", :inertia do
       expect(inertia.props[:competencies].pluck(:name))
         .to eq(%w[Comunicação Raciocínio Escrita])
       expect(inertia.props[:competencies].pluck(:goal)).to all(be_nil)
+      expect(inertia.props[:library_competencies]).to include("Rotinas")
     end
   end
 

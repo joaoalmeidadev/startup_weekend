@@ -70,14 +70,20 @@ function SaveBar({ sector, levelLabel }: { sector: string; levelLabel: string })
 }
 
 // Start from a market level and fine-tune each competency with the veterans reference
-export function SectorGoal({ sector }: { sector: SectorDetail }) {
+export function SectorGoal({
+  sector,
+  libraryCompetencies,
+}: {
+  sector: SectorDetail
+  libraryCompetencies: string[]
+}) {
   const goal = useGoalLevels(sector)
   const { level, adjusted } = goal
 
   return (
     <Block title="Meta" hint="Comece por um nível de mercado e ajuste com a referência dos seus veteranos.">
       {!level && <NoGoalYet sector={sector.name} />}
-      <GoalFields levels={sector.levels} competencies={sector.competencies} goal={goal}>
+      <GoalFields levels={sector.levels} libraryCompetencies={libraryCompetencies} goal={goal}>
         <VeteransNote expertsCount={sector.experts_count} />
       </GoalFields>
       {level && <SaveBar sector={sector.name} levelLabel={adjusted ? 'Personalizado' : level.label} />}

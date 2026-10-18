@@ -1,3 +1,5 @@
+import { isSingleWord } from '@/lib/text'
+
 export type Material = 'file' | 'lessons'
 export type Origin = 'ai' | 'company'
 export type DraftLesson = { title: string; text: string }
@@ -44,8 +46,6 @@ function hasMaterial(draft: ContentDraft) {
   if (draft.material === 'file') return draft.fileName !== null
   return draft.origin === 'company' && draft.lessons.some((lesson) => lesson.title.trim() !== '')
 }
-
-export const isSingleWord = (text: string) => /^\p{L}+$/u.test(text)
 
 export function chosenCompetency(draft: ContentDraft) {
   return draft.competency === NEW_COMPETENCY ? draft.newCompetency.trim() : draft.competency

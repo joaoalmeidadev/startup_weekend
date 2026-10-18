@@ -121,7 +121,7 @@ export default function SectorsNew() {
           <PeoplePicker people={props.people} selected={draft.people} onToggle={togglePerson} />
         </Block>
         <Block title="3. Meta" hint="Comece pelas competências da Base. Você ajusta cada uma depois.">
-          <GoalFields levels={props.levels} competencies={props.competencies} goal={goal} />
+          <GoalFields levels={props.levels} libraryCompetencies={props.library_competencies} goal={goal} />
         </Block>
         <CreateBar draft={draft} missing={missing} />
       </div>

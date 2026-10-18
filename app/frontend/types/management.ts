@@ -196,7 +196,12 @@ export type SectorDetail = {
 
 export type SectorCandidate = Pick<Person, 'id' | 'name' | 'sector' | 'avatar_url'>
 
-export type NewSectorProps = { people: SectorCandidate[]; levels: GoalLevel[]; competencies: Competency[] }
+export type NewSectorProps = {
+  people: SectorCandidate[]
+  levels: GoalLevel[]
+  competencies: Competency[]
+  library_competencies: string[]
+}
 
 // Rewards: 1 point = R$ 1, so a reward costs at least as many points as reais
 export type Reward = {

@@ -10,3 +10,6 @@ export const slugify = (text: string) =>
   normalize(text)
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
+
+// Competencies are a single word, e.g. "Pontualidade"
+export const isSingleWord = (text: string) => /^\p{L}+$/u.test(text)
