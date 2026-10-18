@@ -127,12 +127,12 @@ describe('JourneysIndex', () => {
     ).toHaveLength(2)
   })
 
-  it('points to the sector goal set by the most experienced people', () => {
+  it('points to the sector goal as a market level', () => {
     render(<JourneysIndex />)
 
     const card = screen.getByRole('link', { name: /Meta do setor/ })
     expect(card).toHaveAttribute('href', '/management/sector_goal')
-    expect(card).toHaveTextContent('A régua vem dos seus colaboradores mais experientes')
+    expect(card).toHaveTextContent('Nível de mercado (Fácil, Médio ou Difícil), ajustável por competência')
   })
 
   it('keeps Conteúdos active in the navigation', () => {

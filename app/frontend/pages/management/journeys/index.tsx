@@ -36,7 +36,7 @@ function SectorGoalCard() {
         <span className="flex flex-col">
           <span className="text-label-lg text-on-surface">Meta do setor</span>
           <span className="text-body-sm text-on-surface-variant">
-            A régua vem dos seus colaboradores mais experientes
+            Nível de mercado (Fácil, Médio ou Difícil), ajustável por competência
           </span>
         </span>
       </span>
