@@ -106,7 +106,7 @@ export function ContentLibrary({ library }: { library: LibraryModule[] }) {
     >
       <div className="flex flex-col justify-between gap-space-sm md:flex-row md:items-center">
         <h2 id="content-library-title" className="text-headline-sm text-on-surface">
-          Biblioteca de conteúdos
+          Módulos
         </h2>
         <FilterBar current={filter} onChange={setFilter} />
       </div>

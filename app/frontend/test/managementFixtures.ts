@@ -107,7 +107,7 @@ export function lessonReview(overrides: Partial<LessonReview> = {}): LessonRevie
     approved: 1,
     final: false,
     breadcrumb: [
-      { label: 'Conteúdos', href: '/management/journeys' },
+      { label: 'Jornadas', href: '/management/journeys' },
       { label: 'Módulo: Rotinas de atendimento', href: '/management/modules/rotinas-de-atendimento' },
     ],
     module_name: 'Rotinas de atendimento',
@@ -276,7 +276,7 @@ export const publication: Publication = {
     { title: '1. Base (Soft skills)', status: 'done' },
     { title: '2. Trecho Empresa: Rotinas de atendimento', status: 'new' },
   ],
-  done_path: '/management/journeys',
+  done_path: '/management/library',
 }
 
 export const sectorWithoutGoal: SectorGoal = {

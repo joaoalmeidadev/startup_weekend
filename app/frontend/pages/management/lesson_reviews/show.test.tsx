@@ -76,14 +76,11 @@ describe('LessonReviewsShow', () => {
     expect(router.visit).toHaveBeenCalledWith('/management/modules/rotinas-de-atendimento/publish')
   })
 
-  it('links the breadcrumb back to the contents and the module', () => {
+  it('links the breadcrumb back to the journeys and the module', () => {
     render(<LessonReviewsShow />)
 
     const breadcrumb = within(screen.getByRole('navigation', { name: 'Você está em' }))
-    expect(breadcrumb.getByRole('link', { name: 'Conteúdos' })).toHaveAttribute(
-      'href',
-      '/management/journeys',
-    )
+    expect(breadcrumb.getByRole('link', { name: 'Jornadas' })).toHaveAttribute('href', '/management/journeys')
     expect(breadcrumb.getByRole('link', { name: 'Módulo: Rotinas de atendimento' })).toHaveAttribute(
       'href',
       '/management/modules/rotinas-de-atendimento',

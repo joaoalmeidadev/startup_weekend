@@ -55,7 +55,7 @@ function JourneyHeader({ journey }: { journey: Journey }) {
         className="inline-flex w-fit items-center gap-1 text-label-md text-primary hover:underline"
       >
         <Icon name="chevron_left" className="text-[1.125rem]" />
-        Conteúdos
+        Jornadas
       </Link>
       <div className="flex flex-col justify-between gap-space-md lg:flex-row lg:items-start">
         <div className="flex flex-col gap-space-xs">

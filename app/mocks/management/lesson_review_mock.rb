@@ -32,7 +32,7 @@ module Management
 
     def breadcrumb
       [
-        {label: "Conteúdos", href: routes.management_journeys_path},
+        {label: "Jornadas", href: routes.management_journeys_path},
         {label: "Onboarding Atendimento", href: routes.management_journey_path(JOURNEY_ID)},
         {label: "Módulo: Rotinas de atendimento", href: routes.management_learning_module_path(MODULE_ID)}
       ]

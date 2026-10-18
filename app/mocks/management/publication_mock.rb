@@ -13,7 +13,7 @@ module Management
         audience_count: 32,
         default_audiences: %w[sector newcomers],
         journey_outline: journey_outline,
-        done_path: Rails.application.routes.url_helpers.management_journeys_path
+        done_path: Rails.application.routes.url_helpers.management_library_path
       }
     end
 

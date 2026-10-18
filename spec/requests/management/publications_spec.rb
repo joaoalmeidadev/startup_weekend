@@ -11,7 +11,7 @@ RSpec.describe "Management module publishing", :inertia do
       publication = inertia.props[:publication]
       expect(publication).to include(module_name: "Rotinas de atendimento", lessons: 8, sector: "Atendimento", audience_count: 32)
       expect(publication[:default_audiences]).to eq(%w[sector newcomers])
-      expect(publication[:done_path]).to eq(management_journeys_path)
+      expect(publication[:done_path]).to eq(management_library_path)
       expect(publication[:journey_outline].pluck(:status)).to include("new")
     end
 

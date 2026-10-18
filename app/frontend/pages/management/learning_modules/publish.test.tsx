@@ -47,9 +47,9 @@ describe('LearningModulesPublish', () => {
     const success = screen.getByRole('heading', { name: 'Publicado!' }).parentElement as HTMLElement
     expect(success).toHaveTextContent('32 pessoas já podem fazer este conteúdo.')
     expect(screen.getByText('Novo módulo ativo!')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Voltar para Conteúdos/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Voltar para a Biblioteca/ })).toHaveAttribute(
       'href',
-      '/management/journeys',
+      '/management/library',
     )
   })
 })

@@ -11,10 +11,11 @@ const NAV: NavItem[] = [
   { icon: 'group', label: 'Pessoas', href: '/management/people' },
   {
     icon: 'library_books',
-    label: 'Conteúdos',
-    href: '/management/journeys',
-    sections: ['/management/journeys', '/management/modules', '/management/lesson_reviews'],
+    label: 'Biblioteca',
+    href: '/management/library',
+    sections: ['/management/library', '/management/modules', '/management/lesson_reviews'],
   },
+  { icon: 'route', label: 'Jornadas', href: '/management/journeys' },
   { icon: 'tune', label: 'Meta do setor', href: '/management/sector_goal' },
   { icon: 'redeem', label: 'Recompensas', href: '/management/rewards' },
 ]

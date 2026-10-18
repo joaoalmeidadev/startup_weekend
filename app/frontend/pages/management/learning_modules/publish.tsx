@@ -44,7 +44,7 @@ function PublishedStep({ publication }: { publication: Publication }) {
       </p>
       <JourneyOutline items={publication.journey_outline} />
       <Link href={publication.done_path} className={PRIMARY}>
-        Voltar para Conteúdos
+        Voltar para a Biblioteca
         <Icon name="arrow_forward" className="text-[1.25rem]" />
       </Link>
     </div>

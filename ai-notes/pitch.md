@@ -20,11 +20,11 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
 1. **Dashboard** abre direto. "Isto é o que o gestor vê: quanto da equipe já está nivelada e quem precisa de atenção."
-2. **Conteúdos**. Mostre a faixa "Como o conteúdo chega ao colaborador" (IA · Produtos Nivela · Empresa) e o bloco
+2. **Biblioteca** (o que alimenta as jornadas). Mostre a faixa "Como o conteúdo chega ao colaborador" (IA · Produtos Nivela · Empresa) e o bloco
    **Produtos Nivela**: "Sem material? A Nivela já vem com 12 módulos para qualquer setor — os mais citados na nossa pesquisa."
-3. Abra **Onboarding Atendimento** (montador). Leia o topo: "Esta jornada substitui ~23h de repasse por novato, ≈ R$ 920
+3. **Jornadas** → abra **Onboarding Atendimento** (montador). "A Biblioteca alimenta; a jornada é o que o colaborador percorre." Leia o topo: "Esta jornada substitui ~23h de repasse por novato, ≈ R$ 920
    por contratação." À direita: "é exatamente o que o colaborador vê". Adicione um produto Nivela e mostre o valor mudar.
-4. **+ Novo conteúdo** → "Enviar material → a IA cria as lições" → "Usar o arquivo de exemplo" → **Criar lições com IA**.
+4. Volte à **Biblioteca** → **+ Novo conteúdo** → "Enviar material → a IA cria as lições" → "Usar o arquivo de exemplo" → **Criar lições com IA**.
 5. **Revisar lições**: "À esquerda o manual, à direita o que o funcionário vai ver. Nada vai para a equipe sem a minha
    aprovação." (Atalho: `/management/lesson_reviews/8` → "Aprovar e escolher quem recebe".)
 6. **Publicar**: "Setor Atendimento" e "Novatos" já marcados → **Publicar**.

@@ -12,13 +12,10 @@ RSpec.describe "Management journeys", :inertia do
       expect(inertia.props[:journeys].first).to include(status: "active", modules_per_stretch: {base: 2, company: 2, sector: 2})
     end
 
-    it "lists the content library with the origin and how many journeys use each module" do
+    it "leaves the content library to its own page" do
       get management_journeys_path
 
-      library = inertia.props[:library]
-      expect(library.pluck(:source).uniq).to contain_exactly("ai", "nivela", "company")
-      expect(library.find { |mod| mod[:id] == "nossa-historia-e-valores" }).to include(source: "company", journeys_count: 2)
-      expect(library.find { |mod| mod[:id] == "seguranca-no-armazem" }).to include(journeys_count: 0)
+      expect(inertia.props).not_to have_key(:library)
     end
   end
 

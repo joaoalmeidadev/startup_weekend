@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :people, only: %i[index show]
     resource :sector_goal, only: :show
     resource :rewards, only: :show
+    resource :library, only: :show
     resources :journeys, only: %i[index show]
     resources :learning_modules, only: %i[show new], path: "modules" do
       member { get :publish }

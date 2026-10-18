@@ -92,7 +92,8 @@ describe('HomesShow', () => {
     expect(nav.getAllByRole('link').map((link) => link.textContent)).toEqual([
       'dashboardDashboard',
       'groupPessoas',
-      'library_booksConteúdos',
+      'library_booksBiblioteca',
+      'routeJornadas',
       'tuneMeta do setor',
       'redeemRecompensas',
     ])
