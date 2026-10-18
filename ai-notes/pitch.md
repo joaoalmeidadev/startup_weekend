@@ -1,0 +1,51 @@
+# Pitch Nivela — roteiro
+
+> Pitch de ~5 min: fala (abertura) → vídeo (75s) → demo ao vivo (~2 min) → modelo + pedido.
+> Antes de subir: `make dev` rodando, `bin/rails db:seed`, abas abertas já logadas (ver "Preparação").
+
+## 1. Abertura falada (30s)
+"Quem aqui já foi o 'veterano' que teve que explicar tudo de novo para o novato? Toda vez que entra alguém,
+alguém para o que está fazendo para ensinar. O mesmo treinamento, repetido de pessoa para pessoa — e o gestor
+perde horas nisso todo mês. Pior: cada um aprende de um jeito, e ninguém mede se aprendeu."
+
+## 2. Vídeo (75s) — `~/Desktop/nivela-pitch.mp4`
+Dor → "Grave uma vez. Nivele todos." → 3 fatias (conteúdo, novo funcionário, jornada) → dashboard → fechamento.
+Fale por cima só se quiser; o vídeo se sustenta sozinho.
+
+## 3. Demo ao vivo (~2 min) — as 3 fatias + dashboard
+
+### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
+1. **Dashboard** abre direto. "Isto é o que o gestor vê: quanto da equipe já está nivelada, quem precisa de atenção."
+2. **Conteúdos → + Novo conteúdo**. "O treinamento que hoje é repassado de pessoa para pessoa: eu envio uma vez."
+   Clique em "Usar o arquivo de exemplo" → "Criar lições com IA".
+3. **Revisar lições**. "A IA transformou o manual em microlições. Eu confiro: à esquerda o manual, à direita o
+   que o funcionário vai ver. Nada vai para a equipe sem a minha aprovação." Mostre "Corrigir texto".
+   (Atalho para não aprovar 8 lições: abra `/management/lesson_reviews/8` e clique "Aprovar e publicar".)
+4. **Publicar**: escolha "Setor Atendimento" + "Novatos" → Publicar. "Pronto: 32 pessoas recebem."
+
+### Fatia 1: o novo funcionário chega (`novo@nivela.com` / `12345678`, celular ou janela estreita)
+5. Boas-vindas → **Começar** → responda as 4 perguntas do diagnóstico → **Ver meu resultado**.
+   "Em 2 minutos sabemos o que ele já sabe e montamos uma jornada só com o que falta."
+
+### Fatia 2: a jornada (`colab@nivela.com` / `12345678`)
+6. **Minha jornada** → **Continuar aula** → vídeo → explicação → erre de propósito (dica) → acerte → **Parabéns + selo**.
+   "5 minutos por dia, sem depender de ninguém para explicar."
+
+### Volta ao Dashboard (admin)
+7. Troque o período para **Últimos 30 dias**. "O gestor acompanha a evolução sem perguntar a ninguém."
+
+## 4. Modelo e pedido (45s)
+- SaaS B2B: assinatura por colaborador ativo/mês.
+- Próximo passo: **empresas piloto** com alta contratação operacional (atendimento, logística, varejo).
+- "Se a sua empresa repete o mesmo treinamento todo mês, fale comigo hoje."
+
+## Preparação (10 min antes)
+- `cd ~/projects/startup_weekend/app && make dev` (http://localhost:3000) e `bin/rails db:seed`.
+- Janela 1 (admin) logada no Dashboard; janela 2 estreita (novo@) na tela de login; janela 3 (colab@) na Minha jornada.
+- Zoom do navegador em 110–125% se o projetor for pequeno.
+- Vídeo aberto no QuickTime, em tela cheia, pausado no início.
+
+## Plano B
+- Se o app travar: o vídeo já mostra as 3 fatias e o dashboard — siga a fala em cima dele.
+- Se o login falhar: `bin/rails db:seed` recria os usuários.
+- Se o diagnóstico do `novo@` já tiver sido feito (sessão marcada): saia e entre de novo (a sessão é zerada no logout).
