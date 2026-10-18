@@ -304,3 +304,36 @@ export type PointsRule = { teacher_salary: number; learner_salary: number; rewar
 export type SectorTrainingCost = { own: boolean; teacher_salary: number; learner_salary: number }
 
 export type SectorTrainingCostProps = { company_rule: PointsRule; training_cost: SectorTrainingCost | null }
+
+// Approvals: journeys a collaborator shared to teach what they know, waiting for the admin's decision
+export type SubmissionStatus = 'pending' | 'changes_requested' | 'approved'
+
+export type SubmissionLesson = {
+  title: string
+  question: { prompt: string; options: { text: string; correct: boolean }[] }
+}
+
+export type SubmissionAuthor = Pick<Person, 'id' | 'name' | 'avatar_url' | 'sector'> & {
+  // The author's own hour (salary ÷ 220 h, or the sector value) that prices the suggested points
+  hourly: number
+}
+
+export type KnowledgeSubmission = {
+  id: string
+  author: SubmissionAuthor
+  title: string
+  sector: string
+  // Hours of in-person training the journey replaces, as informed by the author
+  hours: number
+  sent_on: string
+  status: SubmissionStatus
+  suggested_points: number
+  awarded_points: number | null
+  lessons: SubmissionLesson[]
+}
+
+export type AiReview = { name: string; lessons: number; review_path: string }
+
+export type ApprovalsProps = { submissions: KnowledgeSubmission[]; ai_reviews: AiReview[] }
+
+export type ApprovalProps = { submission: KnowledgeSubmission; reward_share: number }

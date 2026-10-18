@@ -156,6 +156,7 @@ describe('HomesShow', () => {
       'groupsSetores',
       'library_booksBiblioteca',
       'redeemRecompensas',
+      'fact_checkAprovações',
     ])
     expect(nav.getByRole('link', { name: /Dashboard/ })).toHaveAttribute('aria-current', 'page')
     expect(screen.queryByRole('navigation', { name: 'Visão' })).not.toBeInTheDocument()

@@ -5,7 +5,14 @@ import { MockNoticeProvider, useMockNotice } from '@/components/MockNotice'
 import { AccountMenu } from './AccountMenu'
 import type { Manager } from '@/types/management'
 
-type NavItem = { icon: string; label: string; href: string; sections?: string[]; exact?: boolean }
+type NavItem = {
+  icon: string
+  label: string
+  href: string
+  sections?: string[]
+  exact?: boolean
+  counted?: boolean
+}
 
 const NAV: NavItem[] = [
   { icon: 'dashboard', label: 'Dashboard', href: '/management', exact: true },
@@ -23,6 +30,7 @@ const NAV: NavItem[] = [
     sections: ['/management/library', '/management/modules', '/management/lesson_reviews'],
   },
   { icon: 'redeem', label: 'Recompensas', href: '/management/rewards' },
+  { icon: 'fact_check', label: 'Aprovações', href: '/management/approvals', counted: true },
 ]
 
 const ITEM = 'flex min-h-[3rem] w-full items-center gap-space-sm rounded-xl px-space-md transition-all'
@@ -35,22 +43,37 @@ function isActive(item: NavItem, url: string) {
   return (item.sections ?? [item.href]).some((section) => url.startsWith(section))
 }
 
+// Small count next to the label, read together with it: "Aprovações, 4 pendentes"
+function PendingBadge({ count }: { count: number }) {
+  return (
+    <span className="ml-auto flex h-6 min-w-6 items-center justify-center rounded-full bg-error px-1.5 text-label-sm font-bold text-on-error">
+      {count}
+    </span>
+  )
+}
+
 function SideNav() {
-  const { url } = usePage()
+  const { url, props } = usePage<{ pending_approvals?: number }>()
+  const pending = props.pending_approvals ?? 0
 
   return (
     <nav className="flex flex-col gap-space-xs" aria-label="Gestão">
       {NAV.map((item) => {
         const active = isActive(item, url)
+        const count = item.counted ? pending : 0
         return (
           <Link
             key={item.label}
             href={item.href}
             aria-current={active ? 'page' : undefined}
+            aria-label={
+              count > 0 ? `${item.label}, ${count} ${count === 1 ? 'pendente' : 'pendentes'}` : undefined
+            }
             className={`${ITEM} ${active ? ACTIVE : INACTIVE}`}
           >
             <Icon name={item.icon} className="text-[1.5rem]" />
             <span className="text-label-lg">{item.label}</span>
+            {count > 0 && <PendingBadge count={count} />}
           </Link>
         )
       })}

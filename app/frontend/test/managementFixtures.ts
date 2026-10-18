@@ -1,4 +1,7 @@
 import type {
+  ApprovalsProps,
+  KnowledgeSubmission,
+  SubmissionLesson,
   SectorTrainingCost,
   SectorTrainingCostProps,
   PointsRule,
@@ -595,4 +598,82 @@ export const logisticsTrainingCost: SectorTrainingCost = {
 export const sectorTrainingCostProps: SectorTrainingCostProps = {
   company_rule: pointsRule,
   training_cost: companyCost,
+}
+
+// Approvals: what the team shared (pending first) and the AI module waiting for review
+const lesson = (title: string, prompt: string, right: string, wrongs: string[]): SubmissionLesson => ({
+  title,
+  question: {
+    prompt,
+    options: [{ text: right, correct: true }, ...wrongs.map((text) => ({ text, correct: false }))],
+  },
+})
+
+export const returnCheckSubmission: KnowledgeSubmission = {
+  id: 'conferir-devolucao',
+  author: {
+    id: 'carla-silveira',
+    name: 'Carla Silveira',
+    avatar_url: null,
+    sector: 'Atendimento',
+    hourly: 12.0,
+  },
+  title: 'Como conferir uma devolução',
+  sector: 'Atendimento',
+  hours: 3,
+  sent_on: '15/10',
+  status: 'pending',
+  suggested_points: 14,
+  awarded_points: null,
+  lessons: [
+    lesson(
+      'Antes de aceitar a devolução',
+      'O que conferir primeiro quando o produto volta?',
+      'A nota e o estado da embalagem',
+      ['Só o nome do cliente', 'Nada, aceita direto'],
+    ),
+    lesson(
+      'Registrando no sistema',
+      'Quando registrar a devolução no sistema?',
+      'Na hora, antes de guardar o produto',
+      ['No fim do mês', 'Só se o gerente pedir'],
+    ),
+  ],
+}
+
+export const approvedSubmission: KnowledgeSubmission = {
+  id: 'clientes-dificeis',
+  author: { id: 'maria-souza', name: 'Maria Souza', avatar_url: null, sector: 'Atendimento', hourly: 10.0 },
+  title: 'Clientes difíceis: o que funciona',
+  sector: 'Atendimento',
+  hours: 2,
+  sent_on: '28/09',
+  status: 'approved',
+  suggested_points: 8,
+  awarded_points: 8,
+  lessons: [
+    lesson(
+      'Ouvir sem interromper',
+      'O cliente está bravo. Qual o primeiro passo?',
+      'Deixar ele terminar de falar',
+      ['Interromper para explicar', 'Passar para outra pessoa'],
+    ),
+  ],
+}
+
+const changesRequestedSubmission: KnowledgeSubmission = {
+  ...returnCheckSubmission,
+  id: 'planilha-de-rotas',
+  author: { id: 'maria-souza', name: 'Maria Souza', avatar_url: null, sector: 'Logística', hourly: 10.0 },
+  title: 'Planilha de rotas',
+  sector: 'Logística',
+  hours: 1.5,
+  sent_on: '16/10',
+  status: 'changes_requested',
+  suggested_points: 6,
+}
+
+export const approvalsProps: ApprovalsProps = {
+  submissions: [returnCheckSubmission, changesRequestedSubmission, approvedSubmission],
+  ai_reviews: [{ name: 'Rotinas de atendimento', lessons: 8, review_path: '/management/lesson_reviews/2' }],
 }
