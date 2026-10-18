@@ -52,6 +52,15 @@ describe('PeopleIndex', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Convites enviados (simulação).')
   })
 
+  it('becomes "Minha equipe" for the manager, attention first', () => {
+    page.props = { ...peopleProps, team: true, manager }
+    render(<PeopleIndex />)
+
+    expect(screen.getByRole('heading', { name: 'Minha equipe' })).toBeInTheDocument()
+    expect(screen.getAllByRole('heading', { level: 2 })[0]).toHaveTextContent('Marcos Oliveira')
+    expect(screen.queryByRole('button', { name: /Convidar pessoas/ })).not.toBeInTheDocument()
+  })
+
   it('highlights Pessoas in the navigation', () => {
     render(<PeopleIndex />)
 

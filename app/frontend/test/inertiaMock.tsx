@@ -9,13 +9,21 @@ export const router: { visit: Mock; delete: Mock; reload: Mock } = {
   reload: vi.fn(),
 }
 
+// Inertia visit options that must not reach the DOM as attributes
+const VISIT_OPTIONS = ['preserveScroll', 'preserveState']
+
 export const inertiaMock: Record<string, unknown> = {
   Head: () => null,
-  Link: ({ href, children, ...rest }: { href: string; children: ReactNode }) => (
-    <a href={href} {...rest}>
-      {children}
-    </a>
-  ),
+  Link: ({ href, children, ...rest }: { href: string; children: ReactNode }) => {
+    const attributes = Object.fromEntries(
+      Object.entries(rest).filter(([key]) => !VISIT_OPTIONS.includes(key)),
+    )
+    return (
+      <a href={href} {...attributes}>
+        {children}
+      </a>
+    )
+  },
   router,
   usePage: () => page,
 }

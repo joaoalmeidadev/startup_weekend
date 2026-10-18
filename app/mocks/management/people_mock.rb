@@ -5,8 +5,15 @@ module Management
   class PeopleMock
     STATUS_LABELS = {"attention" => "Precisa de atenção", "learning" => "Aprendendo", "leveled" => "Nivelado"}.freeze
 
+    TEAM_SECTOR = "Atendimento"
+
+    # team: true is the manager's view, limited to their own sector
+    def initialize(team: false)
+      @team = team
+    end
+
     def props
-      {summary: summary, sectors: sectors, people: people, total: 42}
+      {summary: summary, sectors: sectors, people: people, total: @team ? 14 : 42, team: @team}
     end
 
     def to_csv
@@ -31,7 +38,8 @@ module Management
     end
 
     def people
-      PEOPLE.map { |person| person.slice(:name, :sector, :status, :alert, :progress, :achievement).compact.merge(card_extras(person)) }
+      visible = @team ? PEOPLE.select { |person| person[:sector] == TEAM_SECTOR } : PEOPLE
+      visible.map { |person| person.slice(:name, :sector, :status, :alert, :progress, :achievement).compact.merge(card_extras(person)) }
     end
 
     def card_extras(person)

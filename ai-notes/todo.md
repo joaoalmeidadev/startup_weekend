@@ -93,6 +93,13 @@ Detalhes de cada tarefa vão indentados com 4 espaços logo abaixo dela.
     Mudar de função e Avaliar em `/management/people/:id/{role_change,review}`; Admin Nivela `/management/{companies,library}`.
     Botões: convidar (modal), exportar CSV real (`/management/people.csv`), trocar setor na Meta, alterar quem recebe.
 
+- [x] Visão Gestor com dashboard (mock)
+    "Gestor" no topo → `/management/team`: % nivelada (número principal), engajamento, tempo até nivelar,
+    linha de nivelamento x meta, equipe x meta por competência, funil. "Minha equipe" = `/management/people?team=1`.
+    Gráficos próprios em `app/frontend/components/charts/` (paleta validada pela skill dataviz; tooltip + "Ver tabela").
+    Filtro de período (30 dias / 90 dias / 6 meses) via `?period=`; gestor tem nome próprio (Rafael Costa) e entra direto no dashboard.
+    Login de demo: gestor@nivela.com / 12345678.
+
 ### Pitch
 
 - [ ] Montar o pitch a partir de `business.md`

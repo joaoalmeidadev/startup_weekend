@@ -1,8 +1,16 @@
 module Management
-  # Example data from the Stitch screens until people belong to a company
+  # Example people behind the management area: the team manager has their own name
   class ManagerMock
+    COMPANY = "Distribuidora Sul"
+
+    def initialize(user = nil)
+      @user = user
+    end
+
     def props
-      {name: "Ana Lima", role_label: "RH", company: "Distribuidora Sul"}
+      return {name: "Rafael Costa", role_label: "Gestor · Atendimento", company: COMPANY} if @user&.manager?
+
+      {name: "Ana Lima", role_label: "RH", company: COMPANY}
     end
   end
 end

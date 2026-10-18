@@ -5,7 +5,7 @@ import { MockNoticeProvider, useMockNotice } from '@/components/MockNotice'
 import type { Manager } from '@/types/management'
 
 type NavItem = { icon: string; label: string; href: string; sections?: string[]; exact?: boolean }
-type Area = 'company' | 'platform'
+type Area = 'company' | 'team' | 'platform'
 
 const COMPANY_NAV: NavItem[] = [
   { icon: 'dashboard', label: 'Início', href: '/management', exact: true },
@@ -20,11 +20,19 @@ const COMPANY_NAV: NavItem[] = [
   { icon: 'settings', label: 'Configurações', href: '/management/settings' },
 ]
 
+// Gestor: only their own team (Atendimento in the mock)
+const TEAM_NAV: NavItem[] = [
+  { icon: 'monitoring', label: 'Dashboard', href: '/management/team' },
+  { icon: 'groups', label: 'Minha equipe', href: '/management/people?team=1' },
+]
+
 // Admin Nivela: the Nivela team looking at every client company
 const PLATFORM_NAV: NavItem[] = [
   { icon: 'domain', label: 'Empresas', href: '/management/companies' },
   { icon: 'local_library', label: 'Biblioteca base', href: '/management/library' },
 ]
+
+const NAV_BY_AREA: Record<Area, NavItem[]> = { company: COMPANY_NAV, team: TEAM_NAV, platform: PLATFORM_NAV }
 
 const ITEM = 'flex min-h-[3rem] w-full items-center gap-space-sm rounded-xl px-space-md transition-all'
 const ACTIVE = 'bg-primary-container font-semibold text-on-primary shadow-[0_2px_12px_rgba(15,94,102,0.12)]'
@@ -35,7 +43,7 @@ function SideNav({ area }: { area: Area }) {
 
   return (
     <nav className="flex flex-col gap-space-xs" aria-label="Gestão">
-      {(area === 'platform' ? PLATFORM_NAV : COMPANY_NAV).map((item) => {
+      {NAV_BY_AREA[area].map((item) => {
         const active = item.exact
           ? url === item.href
           : (item.sections ?? [item.href]).some((section) => url.startsWith(section))
@@ -83,33 +91,26 @@ const SWITCH_ON =
   'bg-surface-container-lowest font-semibold text-on-surface shadow-[0_1px_4px_rgba(0,0,0,0.04)]'
 const SWITCH_OFF = 'text-on-surface-variant transition-colors hover:text-on-surface'
 
-// In the MVP the manager sees the same screens as HR, so "Gestor" only explains that
+const SWITCHES: { area: Area; label: string; href: string }[] = [
+  { area: 'company', label: 'RH', href: '/management' },
+  { area: 'team', label: 'Gestor', href: '/management/team' },
+  { area: 'platform', label: 'Admin Nivela', href: '/management/companies' },
+]
+
 function RoleSwitcher({ area }: { area: Area }) {
-  const notify = useMockNotice()
   return (
-    <div className="flex rounded-lg bg-surface-container-high p-space-xs" role="group" aria-label="Visão">
-      <Link
-        href="/management"
-        aria-current={area === 'company' ? 'page' : undefined}
-        className={`${SWITCH} ${area === 'company' ? SWITCH_ON : SWITCH_OFF}`}
-      >
-        RH
-      </Link>
-      <button
-        type="button"
-        onClick={() => notify('No MVP o gestor vê as mesmas telas do RH.')}
-        className={`${SWITCH} ${SWITCH_OFF}`}
-      >
-        Gestor
-      </button>
-      <Link
-        href="/management/companies"
-        aria-current={area === 'platform' ? 'page' : undefined}
-        className={`${SWITCH} ${area === 'platform' ? SWITCH_ON : SWITCH_OFF}`}
-      >
-        Admin Nivela
-      </Link>
-    </div>
+    <nav className="flex rounded-lg bg-surface-container-high p-space-xs" aria-label="Visão">
+      {SWITCHES.map((item) => (
+        <Link
+          key={item.area}
+          href={item.href}
+          aria-current={area === item.area ? 'page' : undefined}
+          className={`${SWITCH} ${area === item.area ? SWITCH_ON : SWITCH_OFF}`}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
   )
 }
 

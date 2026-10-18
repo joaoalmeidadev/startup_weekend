@@ -21,6 +21,14 @@ RSpec.describe "Management people", :inertia do
       expect(inertia.props[:summary]).to include(leveled: {count: 21, percent: 50})
     end
 
+    it "names the team manager differently from HR" do
+      sign_in create(:user, :manager)
+
+      get management_people_path
+
+      expect(inertia.props[:manager]).to include(name: "Rafael Costa", role_label: "Gestor · Atendimento")
+    end
+
     it "shares the signed-in manager for the layout" do
       sign_in create(:user, :hr)
 

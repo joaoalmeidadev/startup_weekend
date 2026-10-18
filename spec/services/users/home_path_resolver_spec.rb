@@ -9,7 +9,11 @@ RSpec.describe Users::HomePathResolver do
     expect(described_class.new(user).path).to eq(collaborator_journey_path)
   end
 
-  %i[hr manager platform_admin].each do |role|
+  it "sends managers to their team dashboard" do
+    expect(described_class.new(build(:user, :manager)).path).to eq(management_team_path)
+  end
+
+  %i[hr platform_admin].each do |role|
     it "sends #{role} users to the management area" do
       user = build(:user, role)
 

@@ -9,7 +9,7 @@ RSpec.describe "Home" do
     end
 
     it "sends signed-in users to their area" do
-      sign_in create(:user, :manager)
+      sign_in create(:user, :hr)
 
       get root_path
 

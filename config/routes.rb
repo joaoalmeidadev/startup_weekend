@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :learning_modules, only: %i[show new], path: "modules"
     resource :settings, only: :show
     resource :setup, only: :show
+    resource :team, only: :show
     resources :companies, only: :index
     resource :library, only: :show
     resources :lesson_reviews, only: %i[index show]

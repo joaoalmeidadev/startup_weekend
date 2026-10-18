@@ -20,6 +20,7 @@ export type Person = {
 export type SummaryEntry = { count: number; percent: number }
 
 export type PeopleProps = {
+  team?: boolean
   summary: Record<PersonStatus, SummaryEntry>
   sectors: { name: string; count: number }[]
   people: Person[]
@@ -167,3 +168,16 @@ export type Company = {
 }
 
 export type LibraryModule = ModuleSummary & { lesson_titles: string[] }
+
+export type TeamDashboard = {
+  sector: string
+  period: string
+  periods: { key: string; label: string }[]
+  leveled: { count: number; total: number; change: number; change_label: string }
+  days_to_level: number
+  leveled_over_time: { label: string; percent: number }[]
+  company_target: number
+  competencies: { name: string; team_average: number; goal: number }[]
+  engagement: { label: string; value: string }[]
+  funnel: { stage: string; count: number }[]
+}

@@ -22,6 +22,7 @@ end
 # Short logins for live demos (password: 12345678)
 {
   "admin@nivela.com" => :hr,
+  "gestor@nivela.com" => :manager,
   "colab@nivela.com" => :collaborator
 }.each do |email, role|
   User.find_or_create_by!(email: email) do |user|

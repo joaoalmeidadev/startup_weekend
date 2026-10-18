@@ -9,6 +9,7 @@ import type {
   PeopleProps,
   PersonDetail,
   SectorGoal,
+  TeamDashboard,
 } from '@/types/management'
 
 export const manager: Manager = { name: 'Ana Lima', role_label: 'RH', company: 'Distribuidora Sul' }
@@ -188,4 +189,26 @@ export const personDetail: PersonDetail = {
   knows: ['Comunicação clara'],
   learning: ['Rotinas da Distribuidora'],
   feedback: ['Explica as coisas com clareza.'],
+}
+
+export const teamDashboard: TeamDashboard = {
+  sector: 'Atendimento',
+  period: '6m',
+  periods: [
+    { key: '30d', label: 'Últimos 30 dias' },
+    { key: '6m', label: 'Últimos 6 meses' },
+  ],
+  leveled: { count: 8, total: 14, change: 43, change_label: 'em 6 meses' },
+  days_to_level: 38,
+  leveled_over_time: [
+    { label: 'set', percent: 45 },
+    { label: 'out', percent: 57 },
+  ],
+  company_target: 80,
+  competencies: [{ name: 'Reclamações de Entrega', team_average: 71, goal: 85 }],
+  engagement: [{ label: 'Ativos na semana', value: '11 de 14' }],
+  funnel: [
+    { stage: 'Começaram a jornada', count: 14 },
+    { stage: 'Nivelados (selo)', count: 8 },
+  ],
 }
