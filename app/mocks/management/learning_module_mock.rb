@@ -8,6 +8,13 @@ module Management
       "Encerramento do chamado"
     ].freeze
 
+    # Friendlier titles for the Nivela customer service product, opened by the Sebrae video
+    SERVICE_MODULE = "atendimento-ao-cliente"
+    SERVICE_LESSONS = [
+      "O básico do bom atendimento", "Ouvir antes de responder", "O tom de voz que acalma",
+      "Quando o cliente está irritado", "Fechar o atendimento bem"
+    ].freeze
+
     # % of the team that gets each published lesson right at the first try
     TEAM_ACCURACY = [92, 78, 85, 64, 88, 71, 90, 81].freeze
 
@@ -38,13 +45,14 @@ module Management
       bank = LessonBank.new(@module)
       (1..@module[:lessons]).map do |position|
         status = lesson_status(position)
-        {position: position, title: lesson_title(position), status: status, text: bank.text(position),
+        {position: position, title: lesson_title(position), status: status, **bank.media(position), text: bank.text(position),
          question: bank.question(position), team_accuracy: (TEAM_ACCURACY[(position - 1) % TEAM_ACCURACY.size] if status == "approved")}
       end
     end
 
     def lesson_title(position)
       return REVIEWED_LESSONS[position - 1] if @module[:id] == REVIEWED_MODULE
+      return SERVICE_LESSONS[position - 1] if @module[:id] == SERVICE_MODULE
 
       "Lição #{position}"
     end

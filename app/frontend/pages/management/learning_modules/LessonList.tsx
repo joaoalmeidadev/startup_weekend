@@ -1,7 +1,9 @@
 import { Link } from '@inertiajs/react'
 import { useState } from 'react'
 import { Icon } from '@/components/Icon'
+import { LESSON_FORMATS } from '@/lib/lessonFormats'
 import type { LearningModule, LessonStatus } from '@/types/management'
+import { LessonPreview } from './LessonPreview'
 
 const STATUS: Record<LessonStatus, { label: string; icon: string; className: string }> = {
   approved: { label: 'Aprovada', icon: 'check_circle', className: 'text-tertiary-container' },
@@ -52,6 +54,7 @@ function Accuracy({ value }: { value: number | null }) {
 function LessonItem({ lesson, reviewable }: { lesson: Lesson; reviewable: boolean }) {
   const [open, setOpen] = useState(false)
   const status = STATUS[lesson.status]
+  const format = LESSON_FORMATS[lesson.format]
   const panelId = `lesson-${lesson.position}`
 
   return (
@@ -66,7 +69,13 @@ function LessonItem({ lesson, reviewable }: { lesson: Lesson; reviewable: boolea
         <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-container-high text-label-md text-primary">
           {lesson.position}
         </span>
-        <span className="flex-1 text-label-lg text-on-surface">{lesson.title}</span>
+        <span className="flex flex-1 flex-col">
+          <span className="text-label-lg text-on-surface">{lesson.title}</span>
+          <span className="inline-flex items-center gap-1 text-body-sm text-on-surface-variant">
+            <Icon name={format.icon} className="text-[1rem]" />
+            {`${format.label} · ${lesson.duration}`}
+          </span>
+        </span>
         <span className={`inline-flex items-center gap-1 text-label-sm font-bold ${status.className}`}>
           <Icon name={status.icon} className="text-[1rem]" />
           {status.label}
@@ -82,7 +91,7 @@ function LessonItem({ lesson, reviewable }: { lesson: Lesson; reviewable: boolea
           aria-label={`Lição ${lesson.position}: ${lesson.title}`}
           className="flex flex-col gap-space-sm px-space-md pb-space-md"
         >
-          <p className="text-body-md text-on-surface">{lesson.text}</p>
+          <LessonPreview lesson={lesson} />
           <AnswerKey question={lesson.question} />
           <Accuracy value={lesson.team_accuracy} />
           {reviewable && (

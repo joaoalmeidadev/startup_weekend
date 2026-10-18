@@ -8,6 +8,7 @@ import {
   NEW_COMPETENCY,
   withMaterial,
   type ContentDraft,
+  type DraftFormat,
   type LessonQuestion,
 } from './contentDraft'
 
@@ -53,7 +54,7 @@ describe('contentDraft', () => {
       draft({
         origin: 'company',
         material: 'lessons',
-        lessons: [{ title, text: '', question: answeredQuestion }],
+        lessons: [{ ...emptyLesson(), title, question: answeredQuestion }],
       })
     expect(canSubmit(lessons(' '))).toBe(false)
     expect(canSubmit(lessons('Um'))).toBe(true)
@@ -87,6 +88,8 @@ describe('contentDraft', () => {
     const answered = {
       title: 'Quando aceitar a troca',
       text: 'Até 30 dias, com nota.',
+      format: 'text' as DraftFormat,
+      mediaName: null as string | null,
       question: {
         prompt: 'O cliente quer trocar após 10 dias. O que fazer?',
         options: ['Aceitar se tiver nota', 'Recusar sempre', 'Trocar sem olhar'] as [string, string, string],
@@ -115,6 +118,20 @@ describe('contentDraft', () => {
       expect(lessonGap(written({ question: { ...answered.question, correct: null } }))).toBe(
         'Marque a resposta correta da lição 1.',
       )
+    })
+
+    it('needs the file of a video, audio or image lesson before its answer key', () => {
+      expect(lessonGap(written({ format: 'video', question: { ...answered.question, prompt: '' } }))).toBe(
+        'Envie o vídeo da lição 1.',
+      )
+      expect(lessonGap(written({ format: 'audio' }))).toBe('Envie o áudio da lição 1.')
+      expect(lessonGap(written({ format: 'image' }))).toBe('Envie a imagem da lição 1.')
+      expect(canSubmit(written({ format: 'video' }))).toBe(false)
+      expect(canSubmit(written({ format: 'video', mediaName: 'boas-vindas.mp4' }))).toBe(true)
+    })
+
+    it('starts each lesson as a text, with no file', () => {
+      expect(emptyLesson()).toMatchObject({ format: 'text', mediaName: null })
     })
 
     it('starts each lesson with three empty options and no right answer', () => {

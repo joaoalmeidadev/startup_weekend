@@ -64,4 +64,9 @@ RSpec.describe Management::ModuleCatalog do
     expect(described_class.summary("uso-do-sistema")).to include(teacher_salary: 3300)
     expect(described_class.summary("conversa-clara")).to include(teacher_salary: nil)
   end
+
+  it "sums up the formats of each content, agreeing with its lessons" do
+    expect(described_class.summary("rotinas-de-atendimento")[:formats]).to eq(video: 1, text: 3, audio: 1, image: 1, quiz: 2)
+    expect(described_class.all.map { |mod| mod[:formats].values.sum }).to eq(described_class.all.pluck(:lessons))
+  end
 end

@@ -147,6 +147,7 @@ const mod = (id: string, name: string, overrides: ModuleOverrides = {}): ModuleS
   name,
   competency: `Competência ${name}`,
   lessons: 4,
+  formats: { video: 1, text: 1, audio: 1, image: 1 },
   status: 'published',
   source: 'nivela',
   stretch: 'base',
@@ -166,6 +167,7 @@ const rotinas = mod('rotinas-de-atendimento', 'Rotinas', {
   source: 'ai',
   stretch: 'company',
   lessons: 8,
+  formats: { video: 1, text: 3, audio: 1, image: 1, quiz: 2 },
   teaching_hours: 6,
   competency: 'Rotinas',
 })
@@ -196,6 +198,9 @@ export const learningModule: LearningModule = {
       position: 1,
       title: 'Boas-vindas',
       status: 'approved',
+      format: 'video',
+      duration: '3:20',
+      credit: null,
       text: 'Rotina do SAC, passo 1.',
       question: {
         prompt: 'Qual é o primeiro passo ao atender um cliente?',
@@ -212,6 +217,9 @@ export const learningModule: LearningModule = {
       position: 2,
       title: 'Como acolher',
       status: 'pending',
+      format: 'text',
+      duration: '2 min de leitura',
+      credit: null,
       text: 'Rotina do SAC, passo 2.',
       question: {
         prompt: 'O cliente liga irritado com um atraso. O que você faz?',

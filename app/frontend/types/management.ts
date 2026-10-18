@@ -68,11 +68,16 @@ export type JourneySummary = {
   modules_count: number
 }
 
+// How a lesson is taught; written lessons may be any of them but the quiz
+export type LessonFormat = 'video' | 'audio' | 'image' | 'text' | 'quiz'
+
 export type ModuleSummary = {
   id: string
   name: string
   competency: string
   lessons: number
+  // How many lessons of each format, e.g. { video: 1, text: 2 }
+  formats: Partial<Record<LessonFormat, number>>
   status: ModuleStatus
   source: ContentSource
   stretch: StretchKey
@@ -99,6 +104,11 @@ export type LearningModule = {
     position: number
     title: string
     status: LessonStatus
+    format: LessonFormat
+    // e.g. "3:20" for video and audio, "2 min de leitura" for text
+    duration: string
+    // Who made it, when it comes from a partner
+    credit: string | null
     text: string
     // The answer key: one question, three options and the right one
     question: { prompt: string; options: { text: string; correct: boolean }[]; explanation: string }

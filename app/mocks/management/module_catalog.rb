@@ -37,7 +37,8 @@ module Management
     def self.summary(id)
       mod = find(id)
       mod.slice(:id, :name, :competency, :lessons, :status, :source, :teaching_hours)
-        .merge(stretch: mod[:stretch].to_s, research_share: mod[:research_share], teacher_salary: mod[:teacher_salary])
+        .merge(stretch: mod[:stretch].to_s, research_share: mod[:research_share], teacher_salary: mod[:teacher_salary],
+          formats: LessonBank.new(mod).formats)
     end
 
     def self.all

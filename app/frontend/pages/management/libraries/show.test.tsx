@@ -31,13 +31,14 @@ describe('LibrariesShow', () => {
     )
   })
 
-  it('shows only the name and the origin of each module', () => {
+  it('shows only the name, the origin and the lesson formats of each module', () => {
     render(<LibrariesShow />)
 
     const library = within(screen.getByRole('region', { name: 'Módulos' }))
     const rotinas = library.getByRole('link', { name: /Rotinas/ })
     expect(rotinas).toHaveAttribute('href', '/management/modules/rotinas-de-atendimento')
     expect(rotinas).toHaveTextContent('Gerado por IA')
+    expect(rotinas).toHaveTextContent('1 vídeo · 1 áudio · 1 imagem · 3 textos · 2 quizzes')
     expect(library.getByRole('link', { name: /Raciocínio Lógico/ })).toHaveTextContent('Produtos Nivela')
     for (const noise of [/lições/, /jornada/, /Citado por/]) {
       expect(library.queryByText(noise)).not.toBeInTheDocument()

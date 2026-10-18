@@ -288,4 +288,30 @@ describe('LearningModulesNew', () => {
     expect(save).toBeEnabled()
     expect(screen.getByLabelText('Explicação ao errar (opcional) da lição 1')).toBeInTheDocument()
   })
+  it('lets each written lesson be a video, audio or image, asking for its file', async () => {
+    renderForm()
+    await writeLessons()
+    await typeName('Trocas')
+    await pickCompetency('Comunicação')
+    await typeHours('4')
+    await writeLessonOne()
+
+    const format = screen.getByLabelText('Formato da lição 1')
+    expect(format).toHaveValue('text')
+    expect(
+      within(format)
+        .getAllByRole('option')
+        .map((option) => option.textContent),
+    ).toEqual(['Texto', 'Vídeo', 'Áudio', 'Imagem'])
+    await userEvent.selectOptions(format, 'video')
+
+    const save = screen.getByRole('button', { name: /Salvar na Biblioteca/ })
+    expect(save).toBeDisabled()
+    expect(screen.getByText('Envie o vídeo da lição 1.')).toBeInTheDocument()
+
+    const video = new File(['x'], 'boas-vindas.mp4', { type: 'video/mp4' })
+    await userEvent.upload(screen.getByLabelText('Enviar o vídeo da lição 1'), video)
+    expect(screen.getByText('boas-vindas.mp4')).toBeInTheDocument()
+    expect(save).toBeEnabled()
+  })
 })
