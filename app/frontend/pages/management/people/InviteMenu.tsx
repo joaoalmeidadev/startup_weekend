@@ -67,7 +67,7 @@ function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps
         <label className="flex cursor-pointer flex-col items-center gap-space-xs rounded-xl border-2 border-dashed border-primary-fixed-dim bg-surface-container-low p-space-lg text-center">
           <Icon name="upload_file" className="text-[2.5rem] text-primary" />
           <span className="text-label-md text-on-surface">
-            {value || 'Escolha a planilha (nome, e-mail, setor)'}
+            {value || 'Escolha a planilha (nome, e-mail, setor e salário opcional)'}
           </span>
           <input
             type="file"
@@ -76,6 +76,9 @@ function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps
             className="sr-only"
             onChange={(event) => setValue(event.target.files?.[0]?.name ?? '')}
           />
+          <span className="text-body-sm text-on-surface-variant">
+            O salário só entra na conta de economia; não muda os pontos de ninguém.
+          </span>
         </label>
       )}
       <button

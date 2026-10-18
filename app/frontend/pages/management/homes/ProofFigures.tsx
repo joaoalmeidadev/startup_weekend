@@ -50,6 +50,7 @@ export function ProofFigures({ dashboard }: { dashboard: TeamDashboard }) {
       <Figure title="Repasse economizado" icon="savings" value={`${savings.hours} h`}>
         <span className="font-semibold text-primary">≈ R$ {decimal.format(savings.amount / 1000)} mil</span>
         <span>{savings.new_hires} novatos sem repasse do veterano · estimativa</span>
+        <span>{`Usa o salário informado de ${savings.salaries.informed} de ${savings.salaries.total} pessoas`}</span>
       </Figure>
     </div>
   )

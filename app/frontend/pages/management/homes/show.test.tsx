@@ -25,8 +25,9 @@ describe('HomesShow', () => {
     expect(faster.getByText(/antes: ~90 dias no repasse · 2× mais rápido/)).toBeInTheDocument()
     const saved = within(screen.getByRole('region', { name: 'Repasse economizado' }))
     expect(saved.getByText('207 h')).toBeInTheDocument()
-    expect(saved.getByText(/R\$ 6,2 mil/)).toBeInTheDocument()
+    expect(saved.getByText(/R\$ 6,4 mil/)).toBeInTheDocument()
     expect(saved.getByText(/9 novatos sem repasse do veterano · estimativa/)).toBeInTheDocument()
+    expect(saved.getByText('Usa o salário informado de 6 de 10 pessoas')).toBeInTheDocument()
   })
 
   it('shows that what is learned sticks and how the team keeps studying', () => {

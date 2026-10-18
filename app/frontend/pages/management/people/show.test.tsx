@@ -59,6 +59,8 @@ describe('PeopleShow', () => {
     expect(study.getByText('82%')).toBeInTheDocument()
     expect(study.getByText('8 h')).toBeInTheDocument()
     expect(study.getByText('de treino substituídas')).toBeInTheDocument()
+    expect(study.getByText('R$ 236')).toBeInTheDocument()
+    expect(study.getByText('economizados · com o salário informado')).toBeInTheDocument()
     const row = study.getByText('Comunicação').closest('li') as HTMLElement
     expect(row).toHaveTextContent('40 → 70')
   })
@@ -126,5 +128,15 @@ describe('PeopleShow', () => {
 
     expect(screen.queryByRole('link', { name: /Avaliar/ })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /Mudar de função/ })).not.toBeInTheDocument()
+  })
+
+  it('uses the sector value for the saving when no salary was informed', () => {
+    page.props = {
+      person: { ...personDetail, study: { ...personDetail.study, saved: 240, salary_informed: false } },
+      manager,
+    }
+    render(<PeopleShow />)
+
+    expect(screen.getByText('economizados · com o valor do setor')).toBeInTheDocument()
   })
 })

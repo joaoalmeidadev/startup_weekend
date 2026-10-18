@@ -52,6 +52,25 @@ RSpec.describe "Management people", :inertia do
       expect(inertia.props[:person][:study]).to include(weekly_minutes: 35, streak_days: 3, lessons_done: 12, hours_done: 8, review_accuracy: 82)
     end
 
+    it "measures the saving with the person's own salary when it was informed" do
+      get management_person_path("maria-souza")
+
+      # 8 h × (who teaches R$ 20/h + Maria R$ 2.090 ÷ 220 = R$ 9,50/h)
+      expect(inertia.props[:person][:study]).to include(saved: 236, salary_informed: true)
+    end
+
+    it "measures the saving with the sector value when the salary was not informed" do
+      get management_person_path("bruna-costa")
+
+      expect(inertia.props[:person][:study]).to include(saved: 6 * 30, salary_informed: false)
+    end
+
+    it "keeps the points the same whatever the salary" do
+      get management_person_path("maria-souza")
+
+      expect(inertia.props[:person][:rewards][:points]).to eq(8 * 12)
+    end
+
     it "compares the diagnostic with today in what the person has studied so far" do
       get management_person_path("maria-souza")
 

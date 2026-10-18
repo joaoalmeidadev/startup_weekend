@@ -30,6 +30,11 @@ module Management
 
     def hour_cost = (teacher_hourly + learner_hourly).round(2)
 
+    # The hour of a given learner, from their own salary when it was informed
+    def learner_hourly_for(salary) = salary ? hourly(salary) : learner_hourly
+
+    def saved_with_learner(hours, learner_hourly) = (hours * (teacher_hourly + learner_hourly)).round
+
     def points_per_hour = (hour_cost * @rule[:reward_share]).round
 
     def points_for(hours) = (hours * points_per_hour).round

@@ -56,6 +56,21 @@ describe('SectorsShow', () => {
     expect(within(screen.getByRole('dialog')).getByLabelText('Setor')).toHaveValue('Atendimento')
   })
 
+  it('takes an optional salary in the invite spreadsheet, only to measure the saving', async () => {
+    render(<SectorsShow />)
+
+    await userEvent.click(screen.getByRole('button', { name: /Convidar para este setor/ }))
+    await userEvent.click(screen.getByRole('button', { name: /Por planilha/ }))
+
+    const dialog = within(screen.getByRole('dialog'))
+    expect(
+      dialog.getByText('Escolha a planilha (nome, e-mail, setor e salário opcional)'),
+    ).toBeInTheDocument()
+    expect(
+      dialog.getByText('O salário só entra na conta de economia; não muda os pontos de ninguém.'),
+    ).toBeInTheDocument()
+  })
+
   it('lists each person with progress, score against the goal, activity and forecast', () => {
     render(<SectorsShow />)
 

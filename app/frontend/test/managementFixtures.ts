@@ -211,7 +211,15 @@ export const personDetail: PersonDetail = {
     },
     { title: 'Setor', journeys: [], modules: [] },
   ],
-  study: { weekly_minutes: 35, streak_days: 3, lessons_done: 12, hours_done: 8, review_accuracy: 82 },
+  study: {
+    weekly_minutes: 35,
+    streak_days: 3,
+    lessons_done: 12,
+    hours_done: 8,
+    review_accuracy: 82,
+    saved: 236,
+    salary_informed: true,
+  },
   competencies: [
     { name: 'Comunicação', before: 40, now: 70, goal: 75 },
     { name: 'Rotinas', before: 41, now: 53, goal: 75 },
@@ -240,7 +248,7 @@ export const teamDashboard: TeamDashboard = {
   company_target: 80,
   knowledge_gain: { before: 48, now: 79 },
   time_to_level: { days: 46, before_days: 90 },
-  savings: { new_hires: 9, hours: 207, amount: 6210 },
+  savings: { new_hires: 9, hours: 207, amount: 6365, salaries: { informed: 6, total: 10 } },
   retention: { review_accuracy: 86, active_weekly: '9 de 14', minutes_per_day: 5 },
   competencies: [{ name: 'Reclamações', before: 42, now: 71, goal: 75 }],
   on_the_job: {

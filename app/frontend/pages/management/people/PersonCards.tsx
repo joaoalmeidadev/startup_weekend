@@ -34,12 +34,16 @@ export function StudyCard({ person }: { person: PersonDetail }) {
   const { study } = person
   return (
     <Card title="Estudo" icon="school">
-      <div className="grid grid-cols-2 gap-space-sm md:grid-cols-3 2xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-space-sm md:grid-cols-3">
         <Fact value={`${study.weekly_minutes} min`} label="nesta semana" />
         <Fact value={`${study.streak_days} dias`} label="seguidos de estudo" />
         <Fact value={String(study.lessons_done)} label="lições concluídas" />
         <Fact value={`${study.review_accuracy}%`} label="de acerto nas revisões" />
         <Fact value={`${study.hours_done.toLocaleString('pt-BR')} h`} label="de treino substituídas" />
+        <Fact
+          value={`R$ ${study.saved.toLocaleString('pt-BR')}`}
+          label={`economizados · ${study.salary_informed ? 'com o salário informado' : 'com o valor do setor'}`}
+        />
       </div>
       <div className="flex flex-col gap-space-sm">
         <div className="flex flex-wrap items-center justify-between gap-space-xs">

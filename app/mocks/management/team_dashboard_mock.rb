@@ -51,7 +51,9 @@ module Management
 
     def savings
       hours = @data[:new_hires] * HANDOFF_HOURS_PER_HIRE
-      {new_hires: @data[:new_hires], hours: hours, amount: PointsRule.new.saved_for(hours)}
+      rule = PointsRule.new
+      {new_hires: @data[:new_hires], hours: hours,
+       amount: rule.saved_with_learner(hours, average_learner_hourly(rule)), salaries: salaries}
     end
 
     def retention
@@ -78,6 +80,18 @@ module Management
           {label: "Reclamações de cliente", before: 8, now: 6, unit: "por mês"}
         ]
       }
+    end
+
+    # Who learns costs the average of the salaries informed on invite; the company value when none was
+    def average_learner_hourly(rule)
+      informed = PeopleMock::PEOPLE.filter_map { |person| person[:salary] }
+      return rule.learner_hourly if informed.empty?
+
+      rule.learner_hourly_for(informed.sum.fdiv(informed.size))
+    end
+
+    def salaries
+      {informed: PeopleMock::PEOPLE.count { |person| person[:salary] }, total: PeopleMock::PEOPLE.size}
     end
   end
 end

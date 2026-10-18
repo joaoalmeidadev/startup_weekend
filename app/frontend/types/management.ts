@@ -112,6 +112,9 @@ export type PersonDetail = Person & {
     streak_days: number
     lessons_done: number
     hours_done: number
+    // R$ of training saved: the person's own salary when informed on invite, otherwise the sector value
+    saved: number
+    salary_informed: boolean
     review_accuracy: number
   }
   competencies: { name: string; before: number; now: number; goal: number | null }[]
@@ -137,7 +140,13 @@ export type TeamDashboard = {
   company_target: number
   knowledge_gain: { before: number; now: number }
   time_to_level: { days: number; before_days: number }
-  savings: { new_hires: number; hours: number; amount: number }
+  savings: {
+    new_hires: number
+    hours: number
+    amount: number
+    // How many people had their salary informed on invite (used for the amount)
+    salaries: { informed: number; total: number }
+  }
   retention: { review_accuracy: number; active_weekly: string; minutes_per_day: number }
   competencies: { name: string; before: number; now: number; goal: number }[]
   on_the_job: { source: string; items: { label: string; before: number; now: number; unit: string }[] }
