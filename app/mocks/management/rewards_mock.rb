@@ -5,13 +5,22 @@ module Management
     RECENT = 6
 
     def props
-      {points_rule: rule.props, rewards: RewardCatalog.rewards, ideas: RewardCatalog.ideas,
+      {points_rule: rule.props, rewards: rewards, ideas: RewardCatalog.ideas.map { |idea| idea.merge(redeemed: 0) },
        redemptions: redemptions.first(RECENT).map { |redemption| redemption.except(:hours_done) }, month: month}
     end
 
     private
 
     def rule = @rule ||= PointsRule.new
+
+    # Each redemption takes one unit out of the stock (nil stock = unlimited)
+    def rewards
+      counts = redemptions.pluck(:reward).tally
+      RewardCatalog.rewards.map do |reward|
+        redeemed = counts.fetch(reward[:name], 0)
+        reward.merge(redeemed: redeemed, stock: reward[:stock] && [reward[:stock] - redeemed, 0].max)
+      end
+    end
 
     def redemptions
       @redemptions ||= PeopleMock::PEOPLE.flat_map { |person| redemptions_of(person) }

@@ -3,7 +3,7 @@ module Management
   class PersonRewards
     # What each kind of person already traded points for (1 point = R$ 1 of the reward's cost)
     REDEEMED = {
-      "leveled" => [["Meio período de folga", "12/09"], ["Vale-lanche", "28/08"]],
+      "leveled" => [["Caneca Nivela", "20/09"], ["Meio período de folga", "12/09"], ["Vale-lanche", "28/08"]],
       "on_track" => [["Vale-lanche", "02/10"]],
       "late" => []
     }.freeze

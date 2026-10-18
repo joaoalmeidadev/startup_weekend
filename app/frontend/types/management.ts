@@ -211,7 +211,9 @@ export type Reward = {
   category: string
   cost: number
   points: number
+  // What is left after the redemptions; null = unlimited
   stock: number | null
+  redeemed: number
 }
 
 export type Redemption = {

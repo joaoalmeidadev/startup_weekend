@@ -2,6 +2,17 @@ import { Icon } from '@/components/Icon'
 import type { PointsRule, Reward } from '@/types/management'
 import { brl, hoursReplaced } from './rewardValue'
 
+const redeemedText = (count: number) => `${count} ${count === 1 ? 'resgatado' : 'resgatados'}`
+
+// What is left after the redemptions; an unlimited reward only tells how often it was redeemed
+function StockLine({ stock, redeemed }: Pick<Reward, 'stock' | 'redeemed'>) {
+  let text: string
+  if (stock === null) text = redeemed > 0 ? `Sem limite · ${redeemedText(redeemed)}` : 'Sem limite de estoque'
+  else if (stock === 0) text = `Esgotado · ${redeemedText(redeemed)}`
+  else text = redeemed > 0 ? `${stock} em estoque · ${redeemedText(redeemed)}` : `${stock} em estoque`
+  return <span className={stock === 0 ? 'font-semibold text-error' : 'text-on-surface-variant'}>{text}</span>
+}
+
 export function RewardCard({ reward, rule }: { reward: Reward; rule: PointsRule }) {
   const hours = hoursReplaced(reward.points, rule)
   const id = `reward-${reward.id}`
@@ -29,7 +40,7 @@ export function RewardCard({ reward, rule }: { reward: Reward; rule: PointsRule 
         {hours && (
           <span className="text-on-surface-variant">{`Equivale a ~${hours} h de treino substituído`}</span>
         )}
-        {reward.stock != null && <span className="text-on-surface-variant">{reward.stock} em estoque</span>}
+        <StockLine stock={reward.stock} redeemed={reward.redeemed} />
       </div>
     </article>
   )

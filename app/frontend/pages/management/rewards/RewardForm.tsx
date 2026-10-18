@@ -80,6 +80,7 @@ export function RewardForm({ idea, rule, onSave, onClose }: RewardFormProps) {
       cost,
       points,
       stock: draft.stock ? Number(draft.stock) : null,
+      redeemed: 0,
     })
 
   return (

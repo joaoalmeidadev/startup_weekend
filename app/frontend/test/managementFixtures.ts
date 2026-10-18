@@ -468,12 +468,18 @@ const reward = (id: string, name: string, icon: string, category: string, cost: 
   cost,
   points,
   stock: null,
+  redeemed: 0,
 })
 
 export const rewardsProps: RewardsProps = {
   points_rule: { manager_hourly: 60, person_hourly: 25, reward_share: 0.4 },
   rewards: [
-    { ...reward('caneca-nivela', 'Caneca Nivela', 'coffee', 'Brinde', 25, 25), stock: 20 },
+    { ...reward('caneca-nivela', 'Caneca Nivela', 'coffee', 'Brinde', 25, 25), stock: 17, redeemed: 3 },
+    {
+      ...reward('ingresso-de-cinema', 'Ingresso de cinema', 'movie', 'Experiência', 40, 40),
+      stock: 0,
+      redeemed: 10,
+    },
     reward('escolher-a-escala-da-semana', 'Escolher a escala da semana', 'calendar_month', 'Folga', 0, 40),
     reward('dia-de-folga', 'Dia de folga', 'beach_access', 'Folga', 150, 150),
   ],

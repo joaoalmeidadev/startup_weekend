@@ -91,7 +91,7 @@ describe('RewardsShow', () => {
     expect(mug.getByText('25 pts')).toBeInTheDocument()
     expect(mug.getByText('Custa R$ 25')).toBeInTheDocument()
     expect(mug.getByText('Equivale a ~0,7 h de treino substituído')).toBeInTheDocument()
-    expect(mug.getByText('20 em estoque')).toBeInTheDocument()
+    expect(mug.getByText('17 em estoque · 3 resgatados')).toBeInTheDocument()
     const shift = within(catalog().getByRole('article', { name: 'Escolher a escala da semana' }))
     expect(shift.getByText('40 pts')).toBeInTheDocument()
     expect(shift.getByText('Custa R$ 0')).toBeInTheDocument()
@@ -164,5 +164,19 @@ describe('RewardsShow', () => {
     expect(maria).toHaveTextContent('02/10')
     expect(maria).toHaveTextContent('30 pts')
     expect(recent.getByText('No mês: R$ 120 em prêmios · R$ 2.890 de treino economizado')).toBeInTheDocument()
+  })
+
+  it('marks a reward as sold out when its stock is over', () => {
+    render(<RewardsShow />)
+
+    const cinema = within(catalog().getByRole('article', { name: 'Ingresso de cinema' }))
+    expect(cinema.getByText('Esgotado · 10 resgatados')).toBeInTheDocument()
+  })
+
+  it('says when a reward has no stock limit', () => {
+    render(<RewardsShow />)
+
+    const dayOff = within(catalog().getByRole('article', { name: 'Dia de folga' }))
+    expect(dayOff.getByText('Sem limite de estoque')).toBeInTheDocument()
   })
 })

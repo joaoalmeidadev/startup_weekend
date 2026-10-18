@@ -83,9 +83,9 @@ RSpec.describe "Management people", :inertia do
       person = inertia.props[:person]
       expect(person[:badge]).to include(earned: true, date: "14/08")
       expect(person[:milestones]).to include("Concluiu a jornada Atendimento na prática", "Ganhou o selo Nivelado em Atendimento")
-      expect(person[:rewards][:redeemed].size).to eq(2)
-      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 105)
-      expect(person[:rewards]).to include(points: 782, balance: 677)
+      expect(person[:rewards][:redeemed].size).to eq(3)
+      expect(person[:rewards][:balance]).to eq(person[:rewards][:points] - 130)
+      expect(person[:rewards]).to include(points: 782, balance: 652)
     end
 
     it "names the badge after the sector when no sector journey reaches the person" do

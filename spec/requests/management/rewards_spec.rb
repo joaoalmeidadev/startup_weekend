@@ -14,6 +14,15 @@ RSpec.describe "Management rewards", :inertia do
       expect(inertia.props[:ideas]).not_to be_empty
     end
 
+    it "takes what was already redeemed out of the stock" do
+      get management_rewards_path
+
+      rewards = inertia.props[:rewards].index_by { |reward| reward[:name] }
+      expect(rewards["Caneca Nivela"]).to include(stock: 17, redeemed: 3)
+      expect(rewards["Ingresso de cinema"]).to include(stock: 10, redeemed: 0)
+      expect(rewards["Vale-lanche"]).to include(stock: nil, redeemed: 7)
+    end
+
     it "lists the recent redemptions, newest first, with the person" do
       get management_rewards_path
 
