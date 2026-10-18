@@ -6,7 +6,6 @@ import type {
   JourneySummary,
   LearningModule,
   LessonReview,
-  LibraryModule,
   Manager,
   ModuleSummary,
   PeopleProps,
@@ -329,16 +328,11 @@ export const journeyGoal: JourneyGoal = {
   competencies: ['Comunicação', 'Postura', 'Rotinas da Distribuidora', 'Reclamações'],
 }
 
-const inJourneys = (module: ModuleSummary, journeys_count: number): LibraryModule => ({
-  ...module,
-  journeys_count,
-})
-
-export const contentLibrary: LibraryModule[] = [
-  inJourneys(journey.stretches[1].modules[0], 1),
-  inJourneys(journey.stretches[0].modules[0], 2),
-  inJourneys(companyModule('uso-do-sistema', 'Uso do Sistema'), 0),
-  inJourneys(mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }), 1),
+export const contentLibrary: ModuleSummary[] = [
+  journey.stretches[1].modules[0],
+  journey.stretches[0].modules[0],
+  companyModule('uso-do-sistema', 'Uso do Sistema'),
+  mod('raciocinio-logico', 'Raciocínio Lógico', { lessons: 5, research_share: 56 }),
 ]
 
 export const nivelaProducts: ModuleSummary[] = catalog[0].modules

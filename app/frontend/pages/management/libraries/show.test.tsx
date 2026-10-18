@@ -33,11 +33,35 @@ describe('LibrariesShow', () => {
     )
   })
 
-  it('shows how each origin reaches the collaborator', () => {
+  it('shows only the name and the origin of each module', () => {
     render(<LibrariesShow />)
 
-    const flows = within(screen.getByRole('region', { name: 'Como o conteúdo chega ao colaborador' }))
-    const ai = within(flows.getByRole('list', { name: 'Caminho: Gerado por IA' }))
+    const library = within(screen.getByRole('region', { name: 'Módulos' }))
+    const rotinas = library.getByRole('link', { name: /Rotinas/ })
+    expect(rotinas).toHaveAttribute('href', '/management/modules/rotinas-de-atendimento')
+    expect(rotinas).toHaveTextContent('Gerado por IA')
+    expect(library.getByRole('link', { name: /Raciocínio Lógico/ })).toHaveTextContent('Produtos Nivela')
+    for (const noise of [/lições/, /jornada/, /Citado por/]) {
+      expect(library.queryByText(noise)).not.toBeInTheDocument()
+    }
+  })
+
+  it('puts the list right after the header, with no explanation blocks on top', () => {
+    render(<LibrariesShow />)
+
+    expect(
+      screen.queryByRole('region', { name: 'Como o conteúdo chega ao colaborador' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Produtos Nivela' })).not.toBeInTheDocument()
+  })
+
+  it('explains each origin on demand', async () => {
+    render(<LibrariesShow />)
+
+    await userEvent.click(screen.getByRole('button', { name: /Entenda as origens/ }))
+
+    const guide = within(screen.getByRole('dialog', { name: 'De onde vem cada conteúdo' }))
+    const ai = within(guide.getByRole('list', { name: 'Caminho: Gerado por IA' }))
     expect(ai.getAllByRole('listitem').map((step) => step.textContent)).toEqual([
       'Material',
       'IA cria',
@@ -45,48 +69,15 @@ describe('LibrariesShow', () => {
       'Jornada',
       'Colaborador',
     ])
-    expect(flows.getByRole('list', { name: 'Caminho: Produtos Nivela' })).toHaveTextContent(
+    expect(guide.getByRole('list', { name: 'Caminho: Produtos Nivela' })).toHaveTextContent(
       'Biblioteca Nivela',
     )
-    expect(flows.getByRole('list', { name: 'Caminho: Produtos da empresa' })).toHaveTextContent(
+    expect(guide.getByRole('list', { name: 'Caminho: Produtos da empresa' })).toHaveTextContent(
       'Você escreve',
     )
-  })
 
-  it('lists the content library with origin, lessons and journeys using each module', () => {
-    render(<LibrariesShow />)
-
-    const library = within(screen.getByRole('region', { name: 'Módulos' }))
-    const rotinas = library.getByRole('link', { name: /Rotinas/ })
-    expect(rotinas).toHaveAttribute('href', '/management/modules/rotinas-de-atendimento')
-    expect(rotinas).toHaveTextContent('Gerado por IA')
-    expect(rotinas).toHaveTextContent('8 lições')
-    expect(rotinas).toHaveTextContent('Em 1 jornada')
-    expect(library.getByRole('link', { name: /Conversa Clara/ })).toHaveTextContent('Em 2 jornadas')
-    expect(library.getByRole('link', { name: /Uso do Sistema/ })).toHaveTextContent('Em nenhuma jornada')
-  })
-
-  it('presents the Nivela products as a ready-made library for any sector', async () => {
-    render(<LibrariesShow />)
-
-    const ready = within(screen.getByRole('region', { name: 'Produtos Nivela' }))
-    expect(
-      ready.getByText(
-        'Prontos para usar, mesmo que sua empresa ainda não tenha material. Feitos para qualquer setor.',
-      ),
-    ).toBeInTheDocument()
-    expect(ready.getByText('2 módulos · 9 lições disponíveis')).toBeInTheDocument()
-
-    await userEvent.click(ready.getByRole('button', { name: /Ver os produtos Nivela/ }))
-    expect(screen.getByRole('button', { name: 'Produtos Nivela' })).toHaveAttribute('aria-pressed', 'true')
-  })
-
-  it('highlights the skills the companies struggle with the most', () => {
-    render(<LibrariesShow />)
-
-    expect(screen.getByRole('link', { name: /Raciocínio Lógico/ })).toHaveTextContent(
-      'Citado por 56% das empresas',
-    )
+    await userEvent.click(guide.getByRole('button', { name: 'Entendi' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('filters the library by origin', async () => {

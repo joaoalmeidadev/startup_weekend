@@ -161,8 +161,6 @@ export type GoalLevel = { key: GoalLevelKey; label: string; target: number; hint
 // Where a content comes from: AI from company material, the Nivela library or written by the company
 export type ContentSource = 'ai' | 'nivela' | 'company'
 
-export type LibraryModule = ModuleSummary & { journeys_count: number }
-
 export type CatalogGroup = { source: ContentSource; title: string; modules: ModuleSummary[] }
 
 export type JourneyGoal = { sector: string | null; competencies: string[] }

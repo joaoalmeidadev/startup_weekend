@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import { Icon } from '@/components/Icon'
+import { Modal } from '@/components/Modal'
 import { SOURCES, SOURCE_ORDER } from '@/components/SourceBadge'
 import type { ContentSource } from '@/types/management'
 
@@ -33,16 +34,10 @@ function FlowSteps({ source }: { source: ContentSource }) {
   )
 }
 
-export function SourceFlows() {
+export function SourceGuideModal({ onClose }: { onClose: () => void }) {
   return (
-    <section
-      aria-labelledby="source-flows-title"
-      className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-sm"
-    >
-      <h2 id="source-flows-title" className="text-headline-sm text-on-surface">
-        Como o conteúdo chega ao colaborador
-      </h2>
-      <div className="grid grid-cols-1 gap-space-md lg:grid-cols-3">
+    <Modal icon="info" title="De onde vem cada conteúdo" onClose={onClose}>
+      <div className="flex flex-col gap-space-md">
         {SOURCE_ORDER.map((source) => (
           <div key={source} className="flex gap-space-sm">
             <span
@@ -58,6 +53,13 @@ export function SourceFlows() {
           </div>
         ))}
       </div>
-    </section>
+      <button
+        type="button"
+        onClick={onClose}
+        className="h-11 rounded-xl bg-primary text-label-lg text-on-primary transition-colors hover:bg-primary-container"
+      >
+        Entendi
+      </button>
+    </Modal>
   )
 }

@@ -2,9 +2,8 @@ import { Head, Link, usePage } from '@inertiajs/react'
 import { ContentPipeline } from '@/components/ContentPipeline'
 import { Icon } from '@/components/Icon'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
-import type { LibraryModule } from '@/types/management'
+import type { ModuleSummary } from '@/types/management'
 import { ContentLibrary } from './ContentLibrary'
-import { SourceFlows } from './SourceFlows'
 
 function LibraryHeader() {
   return (
@@ -12,9 +11,7 @@ function LibraryHeader() {
       <div className="flex flex-col gap-space-xs">
         <ContentPipeline current="library" />
         <h1 className="text-headline-xl tracking-tight text-on-surface">Biblioteca</h1>
-        <p className="text-body-md text-on-surface-variant">
-          O que alimenta as jornadas: material da empresa, lições criadas com IA e produtos Nivela.
-        </p>
+        <p className="text-body-md text-on-surface-variant">O que alimenta as jornadas.</p>
       </div>
       <Link
         href="/management/modules/new"
@@ -28,14 +25,13 @@ function LibraryHeader() {
 }
 
 export default function LibrariesShow() {
-  const { library } = usePage<{ library: LibraryModule[] }>().props
+  const { library } = usePage<{ library: ModuleSummary[] }>().props
 
   return (
     <ManagementLayout>
       <Head title="Biblioteca" />
       <div className="flex w-full flex-col gap-space-lg">
         <LibraryHeader />
-        <SourceFlows />
         <ContentLibrary library={library} />
       </div>
     </ManagementLayout>
