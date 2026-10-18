@@ -19,12 +19,15 @@ RSpec.describe "Authentication", :js do
     expect(page).to have_button("Entrar")
   end
 
-  it "takes an HR user to the management area" do
+  it "takes an HR user to the management area and back to the login on sign out" do
     create(:user, :hr, email: "ana@example.com", password: "password123")
 
     sign_in_with("ana@example.com", "password123")
-
     expect(page).to have_content("Setores")
+
+    click_button "Ana Lima"
+    click_button "Sair"
+    expect(page).to have_button("Entrar")
   end
 
   it "shows an alert on wrong credentials" do

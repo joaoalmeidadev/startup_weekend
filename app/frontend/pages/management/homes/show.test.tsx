@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { teamDashboard as dashboard, manager } from '@/test/managementFixtures'
-import { page } from '@/test/inertiaMock'
+import { page, router } from '@/test/inertiaMock'
 import HomesShow from './show'
 
 vi.mock('@inertiajs/react', async () => (await import('@/test/inertiaMock')).inertiaMock)
@@ -127,5 +127,26 @@ describe('HomesShow', () => {
     expect(screen.queryByRole('navigation', { name: 'Visão' })).not.toBeInTheDocument()
     expect(screen.getByText('Ana Lima')).toBeInTheDocument()
     expect(screen.getByText('Administradora')).toBeInTheDocument()
+  })
+
+  it('signs out from the menu under the manager name', async () => {
+    render(<HomesShow />)
+    expect(screen.queryByRole('menuitem', { name: /Sair/ })).not.toBeInTheDocument()
+
+    const account = screen.getByRole('button', { name: /Ana Lima/ })
+    await userEvent.click(account)
+    expect(account).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.click(screen.getByRole('menuitem', { name: /Sair/ }))
+
+    expect(router.delete).toHaveBeenCalledWith('/users/sign_out')
+  })
+
+  it('closes the account menu with Escape', async () => {
+    render(<HomesShow />)
+
+    await userEvent.click(screen.getByRole('button', { name: /Ana Lima/ }))
+    await userEvent.keyboard('{Escape}')
+
+    expect(screen.queryByRole('menuitem', { name: /Sair/ })).not.toBeInTheDocument()
   })
 })

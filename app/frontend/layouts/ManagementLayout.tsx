@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { Icon } from '@/components/Icon'
 import { MockNoticeProvider, useMockNotice } from '@/components/MockNotice'
+import { AccountMenu } from './AccountMenu'
 import type { Manager } from '@/types/management'
 
 type NavItem = { icon: string; label: string; href: string; sections?: string[]; exact?: boolean }
@@ -103,19 +104,7 @@ export function ManagementLayout({ children }: { children: ReactNode }) {
         </aside>
 
         <header className="fixed top-0 right-0 left-0 z-30 flex h-16 items-center justify-end bg-surface/80 px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl lg:left-72">
-          <div className="flex items-center gap-space-sm">
-            <div className="text-right">
-              <span className="block text-label-md leading-tight font-semibold text-on-surface">
-                {manager.name}
-              </span>
-              <span className="block text-label-sm leading-tight text-on-surface-variant">
-                {manager.role_label}
-              </span>
-            </div>
-            <div className="flex size-8 items-center justify-center rounded-full bg-primary">
-              <Icon name="person" className="text-[1.125rem] text-on-primary" />
-            </div>
-          </div>
+          <AccountMenu manager={manager} />
         </header>
 
         <div className="w-full lg:pl-72">
