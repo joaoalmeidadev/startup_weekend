@@ -4,6 +4,7 @@ import { StatusPill } from '@/components/StatusPill'
 import type { AudienceOption, JourneySummary } from '@/types/management'
 import { KindTag } from './KindTag'
 import { audienceChips } from './audience'
+import { kindOf } from './journeyKinds'
 
 const contentsCount = (count: number) => `${count} ${count === 1 ? 'conteúdo' : 'conteúdos'}`
 
@@ -18,7 +19,7 @@ export function JourneyCard({ journey, audienceOptions }: JourneyCardProps) {
       className="relative flex flex-col gap-space-md overflow-hidden rounded-xl bg-surface-container-lowest p-space-lg shadow-sm transition-all hover:shadow-md"
     >
       <div
-        className={`absolute top-0 bottom-0 left-0 w-1.5 ${active ? 'bg-primary-container' : 'bg-outline-variant'}`}
+        className={`absolute top-0 bottom-0 left-0 w-1.5 ${active ? kindOf(journey.kind).stripe : 'bg-outline-variant'}`}
       />
       <div className="flex items-start justify-between gap-space-sm">
         <div className="flex flex-col gap-space-xs">

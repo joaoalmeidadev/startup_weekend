@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { audienceOptions, journeySummaries, manager } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
@@ -70,7 +71,7 @@ describe('JourneysIndex', () => {
     expect(legend.getByText('Habilidades gerais que todo mundo precisa')).toBeInTheDocument()
     expect(legend.getByText('Cultura, processos e o jeito da empresa')).toBeInTheDocument()
     expect(legend.getByText('O dia a dia de um setor')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Base/ })).not.toBeInTheDocument()
+    expect(legend.queryByRole('button')).not.toBeInTheDocument()
   })
 
   it('keeps the journeys in their own section', () => {
@@ -96,5 +97,31 @@ describe('JourneysIndex', () => {
 
     const nav = within(screen.getByRole('navigation', { name: 'Gestão' }))
     expect(nav.getByRole('link', { name: /Jornadas/ })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('colors the tag of each kind of journey differently', () => {
+    render(<JourneysIndex />)
+
+    const tags = ['Jornada Base', 'Jornada Empresa', 'Jornada Setor'].map(
+      (label) => screen.getByText(label).closest('span') as HTMLElement,
+    )
+    expect(new Set(tags.map((tag) => tag.className)).size).toBe(3)
+  })
+
+  it('filters the journeys by kind, with how many there are of each', async () => {
+    render(<JourneysIndex />)
+
+    const kinds = within(screen.getByRole('group', { name: 'Filtrar por tipo' }))
+    const grid = () => within(screen.getByRole('region', { name: 'Jornadas' }))
+    await userEvent.click(kinds.getByRole('button', { name: 'Setor (1)' }))
+
+    expect(kinds.getByRole('button', { name: 'Setor (1)' })).toHaveAttribute('aria-pressed', 'true')
+    expect(
+      grid()
+        .getAllByRole('link')
+        .map((link) => link.textContent),
+    ).toEqual([expect.stringContaining('Atendimento na prática')])
+    await userEvent.click(kinds.getByRole('button', { name: 'Todas (3)' }))
+    expect(grid().getAllByRole('link')).toHaveLength(3)
   })
 })

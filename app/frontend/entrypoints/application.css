@@ -49,6 +49,7 @@ layer(base);
   --color-on-secondary-container: #6e4c00;
   --color-secondary-fixed: #ffdea9;
   --color-on-secondary-fixed: #271900;
+  --color-secondary-fixed-dim: #eec06f;
 
   --color-tertiary: #00491c;
   --color-on-tertiary: #ffffff;
