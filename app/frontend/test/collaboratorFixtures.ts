@@ -1,10 +1,13 @@
 import type {
+  ContributionForm,
+  ContributionsPage,
   DiagnosticQuestion,
   DiagnosticResult,
   Journey,
   MicroLesson,
   Profile,
   Progress,
+  RewardsPage,
   Viewer,
 } from '@/types/collaborator'
 
@@ -93,4 +96,81 @@ export const microLesson: MicroLesson = {
     ],
   },
   badge: 'Rotinas da Distribuidora',
+}
+
+// Balance 30: enough for the Caneca (25), short of the cinema (40); the Vale-lanche is sold out
+export const rewardsPage: RewardsPage = {
+  balance: 30,
+  rewards: [
+    { id: 'caneca-nivela', name: 'Caneca Nivela', icon: 'coffee', category: 'Brinde', points: 25, stock: 20 },
+    {
+      id: 'ingresso-de-cinema',
+      name: 'Ingresso de cinema',
+      icon: 'movie',
+      category: 'Experiência',
+      points: 40,
+      stock: 10,
+    },
+    { id: 'vale-lanche', name: 'Vale-lanche', icon: 'lunch_dining', category: 'Vale', points: 30, stock: 0 },
+  ],
+  redeemed: [{ name: 'Caneca Nivela', date: '02/10', points: 25 }],
+}
+
+const contributionLesson = (title: string) => ({
+  title,
+  question: {
+    prompt: 'Qual o primeiro passo?',
+    options: [
+      { text: 'Ouvir', correct: true },
+      { text: 'Interromper', correct: false },
+      { text: 'Ignorar', correct: false },
+    ],
+  },
+})
+
+export const contributionsPage: ContributionsPage = {
+  earned: 8,
+  contributions: [
+    {
+      id: 'clientes-dificeis',
+      author: 'Maria Souza',
+      title: 'Clientes difíceis: o que funciona',
+      sector: 'Atendimento',
+      hours: 2,
+      sent_on: '28/09',
+      status: 'approved',
+      awarded_points: 8,
+      suggested_points: 8,
+      lessons: [contributionLesson('Ouvir sem interromper')],
+    },
+    {
+      id: 'planilha-de-rotas',
+      author: 'Maria Souza',
+      title: 'Planilha de rotas',
+      sector: 'Logística',
+      hours: 1.5,
+      sent_on: '16/10',
+      status: 'pending',
+      awarded_points: null,
+      suggested_points: 6,
+      lessons: [contributionLesson('Ler a planilha')],
+    },
+    {
+      id: 'etiquetas',
+      author: 'Maria Souza',
+      title: 'Etiquetas de envio',
+      sector: 'Logística',
+      hours: 1,
+      sent_on: '10/10',
+      status: 'changes_requested',
+      awarded_points: null,
+      suggested_points: 4,
+      lessons: [contributionLesson('Imprimir a etiqueta')],
+    },
+  ],
+}
+
+export const contributionForm: ContributionForm = {
+  sectors: ['Atendimento', 'Comercial', 'Logística'],
+  points_per_hour: 3.8,
 }
