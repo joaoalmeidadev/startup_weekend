@@ -19,9 +19,13 @@ Fale por cima só se quiser; o vídeo se sustenta sozinho.
 ## 3. Demo ao vivo (~2 min) — as 3 fatias + dashboard
 
 ### Fatia 3 primeiro: o cadastro do conteúdo (Administrador — `admin@nivela.com` / `12345678`)
-1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez de ~90, e foram 207 horas de repasse a menos — cerca de R$ 6,4 mil."
+1. **Dashboard** abre direto. "Isto é a prova de que funciona: a equipe foi de 48 para 79 pontos, nivela em 46 dias em vez
+   de ~90." Aponte o card **Quanto a Nivela já devolveu**: "Em 6 meses, R$ 6.365 de treino e R$ 3.120 de retrabalho a
+   menos; tirando prêmios e a mensalidade, sobram **R$ 8.005** — cada R$ 1 investido voltou R$ 6,4."
 2. **Biblioteca** (o que existe). Clique no filtro **Produtos Nivela**: "Sem material? A Nivela já vem com 12 módulos
    para qualquer setor — os mais citados na nossa pesquisa."
+2b. Abra **Atendimento ao Cliente: Fundamentos**: "As lições vêm em vídeo, áudio, infográfico e texto — esta é uma aula
+   básica do Sebrae, patrocinador do evento." Abra a lição e mostre o **gabarito** e "% da equipe acerta de primeira".
 3. **+ Novo conteúdo**: "Um formulário só: o conteúdo em cima, de onde vem embaixo." "Usar o arquivo de exemplo" →
    **Gerado por IA** já marcado → **Criar lições com IA** → **Revisar lições**: "À esquerda o manual, à direita o que o
    funcionário vai ver. Nada vai para a equipe sem a minha aprovação." (Atalho: `/management/lesson_reviews/8` →
