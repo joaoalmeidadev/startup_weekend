@@ -16,8 +16,8 @@ Rails.application.routes.draw do
     resources :journeys, only: :index
     resource :rewards, only: :show
     resources :contributions, only: %i[index new]
-    resource :journey, only: :show
-    resource :progress, only: :show
+    get "journey", to: redirect("/collaborator/journeys", status: 302)
+    get "progress", to: redirect("/collaborator/home", status: 302)
     resource :profile, only: :show
     resource :welcome, only: :show
     resource :diagnostic, only: :show do

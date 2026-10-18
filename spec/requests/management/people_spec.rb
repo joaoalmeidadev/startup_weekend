@@ -12,12 +12,12 @@ RSpec.describe "Management people", :inertia do
       end
     end
 
-    it "sends collaborators back to their journey" do
+    it "sends collaborators back to their home" do
       sign_in create(:user)
 
       get management_people_path
 
-      expect(response).to redirect_to(collaborator_journey_path)
+      expect(response).to redirect_to(collaborator_home_path)
     end
 
     it "asks guests to sign in" do

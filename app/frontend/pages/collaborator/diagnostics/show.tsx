@@ -75,7 +75,7 @@ export default function DiagnosticsShow() {
       </PrimaryButton>
       <div className="flex flex-col items-center gap-space-xs text-center">
         <span className="text-label-md text-on-surface-variant">Isto não é prova: é para conhecer você.</span>
-        <Link href="/collaborator/journey" className="text-label-md text-primary underline">
+        <Link href="/collaborator/home" className="text-label-md text-primary underline">
           Continuar depois
         </Link>
       </div>

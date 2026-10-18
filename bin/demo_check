@@ -37,14 +37,14 @@ for path in /management "/management?period=30d" /management/people/maria-souza 
   check "$path"
 done
 
-expect_landing "novo@nivela.com" "/collaborator/journey"
+expect_landing "novo@nivela.com" "/collaborator/home"
 check /collaborator/welcome
 check /collaborator/diagnostic
 check /collaborator/diagnostic/result
 
-expect_landing "colab@nivela.com" "/collaborator/journey"
-for path in /collaborator/journey /collaborator/modules/rotinas-da-distribuidora \
-  /collaborator/lessons/rotinas-da-distribuidora /collaborator/progress /collaborator/profile; do
+expect_landing "colab@nivela.com" "/collaborator/home"
+for path in /collaborator/home /collaborator/journeys /collaborator/modules/rotinas-da-distribuidora \
+  /collaborator/lessons/rotinas-da-distribuidora /collaborator/profile; do
   check "$path"
 done
 

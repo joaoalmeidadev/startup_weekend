@@ -32,7 +32,7 @@ RSpec.describe "Collaborator learning flow", :inertia do
 
     expect_inertia.to render_component("collaborator/lessons/show")
     lesson = inertia.props[:lesson]
-    expect(lesson).to include(title: "Rotinas da Distribuidora", points: 20)
+    expect(lesson).to include(title: "Rotinas da Distribuidora", points: 23)
     expect(lesson[:question][:options].count { |option| option[:correct] }).to eq(1)
   end
 

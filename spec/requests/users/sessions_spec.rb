@@ -12,10 +12,10 @@ RSpec.describe "User sessions", :inertia do
   end
 
   describe "POST /users/sign_in" do
-    it "signs a collaborator in and redirects to the journey" do
+    it "signs a collaborator in and redirects to the home" do
       post user_session_path, params: {user: {email: "jane@example.com", password: "password123"}}
 
-      expect(response).to redirect_to(collaborator_journey_path)
+      expect(response).to redirect_to(collaborator_home_path)
       expect(controller.current_user).to eq(user)
     end
 

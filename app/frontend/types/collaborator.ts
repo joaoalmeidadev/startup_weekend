@@ -8,43 +8,10 @@ export type Viewer = {
 
 export type LessonStatus = 'done' | 'current' | 'locked'
 
-export type Lesson = {
-  id?: string
-  module_id?: string
-  title: string
-  status: LessonStatus
-  minutes?: number
-  description?: string
-}
-
-export type JourneySection = {
-  title: string
-  lessons: Lesson[]
-}
-
-export type Journey = {
-  today: { minutes: number; owner: string }
-  step: { current: number; total: number }
-  sections: JourneySection[]
-  badge: { title: string; description: string }
-  summary: { completed: number; percent: number }
-}
-
 export type Badge = {
   title: string
   icon: string
   earned: boolean
-}
-
-export type StretchProgress = {
-  name: string
-  completed: number
-  total: number
-}
-
-export type Progress = {
-  badges: Badge[]
-  evolution: { completed: number; total: number; stretches: StretchProgress[] }
 }
 
 export type Profile = {
@@ -83,4 +50,49 @@ export type CollaboratorModule = {
   done: number
   lessons: { title: string; status: LessonStatus }[]
   continue_path: string | null
+}
+
+export type LearnerStep = {
+  module_id: string
+  name: string
+  hours: number
+  lessons: number
+  points: number
+  status: LessonStatus
+}
+
+export type LearnerJourneyStatus = 'done' | 'active' | 'queued'
+
+export type LearnerJourney = {
+  id: string
+  name: string
+  kind: 'base' | 'company' | 'sector'
+  badge: string
+  status: LearnerJourneyStatus
+  steps: LearnerStep[]
+  points_total: number
+  points_earned: number
+}
+
+export type NextStep = {
+  journey: string
+  module_id: string
+  name: string
+  points: number
+}
+
+export type LearnerPoints = {
+  study: number
+  sharing: number
+  total: number
+  balance: number
+}
+
+export type Learner = {
+  name: string
+  journeys: LearnerJourney[]
+  next_step: NextStep | null
+  points: LearnerPoints
+  streak_days: number
+  badges: Badge[]
 }

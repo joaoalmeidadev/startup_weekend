@@ -27,11 +27,11 @@ export default function CollaboratorModuleShow() {
       <Head title={module.name} />
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-space-lg py-space-lg">
         <Link
-          href="/collaborator/journey"
+          href="/collaborator/journeys"
           className="inline-flex w-fit items-center gap-1 text-label-lg text-primary"
         >
           <Icon name="arrow_back" className="text-[1.5rem]" />
-          Minha jornada
+          Jornadas
         </Link>
         <section className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-lg shadow-md">
           <h1 className="text-headline-lg text-on-surface">{module.name}</h1>

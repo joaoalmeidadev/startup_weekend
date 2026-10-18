@@ -11,7 +11,7 @@ type FocusLayoutProps = {
 }
 
 // Distraction-free screens (diagnostic, lesson): only a way out and a thin progress bar
-export function FocusLayout({ children, progress, closeHref = '/collaborator/journey' }: FocusLayoutProps) {
+export function FocusLayout({ children, progress, closeHref = '/collaborator/journeys' }: FocusLayoutProps) {
   return (
     <MockNoticeProvider>
       <OfflineBanner />

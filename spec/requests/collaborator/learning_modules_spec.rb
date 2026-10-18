@@ -24,12 +24,4 @@ RSpec.describe "Collaborator module", :inertia do
 
     expect(response).to have_http_status(:not_found)
   end
-
-  it "links the journey stops to their modules" do
-    get collaborator_journey_path
-
-    lessons = inertia.props[:journey][:sections].flat_map { |section| section[:lessons] }
-    expect(lessons.reject { |lesson| lesson[:status] == "locked" }.pluck(:module_id))
-      .to eq(%w[conversa-clara matematica-do-dia-a-dia nossa-historia-e-valores rotinas-da-distribuidora])
-  end
 end

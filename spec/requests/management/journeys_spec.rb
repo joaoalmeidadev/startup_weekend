@@ -134,6 +134,6 @@ RSpec.describe "Management journeys", :inertia do
 
     get management_journeys_path
 
-    expect(response).to redirect_to(collaborator_journey_path)
+    expect(response).to redirect_to(collaborator_home_path)
   end
 end

@@ -51,7 +51,7 @@ export default function DiagnosticsResult() {
       </div>
       <ResultBlock title="Você já sabe" icon="check" items={result.known} tone="known" />
       <ResultBlock title="Vamos aprender" icon="arrow_forward" items={result.to_learn} tone="learn" />
-      <PrimaryButton onClick={() => router.visit('/collaborator/journey')}>Ver minha jornada</PrimaryButton>
+      <PrimaryButton onClick={() => router.visit('/collaborator/journeys')}>Ver minha jornada</PrimaryButton>
     </FocusLayout>
   )
 }

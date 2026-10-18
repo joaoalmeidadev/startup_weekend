@@ -143,6 +143,6 @@ RSpec.describe "Management sectors", :inertia do
 
     get management_sectors_path
 
-    expect(response).to redirect_to(collaborator_journey_path)
+    expect(response).to redirect_to(collaborator_home_path)
   end
 end

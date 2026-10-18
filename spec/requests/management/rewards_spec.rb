@@ -47,6 +47,6 @@ RSpec.describe "Management rewards", :inertia do
 
     get management_rewards_path
 
-    expect(response).to redirect_to(collaborator_journey_path)
+    expect(response).to redirect_to(collaborator_home_path)
   end
 end

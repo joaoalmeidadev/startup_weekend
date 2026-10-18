@@ -10,7 +10,7 @@ import { SettingRow } from './SettingRow'
 type ProfilePageProps = { profile: Profile; viewer: Viewer }
 type OpenModal = 'reminder' | null
 
-const BACK_TO_JOURNEY_DELAY_MS = 1200
+const BACK_TO_HOME_DELAY_MS = 1200
 
 // Settings are kept in local state until there is somewhere to save them
 function ProfileSettings({ profile }: { profile: Profile }) {
@@ -20,7 +20,7 @@ function ProfileSettings({ profile }: { profile: Profile }) {
 
   const saveAndGoBack = () => {
     notify('Tudo pronto! Suas opções foram salvas.')
-    setTimeout(() => router.visit('/collaborator/journey'), BACK_TO_JOURNEY_DELAY_MS)
+    setTimeout(() => router.visit('/collaborator/home'), BACK_TO_HOME_DELAY_MS)
   }
 
   return (

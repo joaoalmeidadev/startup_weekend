@@ -8,11 +8,11 @@ RSpec.describe "Authentication", :js do
     click_button "Entrar"
   end
 
-  it "takes a collaborator to the journey and back to the login on sign out" do
+  it "takes a collaborator to the home and back to the login on sign out" do
     create(:user, email: "maria@example.com", password: "password123")
 
     sign_in_with("maria@example.com", "password123")
-    expect(page).to have_content("Sua Trilha de Aprendizado")
+    expect(page).to have_content("Sua próxima etapa")
 
     click_link "Perfil", match: :first
     click_button "Sair da minha conta"

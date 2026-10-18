@@ -18,7 +18,7 @@ export function LessonComplete({ lesson }: { lesson: MicroLesson }) {
           Você concluiu <strong>{lesson.module_name}</strong> e ganhou o selo deste módulo.
         </p>
       </div>
-      <PrimaryButton onClick={() => router.visit('/collaborator/journey')}>
+      <PrimaryButton onClick={() => router.visit('/collaborator/journeys')}>
         Voltar para a jornada
       </PrimaryButton>
     </div>
