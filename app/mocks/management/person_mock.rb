@@ -8,7 +8,7 @@ module Management
 
     def props
       PersonOverview.new(@person).props.merge(
-        role: @person[:role], tenure: @person[:tenure], path: path,
+        role: @person[:role], tenure: @person[:tenure], salary: @person[:salary], path: path,
         study: study.props, competencies: study.competencies,
         badge: rewards.badge, milestones: rewards.milestones, rewards: rewards.rewards
       )

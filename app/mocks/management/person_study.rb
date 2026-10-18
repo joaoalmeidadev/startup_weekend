@@ -11,12 +11,14 @@ module Management
     def props
       {weekly_minutes: @person[:weekly_minutes], streak_days: streak_days, lessons_done: lessons_done,
        hours_done: hours_done, review_accuracy: REVIEW_ACCURACY.fetch(@person[:status]),
-       saved: saved, salary_informed: @person[:salary].present?}
+       saved: saved, salary_informed: @person[:salary].present?,
+       learner_hourly: rule.learner_hourly_for(@person[:salary]), reward_share: rule.props[:reward_share]}
     end
+
+    def rule = @rule ||= PointsRule.for_sector(@person[:sector])
 
     # R$ of in-person training saved: the person's own salary when informed, otherwise the sector value
     def saved
-      rule = PointsRule.for_sector(@person[:sector])
       rule.saved_with_learner(hours_done, rule.learner_hourly_for(@person[:salary]))
     end
 
@@ -27,7 +29,6 @@ module Management
 
     # Hours studied × the person's own hour (their salary, or the sector's learner salary) × the company's share
     def points
-      rule = PointsRule.for_sector(@person[:sector])
       rule.points_for(hours_done, salary: @person[:salary])
     end
 

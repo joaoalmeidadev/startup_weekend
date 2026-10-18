@@ -202,6 +202,7 @@ export const personDetail: PersonDetail = {
   ...peopleProps.people[1],
   role: 'Atendente',
   tenure: '1 mês de casa',
+  salary: 2090,
   path: [
     { title: 'Base', journeys: ['Base Nivela'], modules: [{ name: 'Conversa Clara', status: 'done' }] },
     {
@@ -219,6 +220,8 @@ export const personDetail: PersonDetail = {
     review_accuracy: 82,
     saved: 236,
     salary_informed: true,
+    learner_hourly: 9.5,
+    reward_share: 0.4,
   },
   competencies: [
     { name: 'Comunicação', before: 40, now: 70, goal: 75 },
@@ -227,9 +230,9 @@ export const personDetail: PersonDetail = {
   badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
   milestones: ['Concluiu a jornada Base Nivela', '3 dias seguidos de estudo'],
   rewards: {
-    points: 96,
-    balance: 66,
-    redeemed: [{ name: 'Vale-lanche', date: '02/10', points: 30 }],
+    points: 30,
+    balance: 5,
+    redeemed: [{ name: 'Caneca Nivela', date: '02/10', points: 25 }],
   },
 }
 

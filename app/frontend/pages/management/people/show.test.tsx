@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { manager, personDetail } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
@@ -88,11 +89,12 @@ describe('PeopleShow', () => {
     render(<PeopleShow />)
 
     const rewards = within(screen.getByRole('region', { name: 'Recompensas' }))
-    expect(rewards.getByText('96 pts ganhos')).toBeInTheDocument()
-    expect(rewards.getByText('66 pts de saldo')).toBeInTheDocument()
-    const item = rewards.getByText('Vale-lanche').closest('li') as HTMLElement
+    expect(rewards.getByText('30 pts ganhos')).toBeInTheDocument()
+    expect(rewards.getByText('5 pts de saldo')).toBeInTheDocument()
+    expect(rewards.getByText('8 h estudadas × R$ 9,50/h × 40% = 30 pts')).toBeInTheDocument()
+    const item = rewards.getByText('Caneca Nivela').closest('li') as HTMLElement
     expect(item).toHaveTextContent('02/10')
-    expect(item).toHaveTextContent('30 pts')
+    expect(item).toHaveTextContent('25 pts')
   })
 
   it('says when no reward was redeemed yet', () => {
@@ -138,5 +140,27 @@ describe('PeopleShow', () => {
     render(<PeopleShow />)
 
     expect(screen.getByText('economizados · com o valor do setor')).toBeInTheDocument()
+  })
+
+  it('shows the salary that prices the points and lets the manager edit it', async () => {
+    render(<PeopleShow />)
+
+    const salary = within(screen.getByRole('group', { name: 'Salário' }))
+    expect(salary.getByText('Salário: R$ 2.090')).toBeInTheDocument()
+    await userEvent.click(salary.getByRole('button', { name: 'Editar salário' }))
+    const input = salary.getByLabelText('Salário mensal (R$)')
+    await userEvent.clear(input)
+    await userEvent.type(input, '2400')
+    await userEvent.click(salary.getByRole('button', { name: 'Salvar' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('Salário de Maria Souza salvo (simulação).')
+    expect(salary.getByText('Salário: R$ 2.400')).toBeInTheDocument()
+  })
+
+  it('says when the salary was not informed and the sector value is used', () => {
+    page.props = { person: { ...personDetail, salary: null }, manager }
+    render(<PeopleShow />)
+
+    expect(screen.getByText('Salário não informado · usa o valor do setor')).toBeInTheDocument()
   })
 })

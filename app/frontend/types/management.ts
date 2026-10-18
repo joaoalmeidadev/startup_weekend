@@ -101,6 +101,8 @@ export type LearningModule = {
 export type PersonDetail = Person & {
   role: string
   tenure: string
+  // Monthly salary informed on invite (optional); it prices this person's points and saving
+  salary: number | null
   // Base, Empresa and Setor, each named after the journeys the person receives of that kind
   path: {
     title: string
@@ -115,6 +117,9 @@ export type PersonDetail = Person & {
     // R$ of training saved: the person's own salary when informed on invite, otherwise the sector value
     saved: number
     salary_informed: boolean
+    // The person's hour (their salary, or the sector's learner salary) and the company's share that makes the points
+    learner_hourly: number
+    reward_share: number
     review_accuracy: number
   }
   competencies: { name: string; before: number; now: number; goal: number | null }[]

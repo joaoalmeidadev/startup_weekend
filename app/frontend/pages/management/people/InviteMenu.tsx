@@ -26,11 +26,35 @@ function sentMessage(emails: number, sector: string, created: boolean) {
   return `${plural(emails)} para ${sector} (simulação).`
 }
 
+// One optional salary for everyone in an e-mail invite; different salaries go in the spreadsheet
+function SalaryInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  return (
+    <div className="flex flex-col gap-space-xs">
+      <label htmlFor="invite-salary" className="text-label-md text-on-surface">
+        Salário mensal (R$, opcional)
+      </label>
+      <input
+        id="invite-salary"
+        type="number"
+        min={0}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Ex.: 2200"
+        className="h-11 rounded-xl border-0 bg-surface-container-low px-space-md text-body-md text-on-surface focus:ring-2 focus:ring-primary-container"
+      />
+      <span className="text-body-sm text-on-surface-variant">
+        Vale para todos deste convite. Salários diferentes? Use a planilha.
+      </span>
+    </div>
+  )
+}
+
 function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps) {
   const notify = useMockNotice()
   const [value, setValue] = useState('')
   const [sector, setSector] = useState(initialSector)
   const [newSector, setNewSector] = useState('')
+  const [salary, setSalary] = useState('')
   const creating = sector === NEW_SECTOR
   const sectorName = creating ? newSector.trim() : sector
   const emails = value.split('\n').filter((line) => line.trim()).length
@@ -52,6 +76,7 @@ function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps
           onNewName={setNewSector}
         />
       )}
+      {kind === 'email' && <SalaryInput value={salary} onChange={setSalary} />}
       {kind === 'email' ? (
         <label className="flex flex-col gap-space-xs">
           <span className="text-label-md text-on-surface">E-mails (um por linha)</span>
@@ -77,7 +102,7 @@ function InviteModal({ kind, sectors, initialSector, onClose }: InviteModalProps
             onChange={(event) => setValue(event.target.files?.[0]?.name ?? '')}
           />
           <span className="text-body-sm text-on-surface-variant">
-            O salário só entra na conta de economia; não muda os pontos de ninguém.
+            O salário define os pontos de cada pessoa e a economia em R$.
           </span>
         </label>
       )}

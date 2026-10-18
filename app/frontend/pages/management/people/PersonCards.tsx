@@ -91,6 +91,19 @@ export function BadgeCard({ person }: { person: PersonDetail }) {
   )
 }
 
+const hourly = (value: number) =>
+  value.toLocaleString('pt-BR', {
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  })
+
+// Hours studied × the person's own hour × the company's share, so the manager sees where the points come from
+function pointsFormula(study: PersonDetail['study'], points: number) {
+  const hours = study.hours_done.toLocaleString('pt-BR')
+  const share = Math.round(study.reward_share * 100)
+  return `${hours} h estudadas × R$ ${hourly(study.learner_hourly)}/h × ${share}% = ${points} pts`
+}
+
 export function RewardsCard({ person }: { person: PersonDetail }) {
   const { rewards } = person
   return (
@@ -99,6 +112,7 @@ export function RewardsCard({ person }: { person: PersonDetail }) {
         <span>{rewards.points} pts ganhos</span>
         <span className="text-primary">{rewards.balance} pts de saldo</span>
       </div>
+      <p className="text-body-sm text-on-surface-variant">{pointsFormula(person.study, rewards.points)}</p>
       {rewards.redeemed.length === 0 ? (
         <p className="text-body-sm text-outline">Ainda não resgatou nenhuma recompensa.</p>
       ) : (

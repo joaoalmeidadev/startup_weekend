@@ -7,6 +7,7 @@ import { MiniJourney } from './MiniJourney'
 import { BadgeCard, Card, RewardsCard, StudyCard } from './PersonCards'
 import { PersonAvatar } from './PersonAvatar'
 import { PersonHighlights } from './PersonHighlights'
+import { SalaryField } from './SalaryField'
 import { PERSON_STATUS } from './personStatus'
 
 export default function PeopleShow() {
@@ -33,6 +34,7 @@ export default function PeopleShow() {
               <span className="text-body-md text-on-surface-variant">
                 {person.role} · {person.sector} · {person.tenure}
               </span>
+              <SalaryField name={person.name} salary={person.salary} />
               <span
                 className={`inline-flex w-fit items-center gap-space-xs rounded-full px-space-md py-1 ${status.soft}`}
               >
