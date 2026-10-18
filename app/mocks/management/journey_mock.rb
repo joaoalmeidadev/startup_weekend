@@ -1,6 +1,6 @@
 module Management
   # Example data for the journey builder: the journey with its ordered modules, the whole Biblioteca by origin,
-  # who can receive it and the goal of the first sector or group that receives it
+  # who can receive it, the goal of the first sector or group that receives it and the points rule that prices it
   class JourneyMock
     SOURCE_TITLES = {"ai" => "Gerado por IA", "nivela" => "Produtos Nivela", "company" => "Produtos da empresa"}.freeze
 
@@ -14,7 +14,8 @@ module Management
 
     def props
       {journey: journey_props, catalog: catalog, goal: goal, ready_journey: ready_journey,
-       start_ready: @start_ready && ready_journey.present?}.merge(JourneyAudienceMock.new.props)
+       start_ready: @start_ready && ready_journey.present?,
+       points_rule: PointsRule.new.props}.merge(JourneyAudienceMock.new.props)
     end
 
     private

@@ -1,13 +1,15 @@
-import type { JourneyGoal, ModuleSummary } from '@/types/management'
+import { pointsFor, savedFor } from '@/lib/pointsRule'
+import type { JourneyGoal, PointsRule } from '@/types/management'
+import type { JourneyStep } from './journeyEditing'
 
-// Premissas do pitch: hora de repasse (veterano + gestor) e o ritmo de 5 min por dia útil
-export const HOURLY_RATE = 40
+// Ritmo do pitch: 5 min por dia útil
 export const MINUTES_PER_LESSON = 5
 export const MINUTES_PER_WEEK = 25
 
 export type JourneyValue = {
   hours: number
-  cost: number
+  saved: number
+  points: number
   modules: number
   lessons: number
   weeks: number
@@ -15,33 +17,42 @@ export type JourneyValue = {
   total: number
 }
 
-const sum = (modules: ModuleSummary[], pick: (module: ModuleSummary) => number) =>
-  modules.reduce((total, module) => total + pick(module), 0)
+const sum = (steps: JourneyStep[], pick: (step: JourneyStep) => number) =>
+  steps.reduce((total, step) => total + pick(step), 0)
+
+export function stepPoints(step: JourneyStep, rule: PointsRule) {
+  return step.manualPoints ?? pointsFor(step.hours, rule)
+}
 
 export function weeksToFinish(lessons: number) {
   if (lessons === 0) return 0
   return Math.max(1, Math.round((lessons * MINUTES_PER_LESSON) / MINUTES_PER_WEEK))
 }
 
-export function coveredCompetencies(modules: ModuleSummary[], goal: JourneyGoal) {
-  return goal.competencies.filter((competency) => modules.some((module) => module.competency === competency))
+export function coveredCompetencies(steps: JourneyStep[], goal: JourneyGoal) {
+  return goal.competencies.filter((competency) => steps.some((step) => step.module.competency === competency))
 }
 
-export function journeyValue(modules: ModuleSummary[], goal: JourneyGoal): JourneyValue {
-  const hours = sum(modules, (module) => module.teaching_hours)
-  const lessons = sum(modules, (module) => module.lessons)
+export function journeyValue(steps: JourneyStep[], goal: JourneyGoal, rule: PointsRule): JourneyValue {
+  const hours = sum(steps, (step) => step.hours)
+  const lessons = sum(steps, (step) => step.module.lessons)
 
   return {
     hours,
-    cost: hours * HOURLY_RATE,
-    modules: modules.length,
+    saved: savedFor(hours, rule),
+    points: sum(steps, (step) => stepPoints(step, rule)),
+    modules: steps.length,
     lessons,
     weeks: weeksToFinish(lessons),
-    covered: coveredCompetencies(modules, goal).length,
+    covered: coveredCompetencies(steps, goal).length,
     total: goal.competencies.length,
   }
 }
 
 export function formatReais(amount: number) {
   return `R$ ${amount.toLocaleString('pt-BR')}`
+}
+
+export function formatHours(hours: number) {
+  return hours.toLocaleString('pt-BR')
 }

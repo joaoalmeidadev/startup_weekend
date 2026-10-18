@@ -1,12 +1,18 @@
 import { Icon } from '@/components/Icon'
-import type { JourneyGoal, ModuleSummary } from '@/types/management'
-import { formatReais, journeyValue } from './journeyValue'
+import type { JourneyGoal, ModuleSummary, PointsRule } from '@/types/management'
+import { toSteps } from './journeyEditing'
+import { formatHours, formatReais, journeyValue } from './journeyValue'
 
-type ReadyJourneyCardProps = { ready: ModuleSummary[]; goal: JourneyGoal; onApply: () => void }
+type ReadyJourneyCardProps = {
+  ready: ModuleSummary[]
+  goal: JourneyGoal
+  rule: PointsRule
+  onApply: () => void
+}
 
 // One-click start with the Nivela base products only, editable afterwards
-export function ReadyJourneyCard({ ready, goal, onApply }: ReadyJourneyCardProps) {
-  const value = journeyValue(ready, goal)
+export function ReadyJourneyCard({ ready, goal, rule, onApply }: ReadyJourneyCardProps) {
+  const value = journeyValue(toSteps(ready), goal, rule)
 
   return (
     <section
@@ -21,7 +27,7 @@ export function ReadyJourneyCard({ ready, goal, onApply }: ReadyJourneyCardProps
           </h2>
           <p className="text-body-sm">
             Sem material ainda? Comece só com produtos Nivela e ajuste depois. {value.modules} módulos · ~
-            {value.hours}h de repasse ({formatReais(value.cost)}) já resolvidos.
+            {formatHours(value.hours)} h de treino ({formatReais(value.saved)}) já resolvidos.
           </p>
         </div>
       </div>
