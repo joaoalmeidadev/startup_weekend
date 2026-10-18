@@ -1,7 +1,7 @@
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { manager } from '@/test/managementFixtures'
+import { manager, nivelaProducts } from '@/test/managementFixtures'
 import { page } from '@/test/inertiaMock'
 import LearningModulesNew from './new'
 
@@ -13,6 +13,7 @@ describe('LearningModulesNew', () => {
     page.props = {
       journey: { id: 'onboarding-atendimento', name: 'Onboarding Atendimento' },
       generated: { lessons: 8, review_path: '/management/lesson_reviews/1' },
+      nivela_products: nivelaProducts,
       manager,
     }
   })
@@ -33,8 +34,49 @@ describe('LearningModulesNew', () => {
     expect(steps.getByText('Enviar o material').closest('li')).toHaveAttribute('aria-current', 'step')
   })
 
-  it('offers the manual editor as a secondary path', () => {
+  it('starts by choosing where the content comes from, recommending the AI', () => {
     render(<LearningModulesNew />)
+
+    const ai = screen.getByRole('button', { name: /Enviar material/ })
+    expect(ai).toHaveTextContent('a IA cria as lições')
+    expect(ai).toHaveTextContent('Recomendado')
+    expect(screen.getByRole('link', { name: /Escrever do meu jeito/ })).toHaveAttribute(
+      'href',
+      '/management/modules/new?mode=manual&journey=onboarding-atendimento',
+    )
+    expect(screen.getByRole('button', { name: /Usar um produto Nivela/ })).toBeInTheDocument()
+    expect(screen.queryByLabelText('Nome do conteúdo')).not.toBeInTheDocument()
+  })
+
+  it('adds a ready-made Nivela product to the journey as a simulation', async () => {
+    render(<LearningModulesNew />)
+
+    await userEvent.click(screen.getByRole('button', { name: /Usar um produto Nivela/ }))
+    const products = within(screen.getByRole('list', { name: 'Produtos Nivela' }))
+    await userEvent.click(products.getByRole('button', { name: 'Adicionar Postura e Empatia à jornada' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '"Postura e Empatia" entrou na Base de Onboarding Atendimento (simulação).',
+    )
+    expect(products.getByRole('button', { name: 'Postura e Empatia adicionado' })).toBeDisabled()
+    expect(screen.getByRole('link', { name: /Ver a jornada/ })).toHaveAttribute(
+      'href',
+      '/management/journeys/onboarding-atendimento',
+    )
+  })
+
+  it('lets the manager go back to the origin choice', async () => {
+    render(<LearningModulesNew />)
+
+    await userEvent.click(screen.getByRole('button', { name: /Enviar material/ }))
+    await userEvent.click(screen.getByRole('button', { name: /Trocar a origem/ }))
+
+    expect(screen.getByRole('button', { name: /Usar um produto Nivela/ })).toBeInTheDocument()
+  })
+
+  it('offers the manual editor as a secondary path', async () => {
+    render(<LearningModulesNew />)
+    await userEvent.click(screen.getByRole('button', { name: /Enviar material/ }))
 
     expect(screen.getByRole('link', { name: 'Prefiro escrever manualmente' })).toHaveAttribute(
       'href',
@@ -44,6 +86,7 @@ describe('LearningModulesNew', () => {
 
   it('needs a name and a file before creating the lessons', async () => {
     render(<LearningModulesNew />)
+    await userEvent.click(screen.getByRole('button', { name: /Enviar material/ }))
 
     expect(screen.getByRole('button', { name: /Criar lições com IA/ })).toBeDisabled()
     await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
@@ -60,6 +103,7 @@ describe('LearningModulesNew', () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     render(<LearningModulesNew />)
 
+    await userEvent.click(screen.getByRole('button', { name: /Enviar material/ }))
     await userEvent.click(screen.getByRole('button', { name: /Usar o arquivo de exemplo/ }))
     await userEvent.click(screen.getByRole('button', { name: /Criar lições com IA/ }))
     expect(screen.getByRole('status')).toHaveTextContent('A IA está criando 8 lições…')

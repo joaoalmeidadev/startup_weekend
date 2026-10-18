@@ -12,6 +12,13 @@ describe('LearningModulesShow', () => {
     page.props = { learning_module: learningModule, manager }
   })
 
+  it('shows the origin of the module and the material it came from', () => {
+    render(<LearningModulesShow />)
+
+    expect(screen.getByText('Gerado por IA')).toBeInTheDocument()
+    expect(screen.getByText('Manual de SAC.pdf')).toBeInTheDocument()
+  })
+
   it('sends the reviewer to the first pending lesson', () => {
     render(<LearningModulesShow />)
 

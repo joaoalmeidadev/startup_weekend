@@ -20,3 +20,15 @@ export function addModule(stretches: Stretch[], key: StretchKey, module: ModuleS
     stretch.key === key ? { ...stretch, modules: [...stretch.modules, module] } : stretch,
   )
 }
+
+export function removeModule(stretches: Stretch[], key: StretchKey, moduleId: string): Stretch[] {
+  return stretches.map((stretch) =>
+    stretch.key === key
+      ? { ...stretch, modules: stretch.modules.filter((module) => module.id !== moduleId) }
+      : stretch,
+  )
+}
+
+export function moduleIds(stretches: Stretch[]) {
+  return new Set(stretches.flatMap((stretch) => stretch.modules.map((module) => module.id)))
+}

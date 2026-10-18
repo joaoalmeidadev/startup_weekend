@@ -4,6 +4,8 @@ import { Icon } from '@/components/Icon'
 import { WizardSteps } from '@/components/WizardSteps'
 import { ManagementLayout } from '@/layouts/ManagementLayout'
 import type { NewModuleProps } from '@/types/management'
+import { NivelaProducts } from './NivelaProducts'
+import { OriginChoice, type PickedOrigin } from './OriginChoice'
 
 const SAMPLE_FILE = 'Manual de SAC.pdf'
 const SAMPLE_NAME = 'Rotinas de atendimento'
@@ -130,8 +132,22 @@ function manualPathFor(journey: NewModuleProps['journey']) {
   return journey ? `${base}&journey=${journey.id}` : base
 }
 
+function ChangeOrigin({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="mb-space-md inline-flex items-center gap-1 text-label-md text-primary hover:underline"
+    >
+      <Icon name="chevron_left" className="text-[1.125rem]" />
+      Trocar a origem
+    </button>
+  )
+}
+
 export default function LearningModulesNew() {
-  const { journey, generated } = usePage<NewModuleProps>().props
+  const { journey, generated, nivela_products } = usePage<NewModuleProps>().props
+  const [origin, setOrigin] = useState<PickedOrigin | null>(null)
   const [step, setStep] = useState(0)
   const finishGeneration = useCallback(() => setStep(2), [])
 
@@ -156,7 +172,16 @@ export default function LearningModulesNew() {
         </div>
         <WizardSteps current={step} />
         <section className="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
-          {step === 0 && <UploadStep manualPath={manualPathFor(journey)} onStart={() => setStep(1)} />}
+          {step === 0 && origin === null && (
+            <OriginChoice manualPath={manualPathFor(journey)} onPick={setOrigin} />
+          )}
+          {step === 0 && origin !== null && <ChangeOrigin onClick={() => setOrigin(null)} />}
+          {step === 0 && origin === 'ai' && (
+            <UploadStep manualPath={manualPathFor(journey)} onStart={() => setStep(1)} />
+          )}
+          {step === 0 && origin === 'nivela' && (
+            <NivelaProducts products={nivela_products} journey={journey} />
+          )}
           {step === 1 && <GeneratingStep lessons={generated.lessons} onDone={finishGeneration} />}
           {step === 2 && <DoneStep generated={generated} />}
         </section>

@@ -13,7 +13,7 @@ module Management
     end
 
     def props
-      @module.slice(:id, :name, :competency, :status, :source).merge(
+      @module.slice(:id, :name, :competency, :status, :source, :material).merge(
         stretch: JourneyCatalog::STRETCHES.fetch(@module[:stretch]),
         used_in: JourneyCatalog.using_module(@module[:id]).map { |journey| journey.slice(:id, :name) },
         lessons: lessons,

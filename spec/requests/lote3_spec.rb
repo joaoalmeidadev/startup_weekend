@@ -24,5 +24,13 @@ RSpec.describe "Remaining mocked screens", :inertia do
 
       expect(inertia.props[:journey]).to be_nil
     end
+
+    it "offers the ready-made Nivela products to add to a journey" do
+      get new_management_learning_module_path
+
+      products = inertia.props[:nivela_products]
+      expect(products.pluck(:source).uniq).to eq(["nivela"])
+      expect(products.pluck(:id)).to include("conversa-clara", "matematica-do-dia-a-dia")
+    end
   end
 end

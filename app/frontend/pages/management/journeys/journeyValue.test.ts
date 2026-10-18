@@ -1,0 +1,57 @@
+import { describe, expect, it } from 'vitest'
+import { journey, journeyGoal } from '@/test/managementFixtures'
+import { formatReais, journeyValue, weeksToFinish } from './journeyValue'
+
+describe('journeyValue', () => {
+  it('adds up the hand-off hours the journey replaces and prices them at R$ 40 an hour', () => {
+    const value = journeyValue(journey.stretches, journeyGoal)
+
+    expect(value.hours).toBe(12)
+    expect(value.cost).toBe(480)
+  })
+
+  it('counts modules and lessons across the three stretches', () => {
+    const value = journeyValue(journey.stretches, journeyGoal)
+
+    expect(value.modules).toBe(3)
+    expect(value.lessons).toBe(16)
+    expect(value.weeks).toBe(3)
+  })
+
+  it('counts the goal competencies covered by at least one module', () => {
+    const value = journeyValue(journey.stretches, journeyGoal)
+
+    expect(value.covered).toBe(2)
+    expect(value.total).toBe(4)
+  })
+
+  it('is all zero for an empty journey', () => {
+    const empty = journey.stretches.map((stretch) => ({ ...stretch, modules: [] }))
+
+    expect(journeyValue(empty, journeyGoal)).toEqual({
+      hours: 0,
+      cost: 0,
+      modules: 0,
+      lessons: 0,
+      weeks: 0,
+      covered: 0,
+      total: 4,
+    })
+  })
+})
+
+describe('weeksToFinish', () => {
+  it('turns lessons of 5 minutes into weeks of 25 minutes, never less than one week', () => {
+    expect(weeksToFinish(0)).toBe(0)
+    expect(weeksToFinish(2)).toBe(1)
+    expect(weeksToFinish(12)).toBe(2)
+    expect(weeksToFinish(13)).toBe(3)
+  })
+})
+
+describe('formatReais', () => {
+  it('writes the amount in reais with the Brazilian thousands separator', () => {
+    expect(formatReais(1040)).toBe('R$ 1.040')
+    expect(formatReais(480)).toBe('R$ 480')
+  })
+})

@@ -11,6 +11,15 @@ RSpec.describe "Management journeys", :inertia do
       expect(inertia.props[:journeys].pluck(:name)).to eq(["Onboarding Atendimento", "Onboarding Logística", "Promoção para líder"])
       expect(inertia.props[:journeys].first).to include(status: "active", modules_per_stretch: {base: 2, company: 2, sector: 2})
     end
+
+    it "lists the content library with the origin and how many journeys use each module" do
+      get management_journeys_path
+
+      library = inertia.props[:library]
+      expect(library.pluck(:source).uniq).to contain_exactly("ai", "nivela", "company")
+      expect(library.find { |mod| mod[:id] == "nossa-historia-e-valores" }).to include(source: "company", journeys_count: 2)
+      expect(library.find { |mod| mod[:id] == "seguranca-no-armazem" }).to include(journeys_count: 0)
+    end
   end
 
   describe "GET /management/journeys/:id" do
@@ -21,13 +30,26 @@ RSpec.describe "Management journeys", :inertia do
       stretches = inertia.props[:journey][:stretches]
       expect(stretches.pluck(:key)).to eq(%w[base company sector])
       expect(stretches.second[:modules].pluck(:id)).to eq(%w[nossa-historia-e-valores rotinas-de-atendimento])
+      expect(stretches.second[:modules].second).to include(source: "ai", teaching_hours: 6, lessons: 8)
     end
 
-    it "offers the Nivela library modules that are not in the journey yet" do
+    it "offers the whole catalog grouped by origin" do
       get management_journey_path("onboarding-atendimento")
 
-      expect(inertia.props[:library].pluck(:id)).not_to include("conversa-clara", "matematica-do-dia-a-dia")
-      expect(inertia.props[:library]).not_to be_empty
+      catalog = inertia.props[:catalog]
+      expect(catalog.pluck(:source)).to eq(%w[ai nivela company])
+      expect(catalog.second[:modules].pluck(:id)).to include("conversa-clara", "postura-e-empatia")
+      expect(catalog.first[:modules].pluck(:source).uniq).to eq(["ai"])
+    end
+
+    it "brings the sector goal competencies the journey should cover" do
+      get management_journey_path("onboarding-atendimento")
+
+      expect(inertia.props[:goal]).to include(
+        sector: "Atendimento",
+        competencies: ["Comunicação e Escuta Ativa", "Resolução de Reclamações de Entrega",
+          "Uso do Sistema Interno de Pedidos", "Postura e Empatia com Clientes Difíceis", "Rotinas da Distribuidora"]
+      )
     end
 
     it "answers 404 for an unknown journey" do

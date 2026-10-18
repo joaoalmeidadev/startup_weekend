@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { journey, library } from '@/test/managementFixtures'
-import { addModule, moveModule } from './journeyEditing'
+import { catalog, journey } from '@/test/managementFixtures'
+import { addModule, moduleIds, moveModule, removeModule } from './journeyEditing'
 
 const baseIds = (stretches: typeof journey.stretches) => stretches[0].modules.map((m) => m.id)
+const postura = catalog[1].modules[2]
 
 describe('journeyEditing', () => {
   it('swaps a module with its neighbour inside the stretch', () => {
@@ -14,10 +15,20 @@ describe('journeyEditing', () => {
   })
 
   it('appends a module to the end of the stretch', () => {
-    expect(baseIds(addModule(journey.stretches, 'base', library[0]))).toEqual([
+    expect(baseIds(addModule(journey.stretches, 'base', postura))).toEqual([
       'conversa-clara',
       'matematica',
-      'escrita-no-trabalho',
+      'postura-e-empatia',
     ])
+  })
+
+  it('removes a module from its stretch', () => {
+    expect(baseIds(removeModule(journey.stretches, 'base', 'conversa-clara'))).toEqual(['matematica'])
+  })
+
+  it('lists the ids of every module in the journey', () => {
+    expect(moduleIds(journey.stretches)).toEqual(
+      new Set(['conversa-clara', 'matematica', 'rotinas-de-atendimento']),
+    )
   })
 })
