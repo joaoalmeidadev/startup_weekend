@@ -148,7 +148,14 @@ export type PersonDetail = Person & {
   competencies: { name: string; before: number; now: number; goal: number | null }[]
   badge: { label: string; earned: boolean; date: string | null; forecast: string }
   milestones: string[]
-  rewards: { points: number; balance: number; redeemed: { name: string; date: string; points: number }[] }
+  // points = study_points (hours studied) + sharing_points (journeys shared and approved)
+  rewards: {
+    points: number
+    study_points: number
+    sharing_points: number
+    balance: number
+    redeemed: { name: string; date: string; points: number }[]
+  }
 }
 
 export type NewModuleProps = {

@@ -26,11 +26,15 @@ module Management
       finished_journeys.map { |journey| "Concluiu a jornada #{journey[:name]}" } + streak + earned_badge
     end
 
+    # Points come from studying and from journeys shared and approved; the balance is what is left after redeeming
     def rewards
       redeemed = REDEEMED.fetch(@person[:name], []).map do |name, date|
         {name: name, date: date, points: RewardCatalog.find(name)[:points]}
       end
-      {points: @study.points, balance: @study.points - redeemed.sum { |reward| reward[:points] }, redeemed: redeemed}
+      sharing = KnowledgeSubmissionCatalog.points_for(@person[:name])
+      points = @study.points + sharing
+      {points: points, study_points: @study.points, sharing_points: sharing,
+       balance: points - redeemed.sum { |reward| reward[:points] }, redeemed: redeemed}
     end
 
     private

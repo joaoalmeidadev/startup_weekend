@@ -269,8 +269,10 @@ export const personDetail: PersonDetail = {
   badge: { label: 'Nivelado em Atendimento', earned: false, date: null, forecast: 'Nivela em ~12 dias' },
   milestones: ['Concluiu a jornada Base Nivela', '3 dias seguidos de estudo'],
   rewards: {
-    points: 30,
-    balance: 5,
+    points: 38,
+    study_points: 30,
+    sharing_points: 8,
+    balance: 13,
     redeemed: [{ name: 'Caneca Nivela', date: '02/10', points: 25 }],
   },
 }

@@ -14,7 +14,7 @@ RSpec.describe "Authentication", :js do
     sign_in_with("maria@example.com", "password123")
     expect(page).to have_content("Sua Trilha de Aprendizado")
 
-    click_link "Meu Perfil", match: :first
+    click_link "Perfil", match: :first
     click_button "Sair da minha conta"
     expect(page).to have_button("Entrar")
   end

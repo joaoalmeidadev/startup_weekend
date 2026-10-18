@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   devise_for :users, skip: :registrations, controllers: {sessions: "users/sessions"}
 
   namespace :collaborator do
+    resource :home, only: :show
+    resources :journeys, only: :index
+    resource :rewards, only: :show
+    resources :contributions, only: %i[index new]
     resource :journey, only: :show
     resource :progress, only: :show
     resource :profile, only: :show
@@ -30,6 +34,7 @@ Rails.application.routes.draw do
     get "sector_goal", to: redirect("/management/sectors")
     resource :rewards, only: :show
     resource :library, only: :show
+    resources :approvals, only: %i[index show]
     resources :journeys, only: %i[index show new]
     resources :learning_modules, only: %i[show new], path: "modules"
     resources :lesson_reviews, only: %i[index show]

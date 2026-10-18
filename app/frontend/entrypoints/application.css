@@ -157,7 +157,6 @@ layer(base);
   --color-tertiary-container: #00623f;
   --color-on-tertiary-container: #83dcad;
   --color-tertiary-fixed: #9bf5c4;
-
 }
 
 @layer base {

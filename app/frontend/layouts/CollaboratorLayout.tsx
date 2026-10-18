@@ -5,10 +5,25 @@ import { MockNoticeProvider } from '@/components/MockNotice'
 import { OfflineBanner } from '@/components/OfflineBanner'
 import type { Viewer } from '@/types/collaborator'
 
-const NAV_ITEMS = [
-  { href: '/collaborator/journey', icon: 'alt_route', label: 'Minha Jornada' },
-  { href: '/collaborator/progress', icon: 'emoji_events', label: 'Meu Progresso' },
-  { href: '/collaborator/profile', icon: 'person', label: 'Meu Perfil' },
+type NavItem = { href: string; icon: string; label: string; sections?: string[] }
+
+// Início is the gamified home (it took over Meu progresso); Jornadas also covers a journey's modules
+const NAV_ITEMS: NavItem[] = [
+  {
+    href: '/collaborator/home',
+    icon: 'home',
+    label: 'Início',
+    sections: ['/collaborator/home', '/collaborator/progress'],
+  },
+  {
+    href: '/collaborator/journeys',
+    icon: 'alt_route',
+    label: 'Jornadas',
+    sections: ['/collaborator/journey', '/collaborator/modules'],
+  },
+  { href: '/collaborator/rewards', icon: 'redeem', label: 'Prêmios' },
+  { href: '/collaborator/contributions', icon: 'volunteer_activism', label: 'Compartilhar' },
+  { href: '/collaborator/profile', icon: 'person', label: 'Perfil' },
 ]
 
 const ACTIVE = 'bg-primary-container text-on-primary text-body-lg-bold'
@@ -25,7 +40,8 @@ function AvatarBadge() {
 export function CollaboratorLayout({ children }: { children: ReactNode }) {
   const { url, props } = usePage<{ viewer: Viewer }>()
   const { viewer } = props
-  const isActive = (href: string) => url.startsWith(href)
+  const isActive = (item: NavItem) =>
+    (item.sections ?? [item.href]).some((section) => url.startsWith(section))
 
   return (
     <MockNoticeProvider>
@@ -46,8 +62,8 @@ export function CollaboratorLayout({ children }: { children: ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-                className={`flex min-h-[3.5rem] items-center gap-space-md rounded-xl p-space-md transition-colors ${isActive(item.href) ? ACTIVE : INACTIVE}`}
+                aria-current={isActive(item) ? 'page' : undefined}
+                className={`flex min-h-[3.5rem] items-center gap-space-md rounded-xl p-space-md transition-colors ${isActive(item) ? ACTIVE : INACTIVE}`}
               >
                 <Icon name={item.icon} className="text-[1.75rem]" />
                 <span className="text-label-lg">{item.label}</span>
@@ -89,10 +105,10 @@ export function CollaboratorLayout({ children }: { children: ReactNode }) {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex min-h-[4.5rem] flex-1 flex-col items-center justify-center gap-1 text-label-md ${isActive(item.href) ? 'text-primary-container' : 'text-on-surface-variant'}`}
+            className={`flex min-h-[4.5rem] flex-1 flex-col items-center justify-center gap-1 text-label-md ${isActive(item) ? 'text-primary-container' : 'text-on-surface-variant'}`}
           >
-            <Icon name={item.icon} className="text-[1.75rem]" filled={isActive(item.href)} />
-            {item.label.replace('Minha ', '').replace('Meu ', '')}
+            <Icon name={item.icon} className="text-[1.75rem]" filled={isActive(item)} />
+            {item.label}
           </Link>
         ))}
       </nav>

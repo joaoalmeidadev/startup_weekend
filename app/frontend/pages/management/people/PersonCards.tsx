@@ -112,7 +112,12 @@ export function RewardsCard({ person }: { person: PersonDetail }) {
         <span>{rewards.points} pts ganhos</span>
         <span className="text-primary">{rewards.balance} pts de saldo</span>
       </div>
-      <p className="text-body-sm text-on-surface-variant">{pointsFormula(person.study, rewards.points)}</p>
+      <p className="text-body-sm text-on-surface-variant">
+        {pointsFormula(person.study, rewards.study_points)}
+      </p>
+      {rewards.sharing_points > 0 && (
+        <p className="text-body-sm text-on-surface-variant">{`+ ${rewards.sharing_points} pts por compartilhar conhecimento`}</p>
+      )}
       {rewards.redeemed.length === 0 ? (
         <p className="text-body-sm text-outline">Ainda não resgatou nenhuma recompensa.</p>
       ) : (

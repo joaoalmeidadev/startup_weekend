@@ -87,7 +87,7 @@ RSpec.describe "Management people", :inertia do
     it "prices the points with the person's own salary, or the sector value without one" do
       get management_person_path("maria-souza")
       # 8 h studied × Maria's R$ 9,50/h × 40%
-      expect(inertia.props[:person][:rewards][:points]).to eq(30)
+      expect(inertia.props[:person][:rewards][:study_points]).to eq(30)
 
       get management_person_path("bruna-costa")
       # 6 h × the sector learner's R$ 10/h × 40%
@@ -115,7 +115,8 @@ RSpec.describe "Management people", :inertia do
       get management_person_path("maria-souza")
 
       rewards = inertia.props[:person][:rewards]
-      expect(rewards).to include(points: 30, balance: 5)
+      # 30 pts of study + 8 pts of an approved shared journey, minus a Caneca (25)
+      expect(rewards).to include(points: 38, study_points: 30, sharing_points: 8, balance: 13)
       expect(rewards[:redeemed]).to eq([{"name" => "Caneca Nivela", "date" => "02/10", "points" => 25}])
     end
 

@@ -61,7 +61,7 @@ describe('JourneysShow', () => {
     render(<JourneysShow />)
 
     const nav = screen.getByRole('navigation', { name: 'Principal' })
-    expect(within(nav).getByRole('link', { name: /Minha Jornada/ })).toHaveAttribute('aria-current', 'page')
-    expect(within(nav).getByRole('link', { name: /Meu Perfil/ })).not.toHaveAttribute('aria-current')
+    expect(within(nav).getByRole('link', { name: /Jornadas/ })).toHaveAttribute('aria-current', 'page')
+    expect(within(nav).getByRole('link', { name: /Perfil/ })).not.toHaveAttribute('aria-current')
   })
 })

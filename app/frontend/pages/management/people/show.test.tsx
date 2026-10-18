@@ -89,9 +89,10 @@ describe('PeopleShow', () => {
     render(<PeopleShow />)
 
     const rewards = within(screen.getByRole('region', { name: 'Recompensas' }))
-    expect(rewards.getByText('30 pts ganhos')).toBeInTheDocument()
-    expect(rewards.getByText('5 pts de saldo')).toBeInTheDocument()
+    expect(rewards.getByText('38 pts ganhos')).toBeInTheDocument()
+    expect(rewards.getByText('13 pts de saldo')).toBeInTheDocument()
     expect(rewards.getByText('8 h estudadas × R$ 9,50/h × 40% = 30 pts')).toBeInTheDocument()
+    expect(rewards.getByText('+ 8 pts por compartilhar conhecimento')).toBeInTheDocument()
     const item = rewards.getByText('Caneca Nivela').closest('li') as HTMLElement
     expect(item).toHaveTextContent('02/10')
     expect(item).toHaveTextContent('25 pts')
